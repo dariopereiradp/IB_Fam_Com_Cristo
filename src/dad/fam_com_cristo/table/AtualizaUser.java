@@ -48,7 +48,7 @@ public class AtualizaUser implements Command {
 	public void execute() {
 		try {
 			CriptografiaAES.setKey(User.key);
-			CriptografiaAES.encrypt(user.getCpf());
+//			CriptografiaAES.encrypt(user.getCpf());
 			pst = con.prepareStatement("update usuarios set " + coluna + "=? where CPF=?");
 			switch (coluna) {
 			case "Nome":
@@ -85,7 +85,7 @@ public class AtualizaUser implements Command {
 	public void undo() {
 		try {
 			CriptografiaAES.setKey(User.key);
-			CriptografiaAES.encrypt(user.getCpf());
+//			CriptografiaAES.encrypt(user.getCpf());
 			pst = con.prepareStatement("update usuarios set " + coluna + "=? where CPF=?");
 			switch (coluna) {
 			case "Nome":

@@ -11,9 +11,6 @@ import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
-import dad.fam_com_cristo.Emprestimo;
-import dad.fam_com_cristo.table.TableModelEmprestimo;
-import dad.recursos.Log;
 import dad.recursos.RegistoLogin;
 
 import javax.swing.JLabel;
@@ -22,10 +19,6 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.awt.Color;
 import javax.swing.JFormattedTextField;
@@ -70,11 +63,10 @@ public class Config extends JDialog {
 			multa = new JFormattedTextField();
 			e1.printStackTrace();
 		}
-		System.out.println("Multa: " + Emprestimo.MULTA);
 
 		multa.setFont(new Font("Arial", Font.PLAIN, 14));
 		multa.setBounds(180, 72, 60, 30);
-		multa.setValue("R$ " + String.valueOf(Emprestimo.MULTA));
+		multa.setValue("R$ " + String.valueOf(0.0));
 		contentPanel.add(multa);
 
 		JButton bAddFuncionrio = new JButton("ADICIONAR FUNCION\u00C1RIO");
@@ -137,50 +129,7 @@ public class Config extends JDialog {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						double multaValor = Double.valueOf(multa.getText().trim().replace("R$", ""));
-						if (multaValor != Emprestimo.MULTA) {
-							int ok = JOptionPane.showConfirmDialog(Config.this,
-									"Tem certeza que quer alterar o valor diário da multa por atraso?\nAtenção: Essa alteração será válida para todos os empréstimos ativos e futuros!",
-									"ALTERAR VALOR DA MULTA", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-									new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
-							if (ok == JOptionPane.OK_OPTION) {
-								JPasswordField pass = new JPasswordField();
-								int ok1 = JOptionPane.showConfirmDialog(null, pass,
-										"Introduza a senha do administrador", JOptionPane.OK_CANCEL_OPTION,
-										JOptionPane.QUESTION_MESSAGE,
-										new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
-								if (ok1 == JOptionPane.OK_OPTION) {
-									if (String.valueOf(pass.getPassword()).equals(Main.PASS)) {
-										Emprestimo.MULTA = multaValor;
-										TableModelEmprestimo.getInstance().atualizarMultas();
-										File conf = new File(
-												System.getenv("APPDATA") + "/BibliotecaDAD/Databases/conf.dad");
-										conf.delete();
-										try {
-											conf.createNewFile();
-											PrintWriter pw = new PrintWriter(conf);
-											pw.println(multaValor);
-											pw.close();
-										} catch (FileNotFoundException e1) {
-											Log.getInstance().printLog(
-													"Erro ao alterar valor da multa: Ficheiro de configuração não encontrado! - "
-															+ e1.getMessage());
-											e1.printStackTrace();
-										} catch (IOException e1) {
-											Log.getInstance()
-													.printLog("Erro ao alterar valor da multa! - " + e1.getMessage());
-											e1.printStackTrace();
-										}
-										dispose();
-									} else
-										JOptionPane.showMessageDialog(null, "Senha errada!", "SENHA ERRADA",
-												JOptionPane.OK_OPTION,
-												new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
-								}
-							}
-						} else {
-							dispose();
-						}
+
 					}
 				});
 				buttonPane.add(okButton);

@@ -27,21 +27,15 @@ import javax.swing.UIManager;
 
 import org.apache.commons.io.FileUtils;
 
-import dad.fam_com_cristo.Emprestimo;
 import dad.fam_com_cristo.Item;
-import dad.fam_com_cristo.table.TableModelEmprestimo;
 import dad.fam_com_cristo.table.TableModelFuncionario;
-import dad.fam_com_cristo.table.TableModelLivro;
 import dad.fam_com_cristo.table.TableModelUser;
-import dad.recursos.ConexaoEmprestimos;
-import dad.recursos.ConexaoLivros;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.ConexaoUser;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 import mdlaf.MaterialLookAndFeel;
 import net.ucanaccess.jdbc.UcanaccessSQLException;
-
 
 public class Main {
 
@@ -77,9 +71,7 @@ public class Main {
 				@Override
 				public void run() {
 					createTables();
-					TableModelLivro.getInstance().uploadDataBase();
 					TableModelUser.getInstance().uploadDataBase();
-					TableModelEmprestimo.getInstance().uploadDataBase();
 					TableModelFuncionario.getInstance().uploadDataBase();
 				}
 			});
@@ -159,42 +151,22 @@ public class Main {
 			conf.createNewFile();
 			scan = new Scanner(conf);
 			scan.useLocale(Locale.US);
-			Emprestimo.MULTA = scan.nextDouble();
 			scan.close();
 		} catch (IOException | InputMismatchException e1) {
 			Log.getInstance().printLog("Erro ao carregar configurações! - " + e1.getMessage());
 			e1.printStackTrace();
 		} catch (NoSuchElementException e) {
-			Emprestimo.MULTA = 0.5;
 			scan.close();
 			PrintWriter pw;
 			try {
 				pw = new PrintWriter(conf);
-				pw.println(Emprestimo.MULTA);
 				pw.close();
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
-
 		try {
-			File livros = new File(ConexaoLivros.dbFile);
-			if (!livros.exists()) {
-				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoLivros.dbFile
-						+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
-				DatabaseMetaData dmd = con.getMetaData();
-				try (ResultSet rs = dmd.getTables(null, null, "Livros", new String[] { "TABLE" })) {
-					try (Statement s = con.createStatement()) {
-						s.executeUpdate("CREATE TABLE Livros (ID int NOT NULL,Título varchar(255) NOT NULL,"
-								+ "Autor varchar(255),Editora varchar(255),Classificação varchar(255),"
-								+ "Exemplares int,Disponíveis int,Disponível varchar(5),Local varchar(255),CONSTRAINT PK_Livros PRIMARY KEY (ID,Título));");
-						Log.getInstance().printLog("Base de dados livros.mbd criada com sucesso");
-					}
-				}
-				con.close();
-			}
-
 			File logins = new File(ConexaoLogin.dbFile);
 			if (!logins.exists()) {
 				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoLogin.dbFile
@@ -242,24 +214,8 @@ public class Main {
 				try (Statement s = con.createStatement()) {
 					s.executeUpdate("ALTER TABLE Usuarios ADD COLUMN Telefone varchar(15);");
 					Log.getInstance().printLog("Base de dados users.mbd atualizada com sucesso");
-				} catch(SQLSyntaxErrorException | UcanaccessSQLException e3){
+				} catch (SQLSyntaxErrorException | UcanaccessSQLException e3) {
 					System.out.println("Coluna 'Telefone' já existe!");
-				}
-				con.close();
-			}
-
-			File emprestimos = new File(ConexaoEmprestimos.dbFile);
-			if (!emprestimos.exists()) {
-				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoEmprestimos.dbFile
-						+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
-				DatabaseMetaData dmd = con.getMetaData();
-				try (ResultSet rs = dmd.getTables(null, null, "Empréstimos", new String[] { "TABLE" })) {
-					try (Statement s = con.createStatement()) {
-						s.executeUpdate("CREATE TABLE Emprestimos (ID int NOT NULL,ID_Item int NOT NULL,"
-								+ "Data_Emprestimo date,Data_Devolucao date, Cliente varchar(15),Funcionario varchar(255),Ativo varchar(5),"
-								+ "Multa double,Pago varchar(5),CONSTRAINT PK_Emprestimos PRIMARY KEY (ID));");
-						Log.getInstance().printLog("Base de dados emprestimos.mbd criada com sucesso");
-					}
 				}
 				con.close();
 			}
@@ -268,7 +224,9 @@ public class Main {
 			if (!imgs.exists())
 				imgs.mkdirs();
 
-		} catch (SQLException e) {
+		} catch (
+
+		SQLException e) {
 			String message = "Ocorreu um erro ao criar a base de dados... Tenta novamente!\n" + e.getMessage() + "\n"
 					+ this.getClass();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,

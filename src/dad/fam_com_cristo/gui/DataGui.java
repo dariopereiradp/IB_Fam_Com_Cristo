@@ -29,7 +29,6 @@ import java.awt.Desktop;
 
 import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.event.ChangeEvent;
@@ -40,12 +39,6 @@ import javax.swing.table.TableRowSorter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
-import dad.fam_com_cristo.Livro;
-import dad.fam_com_cristo.User;
-import dad.fam_com_cristo.table.EmprestimoPanel;
-import dad.fam_com_cristo.table.LivroPanel;
-import dad.fam_com_cristo.table.TableModelEmprestimo;
-import dad.fam_com_cristo.table.TableModelLivro;
 import dad.fam_com_cristo.table.TableModelUser;
 import dad.fam_com_cristo.table.UserPanel;
 import dad.recursos.CellRenderer;
@@ -71,21 +64,19 @@ public class DataGui extends JFrame {
 	private static final int DELAY = 2200;
 	private static DataGui INSTANCE;
 	private JTabbedPane tabbedPane;
-	private JTable media, outros;
 	private JMenu mnArquivo, mnAjuda, mnEditar;
 	private JMenuItem menuSobre, menuEstatisticas, menuSair, menuAnular, menuRefazer, menuImportar, menuBackup,
 			menuOrdenar, menuAtualizar, menuConfig;
 	private JTextField pesquisa;
 	private JPanel filtrosPanel;
-	private JCheckBox checkID, checkTitulo, checkAutor, checkEditora, checkClassificacao, checkLocal, checkIDItem,
-			checkCliente, checkFuncionario, checkDataEmp, checkDataDevol, checkNome, checkData_Nasc, checkCpf;
+	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca;
 	private JMenuItem mntmRelatarErro;
 	private JMenuItem mnLimpar;
 	private JMenuItem menuManual;
 
 	private DataGui() {
 		INSTANCE = this;
-		setTitle("Biblioteca - Dádiva de Deus");
+		setTitle(Main.TITLE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/DAD.jpg"))));
 		setMinimumSize(new Dimension(800, 600));
@@ -111,89 +102,29 @@ public class DataGui extends JFrame {
 		filtrosPanel = new JPanel();
 		pesquisaPanel.add(filtrosPanel, BorderLayout.EAST);
 
-		checkID = new JCheckBox("ID");
-		checkID.setSelected(true);
-		filtrosPanel.add(checkID);
+		checkMembroAtivo = new JCheckBox("Membro Ativo");
+		checkMembroAtivo.setSelected(true);
+		filtrosPanel.add(checkMembroAtivo);
 
-		checkIDItem = new JCheckBox("ID do Item");
-		checkIDItem.setSelected(true);
-		filtrosPanel.add(checkIDItem);
-		checkIDItem.setVisible(false);
+		checkMembroNominal = new JCheckBox("Membro Nominal");
+		checkMembroNominal.setSelected(true);
+		filtrosPanel.add(checkMembroNominal);
 
-		checkTitulo = new JCheckBox("T\u00EDtulo");
-		checkTitulo.setSelected(true);
-		filtrosPanel.add(checkTitulo);
+		checkCongregados = new JCheckBox("Congregados");
+		checkCongregados.setSelected(true);
+		filtrosPanel.add(checkCongregados);
 
-		checkAutor = new JCheckBox("Autor");
-		checkAutor.setSelected(true);
-		filtrosPanel.add(checkAutor);
-
-		checkEditora = new JCheckBox("Editora");
-		checkEditora.setSelected(true);
-		filtrosPanel.add(checkEditora);
-
-		checkClassificacao = new JCheckBox("Classifica\u00E7\u00E3o");
-		checkClassificacao.setSelected(true);
-		filtrosPanel.add(checkClassificacao);
-
-		checkLocal = new JCheckBox("Localiza\u00E7\u00E3o");
-		checkLocal.setSelected(true);
-		filtrosPanel.add(checkLocal);
-
-		checkDataEmp = new JCheckBox("Data do Empréstimo");
-		checkDataEmp.setSelected(true);
-		filtrosPanel.add(checkDataEmp);
-		checkDataEmp.setVisible(false);
-
-		checkDataDevol = new JCheckBox("Data de Devolução");
-		checkDataDevol.setSelected(true);
-		filtrosPanel.add(checkDataDevol);
-		checkDataDevol.setVisible(false);
-
-		checkCliente = new JCheckBox("Cliente");
-		checkCliente.setSelected(true);
-		filtrosPanel.add(checkCliente);
-		checkCliente.setVisible(false);
-
-		checkFuncionario = new JCheckBox("Funcionário");
-		checkFuncionario.setSelected(true);
-		filtrosPanel.add(checkFuncionario);
-		checkFuncionario.setVisible(false);
-
-		checkCpf = new JCheckBox("CPF");
-		checkCpf.setSelected(true);
-		filtrosPanel.add(checkCpf);
-		checkCpf.setVisible(false);
-
-		checkNome = new JCheckBox("Nome");
-		checkNome.setSelected(true);
-		filtrosPanel.add(checkNome);
-		checkNome.setVisible(false);
-
-		checkData_Nasc = new JCheckBox("Data de Nascimento");
-		checkData_Nasc.setSelected(true);
-		filtrosPanel.add(checkData_Nasc);
-		checkData_Nasc.setVisible(false);
+		checkLideranca = new JCheckBox("Liderança");
+		checkLideranca.setSelected(true);
+		filtrosPanel.add(checkLideranca);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.addTab("Livros", LivroPanel.getInstance());
+		tabbedPane.addTab("Pessoas associadas", UserPanel.getInstance());
 
-		media = new JTable();
-		tabbedPane.addTab("Multimédia", null, media, null);
-
-		outros = new JTable();
-		tabbedPane.addTab("Outros", null, outros, null);
-
-		tabbedPane.addTab("Empréstimos", EmprestimoPanel.getInstance());
-
-		tabbedPane.addTab("Clientes", null, UserPanel.getInstance(), null);
-
-		tabbedPane.setEnabledAt(1, false);
-		tabbedPane.setEnabledAt(2, false);
-		tabbedPane.setToolTipTextAt(1, "Recurso em desenvolvimento... Brevemente disponível na versão 2.0");
-		tabbedPane.setToolTipTextAt(2, "Recurso em desenvolvimento... Brevemente disponível na versão 2.0");
+		tabbedPane.setToolTipTextAt(1,
+				"Pessoas que vão à IBFC com alguma regularidade: membros ativos, membros nominais e congregados");
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -297,8 +228,8 @@ public class DataGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String path = System.getenv("ProgramFiles(X86)") + System.getProperty("file.separator") + "Biblioteca Dádiva de Deus/"
-						+ "Manual_Instrucoes_Biblioteca_DAD_v" + Main.VERSION + ".pdf";
+				String path = System.getenv("ProgramFiles(X86)") + System.getProperty("file.separator")
+						+ "Biblioteca Dádiva de Deus/" + "Manual_Instrucoes_Biblioteca_DAD_v" + Main.VERSION + ".pdf";
 				try {
 					Desktop.getDesktop().open(new File(path));
 				} catch (Exception e1) {
@@ -327,7 +258,7 @@ public class DataGui extends JFrame {
 		});
 		mnAjuda.add(menuSobre);
 
-		getRootPane().setDefaultButton(LivroPanel.getInstance().getbAdd());
+		getRootPane().setDefaultButton(UserPanel.getInstance().getbAdd());
 
 		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		manager.addKeyEventDispatcher(new MyDispatcher());
@@ -360,9 +291,6 @@ public class DataGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				TableModelLivro.getInstance().fireTableDataChanged();
-				TableModelEmprestimo.getInstance().fireTableDataChanged();
-				TableModelEmprestimo.getInstance().atualizarMultas();
 				TableModelUser.getInstance().fireTableDataChanged();
 			}
 		});
@@ -376,14 +304,12 @@ public class DataGui extends JFrame {
 
 		});
 
-		TableModelLivro.getInstance().addListeners();
 		TableModelUser.getInstance().addListeners();
 
 		tabbedPane.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				visibleBoxes();
 				filter("");
 				updateItems();
 			}
@@ -442,15 +368,7 @@ public class DataGui extends JFrame {
 	}
 
 	public void updateItems() {
-		if (tabbedPane.getSelectedIndex() == 0) {
-			TableModelLivro.getInstance().updateItems();
-		} else if (tabbedPane.getSelectedIndex() == 4) {
-			TableModelUser.getInstance().updateItems();
-		} else {
-			DataGui.getInstance().getMenuAnular().setEnabled(false);
-			DataGui.getInstance().getMenuRefazer().setEnabled(false);
-		}
-
+		TableModelUser.getInstance().updateItems();
 	}
 
 	private class MyDispatcher implements KeyEventDispatcher {
@@ -494,139 +412,31 @@ public class DataGui extends JFrame {
 		dialog.setVisible(true);
 	}
 
-	public void visibleBoxes() {
-		if (tabbedPane.getSelectedIndex() == 0) {
-			menuOrdenar.setEnabled(true);
-			checkTitulo.setText("Título");
-			checkAutor.setText("Autor");
-			checkID.setVisible(true);
-			checkTitulo.setVisible(true);
-			checkAutor.setVisible(true);
-			checkEditora.setVisible(true);
-			checkClassificacao.setVisible(true);
-			checkLocal.setVisible(true);
-			checkIDItem.setVisible(false);
-			checkDataEmp.setVisible(false);
-			checkDataDevol.setVisible(false);
-			checkCliente.setVisible(false);
-			checkFuncionario.setVisible(false);
-			checkCpf.setVisible(false);
-			checkData_Nasc.setVisible(false);
-			checkNome.setVisible(false);
-		} else if (tabbedPane.getSelectedIndex() == 1) {
-			menuOrdenar.setEnabled(true);
-			checkTitulo.setText("Título");
-			checkAutor.setText("Artista");
-			checkID.setVisible(true);
-			checkTitulo.setVisible(true);
-			checkAutor.setVisible(true);
-			checkEditora.setVisible(false);
-			checkClassificacao.setVisible(true);
-			checkLocal.setVisible(true);
-			checkIDItem.setVisible(false);
-			checkDataEmp.setVisible(false);
-			checkDataDevol.setVisible(false);
-			checkCliente.setVisible(false);
-			checkFuncionario.setVisible(false);
-			checkCpf.setVisible(false);
-			checkData_Nasc.setVisible(false);
-			checkNome.setVisible(false);
-		} else if (tabbedPane.getSelectedIndex() == 3) {
-			menuOrdenar.setEnabled(false);
-			checkID.setVisible(true);
-			checkTitulo.setVisible(true);
-			checkAutor.setVisible(false);
-			checkEditora.setVisible(false);
-			checkClassificacao.setVisible(false);
-			checkLocal.setVisible(false);
-			checkCpf.setVisible(false);
-			checkData_Nasc.setVisible(false);
-			checkNome.setVisible(false);
-			checkIDItem.setVisible(true);
-			checkDataEmp.setVisible(true);
-			checkDataDevol.setVisible(true);
-			checkCliente.setVisible(true);
-			checkFuncionario.setVisible(true);
-		} else if (tabbedPane.getSelectedIndex() == 4) {
-			menuOrdenar.setEnabled(false);
-			checkID.setVisible(false);
-			checkTitulo.setVisible(false);
-			checkAutor.setVisible(false);
-			checkEditora.setVisible(false);
-			checkClassificacao.setVisible(false);
-			checkLocal.setVisible(false);
-			checkIDItem.setVisible(false);
-			checkDataEmp.setVisible(false);
-			checkDataDevol.setVisible(false);
-			checkCliente.setVisible(false);
-			checkFuncionario.setVisible(false);
-			checkCpf.setVisible(true);
-			checkData_Nasc.setVisible(true);
-			checkNome.setVisible(true);
-		}
-		// TODO
-		filtrosPanel.repaint();
-	}
-
 	public void anular() {
-		if (tabbedPane.getSelectedIndex() == 0)
-			TableModelLivro.getInstance().getUndoManager().undo();
-		else if (tabbedPane.getSelectedIndex() == 4)
-			TableModelUser.getInstance().getUndoManager().undo();
-		// TODO
+
+		TableModelUser.getInstance().getUndoManager().undo();
 	}
 
 	public void refazer() {
-		if (tabbedPane.getSelectedIndex() == 0)
-			TableModelLivro.getInstance().getUndoManager().redo();
-		else if (tabbedPane.getSelectedIndex() == 4)
-			TableModelUser.getInstance().getUndoManager().redo();
-		// TODO
+
+		TableModelUser.getInstance().getUndoManager().redo();
 	}
 
 	public void ordenar() {
-		if (tabbedPane.getSelectedIndex() == 0)
-			TableModelLivro.getInstance().ordenar();
-		// else if (tabbedPane.getSelectedIndex() == 1)
-		// TODO
+//		if (tabbedPane.getSelectedIndex() == 0)
+//			TableModelUser.getInstance().ordenar();
 	}
 
 	private int num_checkboxEnabled() {
 		int count = 0;
 		if (tabbedPane.getSelectedIndex() == 0) {
-			if (checkID.isSelected())
+			if (checkMembroAtivo.isSelected())
 				count++;
-			if (checkTitulo.isSelected())
+			if (checkMembroNominal.isSelected())
 				count++;
-			if (checkAutor.isSelected())
+			if (checkCongregados.isSelected())
 				count++;
-			if (checkEditora.isSelected())
-				count++;
-			if (checkClassificacao.isSelected())
-				count++;
-			if (checkLocal.isSelected())
-				count++;
-		} else if (tabbedPane.getSelectedIndex() == 3) {
-			if (checkID.isSelected())
-				count++;
-			if (checkIDItem.isSelected())
-				count++;
-			if (checkTitulo.isSelected())
-				count++;
-			if (checkDataEmp.isSelected())
-				count++;
-			if (checkDataDevol.isSelected())
-				count++;
-			if (checkCliente.isSelected())
-				count++;
-			if (checkFuncionario.isSelected())
-				count++;
-		} else if (tabbedPane.getSelectedIndex() == 4) {
-			if (checkCpf.isSelected())
-				count++;
-			if (checkNome.isSelected())
-				count++;
-			if (checkData_Nasc.isSelected())
+			if (checkLideranca.isSelected())
 				count++;
 		}
 		return count;
@@ -636,48 +446,17 @@ public class DataGui extends JFrame {
 		int count = 0;
 		int[] columns = new int[num_checkboxEnabled() + 3];
 		if (tabbedPane.getSelectedIndex() == 0) {
-			if (checkID.isSelected())
+			if (checkMembroAtivo.isSelected())
 				columns[count++] = 0;
-			if (checkTitulo.isSelected())
+			if (checkMembroNominal.isSelected())
 				columns[count++] = 1;
-			if (checkAutor.isSelected())
+			if (checkCongregados.isSelected())
 				columns[count++] = 2;
-			if (checkEditora.isSelected())
+			if (checkLideranca.isSelected())
 				columns[count++] = 3;
-			if (checkClassificacao.isSelected())
-				columns[count++] = 4;
 			columns[count++] = 5;
 			columns[count++] = 6;
 			columns[count++] = 7;
-			if (checkLocal.isSelected())
-				columns[count++] = 8;
-		} else if (tabbedPane.getSelectedIndex() == 3) {
-			columns = new int[num_checkboxEnabled() + 2];
-			if (checkID.isSelected())
-				columns[count++] = 0;
-			if (checkIDItem.isSelected())
-				columns[count++] = 1;
-			if (checkTitulo.isSelected())
-				columns[count++] = 2;
-			if (checkDataEmp.isSelected())
-				columns[count++] = 3;
-			if (checkDataDevol.isSelected())
-				columns[count++] = 4;
-			if (checkCliente.isSelected())
-				columns[count++] = 5;
-			if (checkFuncionario.isSelected())
-				columns[count++] = 6;
-			columns[count++] = 7;
-			columns[count++] = 8;
-		} else if (tabbedPane.getSelectedIndex() == 4) {
-			columns = new int[num_checkboxEnabled() + 1];
-			if (checkCpf.isSelected())
-				columns[count++] = 0;
-			if (checkNome.isSelected())
-				columns[count++] = 1;
-			if (checkData_Nasc.isSelected())
-				columns[count++] = 2;
-			columns[count++] = 3;
 		}
 		return columns;
 	}
@@ -690,171 +469,45 @@ public class DataGui extends JFrame {
 
 	public void filter(String filtro) {
 		if (tabbedPane.getSelectedIndex() == 0) {
-			TableRowSorter<TableModelLivro> sorter = new TableRowSorter<TableModelLivro>(TableModelLivro.getInstance());
-			LivroPanel.getInstance().getLivros().setRowSorter(sorter);
-			RowFilter<TableModelLivro, Object> filter;
+			TableRowSorter<TableModelUser> sorter = new TableRowSorter<TableModelUser>(TableModelUser.getInstance());
+			UserPanel.getInstance().getUsers().setRowSorter(sorter);
+			RowFilter<TableModelUser, Object> filter;
 			if (filtro.trim().equals("")) {
 				sorter.setRowFilter(null);
 			} else {
 				if (num_checkboxEnabled() == 6 || num_checkboxEnabled() == 0) {
 					filter = RowFilter
 							.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()));
-					LivroPanel.getInstance().getLivros().setDefaultRenderer(Object.class, new CellRenderer());
+					UserPanel.getInstance().getUsers().setDefaultRenderer(Object.class, new CellRenderer());
 				} else
 					filter = RowFilter.regexFilter(
 							(Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()), checkBoxEnabled());
 				sorter.setRowFilter(filter);
 				setRenderers();
 			}
-		} else if (tabbedPane.getSelectedIndex() == 3) {
-			filtrarEmprestimos(filtro);
-		} else if (tabbedPane.getSelectedIndex() == 4) {
-			filtrarUsers(filtro);
 		}
-	}
-
-	public void filtrarEmprestimos(String filtro) {
-		TableRowSorter<TableModelEmprestimo> sorter = new TableRowSorter<TableModelEmprestimo>(
-				TableModelEmprestimo.getInstance());
-		EmprestimoPanel.getInstance().getEmprestimos().setRowSorter(sorter);
-		RowFilter<TableModelEmprestimo, Object> filter;
-		if (filtro.trim().equals("")) {
-			sorter.setRowFilter(null);
-		} else {
-			if (num_checkboxEnabled() == 7 || num_checkboxEnabled() == 0) {
-				filter = RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()));
-				EmprestimoPanel.getInstance().getEmprestimos().setDefaultRenderer(Object.class, new CellRenderer());
-			} else
-				filter = RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()),
-						checkBoxEnabled());
-			sorter.setRowFilter(filter);
-			setRenderers();
-		}
-	}
-
-	public void filtrarUsers(String filtro) {
-		TableRowSorter<TableModelUser> sorter = new TableRowSorter<TableModelUser>(TableModelUser.getInstance());
-		UserPanel.getInstance().getUsers().setRowSorter(sorter);
-		RowFilter<TableModelUser, Object> filter;
-		if (filtro.trim().equals("")) {
-			sorter.setRowFilter(null);
-		} else {
-			if (num_checkboxEnabled() == 7 || num_checkboxEnabled() == 0) {
-				filter = RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()));
-				UserPanel.getInstance().getUsers().setDefaultRenderer(Object.class, new CellRenderer());
-			} else
-				filter = RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()),
-						checkBoxEnabled());
-			sorter.setRowFilter(filter);
-			setRenderers();
-		}
-	}
-
-	public void filtrarEmprestimos(Livro l, JTable table) {
-		String filtro = String.valueOf(l.getId());
-		TableRowSorter<TableModelEmprestimo> sorter = new TableRowSorter<TableModelEmprestimo>(
-				TableModelEmprestimo.getInstance());
-		table.setRowSorter(sorter);
-		RowFilter<TableModelEmprestimo, Object> filter;
-		filter = RowFilter.regexFilter(Pattern.compile("\\b" + filtro + "\\b").toString(), 1);
-		sorter.setRowFilter(filter);
-		setRenderers();
-	}
-
-	public void filtrarEmprestimos(User user, JTable table) {
-		String filtro = String.valueOf(user.getCpf());
-		TableRowSorter<TableModelEmprestimo> sorter = new TableRowSorter<TableModelEmprestimo>(
-				TableModelEmprestimo.getInstance());
-		table.setRowSorter(sorter);
-		RowFilter<TableModelEmprestimo, Object> filter;
-		filter = RowFilter.regexFilter(Pattern.compile("\\b" + filtro + "\\b").toString(), 5);
-		sorter.setRowFilter(filter);
-		setRenderers();
 	}
 
 	public void setRenderers() {
 		if (tabbedPane.getSelectedIndex() == 0) {
-			TableColumnModel tcl = LivroPanel.getInstance().getLivros().getColumnModel();
-			if (checkID.isSelected())
+			TableColumnModel tcl = UserPanel.getInstance().getUsers().getColumnModel();
+			if (checkMembroAtivo.isSelected())
 				tcl.getColumn(0).setCellRenderer(new CellRendererNoImage());
 			else
 				tcl.getColumn(0).setCellRenderer(new DefaultCellRenderer());
-			if (checkTitulo.isSelected())
+			if (checkMembroNominal.isSelected())
 				tcl.getColumn(1).setCellRenderer(new CellRenderer());
 			else
 				tcl.getColumn(1).setCellRenderer(new DefaultCellRenderer());
-			if (checkAutor.isSelected())
+			if (checkCongregados.isSelected())
 				tcl.getColumn(2).setCellRenderer(new CellRenderer());
 			else
 				tcl.getColumn(2).setCellRenderer(new DefaultCellRenderer());
-			if (checkEditora.isSelected())
+			if (checkLideranca.isSelected())
 				tcl.getColumn(3).setCellRenderer(new CellRenderer());
 			else
 				tcl.getColumn(3).setCellRenderer(new DefaultCellRenderer());
-			if (checkClassificacao.isSelected())
-				tcl.getColumn(4).setCellRenderer(new CellRenderer());
-			else
-				tcl.getColumn(4).setCellRenderer(new DefaultCellRenderer());
-			if (checkLocal.isSelected())
-				tcl.getColumn(8).setCellRenderer(new CellRenderer());
-			else
-				tcl.getColumn(8).setCellRenderer(new DefaultCellRenderer());
-
-		} else if (tabbedPane.getSelectedIndex() == 3) {
-			TableColumnModel tcl = EmprestimoPanel.getInstance().getEmprestimos().getColumnModel();
-			if (checkID.isSelected())
-				tcl.getColumn(0).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(0).setCellRenderer(new DefaultCellRenderer());
-
-			if (checkIDItem.isSelected())
-				tcl.getColumn(1).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(1).setCellRenderer(new DefaultCellRenderer());
-
-			if (checkTitulo.isSelected())
-				tcl.getColumn(2).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(2).setCellRenderer(new DefaultCellRenderer());
-
-			if (checkDataEmp.isSelected())
-				tcl.getColumn(3).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(3).setCellRenderer(new DefaultCellRenderer());
-
-			if (checkDataDevol.isSelected())
-				tcl.getColumn(4).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(4).setCellRenderer(new DefaultCellRenderer());
-
-			if (checkCliente.isSelected())
-				tcl.getColumn(5).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(5).setCellRenderer(new DefaultCellRenderer());
-
-			if (checkFuncionario.isSelected())
-				tcl.getColumn(6).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(6).setCellRenderer(new DefaultCellRenderer());
-		} else if (tabbedPane.getSelectedIndex() == 4) {
-			TableColumnModel tcl = UserPanel.getInstance().getUsers().getColumnModel();
-
-			if (checkCpf.isSelected())
-				tcl.getColumn(0).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(0).setCellRenderer(new DefaultCellRenderer());
-
-			if (checkNome.isSelected())
-				tcl.getColumn(1).setCellRenderer(new CellRenderer());
-			else
-				tcl.getColumn(1).setCellRenderer(new DefaultCellRenderer());
-
-			if (checkData_Nasc.isSelected())
-				tcl.getColumn(2).setCellRenderer(new CellRenderer());
-			else
-				tcl.getColumn(2).setCellRenderer(new DefaultCellRenderer());
 		}
-
 	}
 
 	public JTextField getPesquisa() {

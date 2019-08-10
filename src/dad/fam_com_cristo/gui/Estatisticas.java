@@ -8,9 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import dad.fam_com_cristo.table.TableModelEmprestimo;
 import dad.fam_com_cristo.table.TableModelFuncionario;
-import dad.fam_com_cristo.table.TableModelLivro;
 import dad.fam_com_cristo.table.TableModelUser;
 
 import javax.swing.JLabel;
@@ -67,12 +65,12 @@ public class Estatisticas extends JDialog {
 		
 		n_livro = new JTextField();
 		n_livro.setEditable(false);
-		n_livro.setText(String.valueOf(TableModelLivro.getInstance().getRowCount()));
+//		n_livro.setText(String.valueOf(TableModelLivro.getInstance().getRowCount()));
 		n_livro.setBounds(250, 42, 62, 25);
 		contentPanel.add(n_livro);
 		n_livro.setColumns(10);
 		
-		JLabel lDisponiveis = new JLabel("(dos quais " + String.valueOf(TableModelLivro.getInstance().getNumLivrosDisponiveis()) + " estão disponíveis)");
+		JLabel lDisponiveis = new JLabel("(dos quais " + "-" + " estão disponíveis)");
 		lDisponiveis.setHorizontalAlignment(SwingConstants.CENTER);
 		lDisponiveis.setFont(new Font("Dialog", Font.PLAIN, 14));
 		lDisponiveis.setBounds(325, 42, 243, 25);
@@ -80,7 +78,7 @@ public class Estatisticas extends JDialog {
 		
 		n_emp = new JTextField();
 		n_emp.setEditable(false);
-		n_emp.setText(String.valueOf(TableModelEmprestimo.getInstance().getRowCount()));
+//		n_emp.setText(String.valueOf(TableModelEmprestimo.getInstance().getRowCount()));
 		n_emp.setColumns(10);
 		n_emp.setBounds(250, 80, 62, 25);
 		contentPanel.add(n_emp);
@@ -91,13 +89,13 @@ public class Estatisticas extends JDialog {
 		contentPanel.add(lEmpDisp);
 		
 		n_emp_ativos = new JTextField();
-		n_emp_ativos.setText(String.valueOf(TableModelEmprestimo.getInstance().getNumEmprestimosAtivos()));
+//		n_emp_ativos.setText(String.valueOf(TableModelEmprestimo.getInstance().getNumEmprestimosAtivos()));
 		n_emp_ativos.setEditable(false);
 		n_emp_ativos.setColumns(10);
 		n_emp_ativos.setBounds(250, 120, 62, 25);
 		contentPanel.add(n_emp_ativos);
 		
-		JLabel lEmpMulta = new JLabel("(dos quais " + String.valueOf(TableModelEmprestimo.getInstance().getNumEmprestimosAtivosComMulta()) + " têm multa pendente)");
+		JLabel lEmpMulta = new JLabel("(dos quais " + "-" + " têm multa pendente)");
 		lEmpMulta.setHorizontalAlignment(SwingConstants.CENTER);
 		lEmpMulta.setFont(new Font("Dialog", Font.PLAIN, 14));
 		lEmpMulta.setBounds(325, 120, 243, 25);

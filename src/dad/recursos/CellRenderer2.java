@@ -8,9 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import dad.fam_com_cristo.Emprestimo;
 import dad.fam_com_cristo.gui.DataGui;
-import dad.fam_com_cristo.table.TableModelEmprestimo;
 import mdlaf.utils.MaterialColors;
 
 public class CellRenderer2 extends DefaultTableCellRenderer {
@@ -50,13 +48,14 @@ public class CellRenderer2 extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus,
 			int row, int column) {
 		super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
-
+/*
 		Emprestimo emp = TableModelEmprestimo.getInstance().getEmprestimo(table.convertRowIndexToModel(row));
 
 		if (emp.getMulta() == 0.0 || emp.isPago())
 			this.setIcon(right);
 		else if(emp.getMulta()>0 || !emp.isPago())
 			this.setIcon(wrong);
+		*/
 		return this;
 	}
 }
