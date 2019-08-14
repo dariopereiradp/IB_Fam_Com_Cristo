@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 
 import dad.fam_com_cristo.Membro;
 import dad.recursos.Command;
-import dad.recursos.ConexaoUser;
+import dad.recursos.ConexaoMembro;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 
@@ -28,7 +28,7 @@ public class AtualizaMembro implements Command {
 		this.coluna = coluna;
 		this.user = user;
 		this.valor = valor;
-		con = ConexaoUser.getConnection();
+		con = ConexaoMembro.getConnection();
 		switch (coluna) {
 		case "Nome":
 			old = user.getNome();

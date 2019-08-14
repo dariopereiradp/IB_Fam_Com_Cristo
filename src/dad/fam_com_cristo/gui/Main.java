@@ -14,7 +14,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Locale;
@@ -31,11 +30,10 @@ import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.table.TableModelFuncionario;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.ConexaoLogin;
-import dad.recursos.ConexaoUser;
+import dad.recursos.ConexaoMembro;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 import mdlaf.MaterialLookAndFeel;
-import net.ucanaccess.jdbc.UcanaccessSQLException;
 
 public class Main {
 
@@ -86,7 +84,7 @@ public class Main {
 			} catch (InterruptedException e) {
 				String message = "Ocorreu um erro ao abrir o programa. Tenta novamente!\n" + e.getMessage();
 				JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 				Log.getInstance().printLog(message);
 			}
 
@@ -108,7 +106,7 @@ public class Main {
 			e1.printStackTrace();
 			String message = "Ocorreu um erro ao abrir o programa. Tenta novamente!\n" + e1.getMessage();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			Log.getInstance().printLog(message);
 			System.exit(1);
 
@@ -196,26 +194,20 @@ public class Main {
 				con.close();
 			}
 
-			File users = new File(ConexaoUser.dbFile);
+			File users = new File(ConexaoMembro.dbFile);
 			if (!users.exists()) {
-				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoUser.dbFile
+				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoMembro.dbFile
 						+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
 				DatabaseMetaData dmd = con.getMetaData();
-				try (ResultSet rs = dmd.getTables(null, null, "Usuários", new String[] { "TABLE" })) {
+				try (ResultSet rs = dmd.getTables(null, null, "Membros", new String[] { "TABLE" })) {
 					try (Statement s = con.createStatement()) {
-						s.executeUpdate("CREATE TABLE Usuarios (CPF varchar(255) NOT NULL, Nome varchar(255) NOT NULL,"
-								+ "Data_Nascimento date, N_Emprestimos int, Telefone varchar(15), CONSTRAINT PK_Usuarios PRIMARY KEY (CPF));");
-						Log.getInstance().printLog("Base de dados users.mbd criada com sucesso");
+						s.executeUpdate("CREATE TABLE Membros (ID int NOT NULL, Nome varchar(255) NOT NULL,"
+								+ "Data_Nascimento date, Sexo varchar(10), Estado_Civil varchar(25), Profissao varchar(50),"
+								+ "Endereco memo, Telefone varchar(15), Email varchar(255), Igreja_Origem varchar(255),"
+								+ "Tipo_Membro varchar(127), Membro_Desde date, Data_Batismo date, Observacoes memo,"
+								+ "CONSTRAINT PK_Membros PRIMARY KEY (ID));");
+						Log.getInstance().printLog("Base de dados membros.mbd criada com sucesso");
 					}
-				}
-				con.close();
-			} else {
-				con = ConexaoUser.getConnection();
-				try (Statement s = con.createStatement()) {
-					s.executeUpdate("ALTER TABLE Usuarios ADD COLUMN Telefone varchar(15);");
-					Log.getInstance().printLog("Base de dados users.mbd atualizada com sucesso");
-				} catch (SQLSyntaxErrorException | UcanaccessSQLException e3) {
-					System.out.println("Coluna 'Telefone' já existe!");
 				}
 				con.close();
 			}
@@ -230,7 +222,7 @@ public class Main {
 			String message = "Ocorreu um erro ao criar a base de dados... Tenta novamente!\n" + e.getMessage() + "\n"
 					+ this.getClass();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			Log.getInstance().printLog(message);
 			e.printStackTrace();
 		}
@@ -252,25 +244,15 @@ public class Main {
 				if (funcFile.exists())
 					Files.copy(funcFile.toPath(), funcDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-				File livrosFile = new File(path + "livros.mdb");
-				File livrosDest = new File(Main.DATABASE_DIR + "livros.mdb");
-				if (livrosFile.exists())
-					Files.copy(livrosFile.toPath(), livrosDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
 				File images = new File(path + "Imagens/");
 				File imagesDest = new File(Main.DATABASE_DIR + "Imagens/");
 				if (images.exists())
 					FileUtils.copyDirectory(images, imagesDest);
 
-				File empFile = new File(path + "emprestimos.mdb");
-				File empDest = new File(Main.DATABASE_DIR + "emprestimos.mdb");
-				if (empFile.exists())
-					Files.copy(empFile.toPath(), empDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-				File userFile = new File(path + "users.mdb");
-				File userDest = new File(Main.DATABASE_DIR + "users.mdb");
-				if (userFile.exists())
-					Files.copy(userFile.toPath(), userDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				File membrosFile = new File(path + "membros.mdb");
+				File membrosDest = new File(Main.DATABASE_DIR + "membros.mdb");
+				if (membrosFile.exists())
+					Files.copy(membrosFile.toPath(), membrosDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 				FileUtils.deleteDirectory(tmp);
 			} catch (Exception e) {

@@ -59,39 +59,39 @@ public class RegistoLogin {
 	private RegistoLogin() {
 		INSTANCE = this;
 		dialog = new JDialog();
-		dialog.setTitle("Biblioteca Dádiva de Deus - Registro");
+		dialog.setTitle("Igreja Batista Famílias com Cristo - Registro");
 		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/DAD.jpg"))));
-		dialog.setBounds(100, 100, 500, 300);
+		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
+		dialog.setBounds(100, 100, 500, 350);
 		dialog.setLocationRelativeTo(null);
 		dialog.setResizable(false);
 		dialog.getContentPane().setLayout(null);
 
 		JLabel txUser = new JLabel("USU\u00C1RIO:");
 		txUser.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txUser.setBounds(10, 165, 70, 15);
+		txUser.setBounds(10, 207, 70, 15);
 		dialog.getContentPane().add(txUser);
 
 		JLabel txSenha = new JLabel("SENHA:");
 		txSenha.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txSenha.setBounds(10, 200, 70, 15);
+		txSenha.setBounds(10, 233, 70, 15);
 		dialog.getContentPane().add(txSenha);
 
-		JLabel titulo = new JLabel("BIBLIOTECA D\u00C1DIVA DE DEUS");
+		JLabel titulo = new JLabel(Main.TITLE);
 		titulo.setFont(new Font("Roboto Black", Font.PLAIN, 20));
 		titulo.setHorizontalAlignment(SwingConstants.CENTER);
-		titulo.setBounds(10, 93, 480, 39);
+		titulo.setBounds(10, 134, 480, 39);
 		dialog.getContentPane().add(titulo);
 
 		JLabel image = new JLabel("");
 		image.setHorizontalAlignment(SwingConstants.CENTER);
-		image.setIcon(new ImageIcon(RegistoLogin.class.getResource("/DAD_T.png")));
-		image.setBounds(150, 11, 200, 87);
+		image.setIcon(new ImageIcon(RegistoLogin.class.getResource("/FC_T.png")));
+		image.setBounds(150, 11, 200, 124);
 		dialog.getContentPane().add(image);
 
 		user = new JTextField();
 		user.setFont(new Font("Roboto", Font.PLAIN, 15));
-		user.setBounds(85, 163, 399, 20);
+		user.setBounds(85, 202, 399, 20);
 		user.setBorder(new LineBorder(Color.WHITE, 1));
 		user.setMargin(new Insets(0, 0, 20, 0));
 		dialog.getContentPane().add(user);
@@ -99,14 +99,14 @@ public class RegistoLogin {
 
 		pass = new JPasswordField();
 		pass.setFont(new Font("Roboto", Font.PLAIN, 14));
-		pass.setBounds(85, 198, 399, 20);
+		pass.setBounds(85, 231, 399, 20);
 		pass.setBorder(new LineBorder(Color.WHITE, 1));
 		pass.setMargin(new Insets(0, 0, 20, 0));
 		dialog.getContentPane().add(pass);
 
 		JButton registar = new JButton("REGISTRAR");
 		registar.setFont(new Font("Roboto", Font.BOLD, 12));
-		registar.setBounds(190, 245, 120, 23);
+		registar.setBounds(190, 287, 120, 23);
 		registar.setBackground(MaterialColors.LIGHT_BLUE_600);
 		MaterialUIMovement.add(registar, MaterialColors.GRAY_300, 5, 1000 / 30);
 		dialog.getContentPane().add(registar);
@@ -123,7 +123,7 @@ public class RegistoLogin {
 				"Escreva o nome de utilizador e a senha que vai ficar associada e clique no bot\u00E3o abaixo para fazer o registro");
 		texto.setHorizontalAlignment(SwingConstants.CENTER);
 		texto.setFont(new Font("Dialog", Font.PLAIN, 9));
-		texto.setBounds(5, 126, 490, 20);
+		texto.setBounds(0, 171, 490, 20);
 		dialog.getContentPane().add(texto);
 
 		JLabel warning = new JLabel(
@@ -131,13 +131,13 @@ public class RegistoLogin {
 		warning.setFont(new Font("Roboto", Font.PLAIN, 12));
 		warning.setForeground(Color.RED);
 		warning.setHorizontalAlignment(SwingConstants.CENTER);
-		warning.setBounds(10, 225, 474, 14);
+		warning.setBounds(10, 262, 474, 14);
 		dialog.getContentPane().add(warning);
 
 		JCheckBox showPass = new JCheckBox("Mostrar senha");
 		pass.setEchoChar('*');
 		showPass.setFont(new Font("Roboto", Font.PLAIN, 10));
-		showPass.setBounds(10, 241, 110, 23);
+		showPass.setBounds(10, 287, 110, 23);
 		dialog.getContentPane().add(showPass);
 		showPass.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -205,7 +205,7 @@ public class RegistoLogin {
 		String password = String.valueOf(pass.getPassword());
 		if (username.trim().equals("") || password.trim().equals("")) {
 			JOptionPane.showMessageDialog(dialog, "Preencha os campos de registo", "ERRO", JOptionPane.ERROR_MESSAGE,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 		} else {
 			con = ConexaoLogin.getConnection();
 			try {
@@ -216,7 +216,7 @@ public class RegistoLogin {
 					inserir(username, password);
 				} else
 					JOptionPane.showMessageDialog(dialog, "O usuário '" + username + "' já existe!", "ERRO",
-							JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+							JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			} catch (SQLException e) {
 				e.printStackTrace();
 				Log.getInstance().printLog("RegistoLogin - " + e.getMessage());
@@ -251,7 +251,7 @@ public class RegistoLogin {
 			TableModelFuncionario.getInstance().addFuncionario(new Funcionario(username, 0, new java.util.Date(), new java.util.Date()));
 			JOptionPane.showMessageDialog(dialog, "O usuário '" + username + "' foi criado com sucesso!",
 					"USUÁRIO CRIADO", JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			Log.getInstance().printLog("O usuário '" + username + "' foi criado com sucesso!");
 			if (login)
 				Login.getInstance().openDirect();

@@ -6,11 +6,11 @@ import java.sql.DriverManager;
 
 import dad.fam_com_cristo.gui.Main;
 
-public class ConexaoUser {
+public class ConexaoMembro {
 
 	public static Connection con;
 
-	public static String dbFile = Main.DATABASE_DIR + "users.mdb";
+	public static String dbFile = Main.DATABASE_DIR + "membros.mdb";
 	public static String dbUrl = "jdbc:ucanaccess://" + dbFile + ";memory=true;immediatelyReleaseResources=true";
 
 	public static Connection getConnection() {

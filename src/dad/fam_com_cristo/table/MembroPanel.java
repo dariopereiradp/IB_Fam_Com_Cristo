@@ -11,25 +11,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -53,37 +49,44 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.MaskFormatter;
 
-import com.toedter.calendar.JDateChooser;
-
 import dad.fam_com_cristo.Membro;
+import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.MembroDetail;
 import dad.recursos.CellRenderer;
-import dad.recursos.CellRendererNoImage;
-import dad.recursos.CpfValidator;
-import dad.recursos.Log;
 import dad.recursos.SairAction;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.utils.MaterialColors;
 
 public class MembroPanel extends JPanel {
 
-	private static MembroPanel INSTANCE;
-	private JTable membros;
-	private TableModelMembro modelMembro;
-	private JPanel panelAdd, pInferior, panel2, panel3;
-	private JTextField nome;
-	private JFormattedTextField cpf, telefone;
-	private MaskFormatter mascaraCpf, maskPhone;
-	private JTextField jtfTotal;
-	private JDateChooser date_nasc;
-	private JButton bAdd;
-
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5439324224974968781L;
-	private String[] columnToolTips = { "CPF do cliente", "Nome do cliente", "Data de Nascimento do Cliente",
-			"Telefone do cliente", "Número de Empréstimos que o cliente fez" };
+	private static final long serialVersionUID = -5202224261982802705L;
+	private static MembroPanel INSTANCE;
+	private JTable membros;
+	private TableModelMembro modelMembro;
+	private JPanel pInferior, panel2;
+	private JTextField jtfTotal;
+	private JButton bAdd;
+	private String[] columnToolTips = { "Nome do membro", "Data de nascimento do membro", "Telefone de contato do membro",
+			"Tipo de membro (Congregado, Membro Ativo, Membro Nominal, Liderança ou Ex-membro)" };
+	private JPanel panel_total;
+	private JPanel panel;
+	private JLabel lblNmeroDeMembros;
+	private JTextField jft_membros_ativos;
+	private JPanel panel_1;
+	private JLabel lblMembrosNominais;
+	private JTextField jft_membros_nominais;
+	private JPanel panel_2;
+	private JLabel lblCongregados;
+	private JTextField jft_congregados;
+	private JPanel panel_3;
+	private JLabel lblLiderana;
+	private JTextField jft_lideranca;
+	private JPanel panel_4;
+	private JLabel lblExmembros;
+	private JTextField jft_ex_membros;
 
 	public MembroPanel() {
 		super();
@@ -98,8 +101,6 @@ public class MembroPanel extends JPanel {
 
 			@Override
 			public boolean isCellEditable(int data, int columns) {
-				if (columns == 0 || columns == 4)
-					return false;
 				return true;
 			}
 
@@ -204,11 +205,10 @@ public class MembroPanel extends JPanel {
 		membros.getTableHeader().setReorderingAllowed(false);
 		membros.setRowHeight(30);
 
-		membros.getColumnModel().getColumn(0).setCellRenderer(new CellRendererNoImage());
+		membros.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
 		membros.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
 		membros.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
 		membros.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
-		membros.getColumnModel().getColumn(4).setCellRenderer(new CellRendererNoImage());
 
 		MaskFormatter mascaraData;
 		JFormattedTextField data;
@@ -222,13 +222,11 @@ public class MembroPanel extends JPanel {
 			e1.printStackTrace();
 		}
 		data.setFont(new Font("Arial", Font.PLAIN, 15));
-		
+
 		final TableCellEditor dataEditor = new DefaultCellEditor(data);
-		
-		membros.getColumnModel().getColumn(2).setCellEditor(dataEditor);
-		// users.getColumnModel().getColumn(2).setCellEditor(new
-		// JDateChooserCellEditor());
-		
+
+		membros.getColumnModel().getColumn(1).setCellEditor(dataEditor);
+
 		InputMap iMap = data.getInputMap(JComponent.WHEN_FOCUSED);
 		iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
 		ActionMap aMap = data.getActionMap();
@@ -258,7 +256,7 @@ public class MembroPanel extends JPanel {
 		phone.setFont(new Font("Arial", Font.PLAIN, 15));
 
 		final TableCellEditor phoneEditor = new DefaultCellEditor(phone);
-		membros.getColumnModel().getColumn(3).setCellEditor(phoneEditor);
+		membros.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
 
 		InputMap iMap1 = phone.getInputMap(JComponent.WHEN_FOCUSED);
 		iMap1.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
@@ -275,6 +273,12 @@ public class MembroPanel extends JPanel {
 			}
 		});
 
+		JComboBox<Tipo_Membro> tipo_membro = new JComboBox<Tipo_Membro>();
+		tipo_membro.setBounds(370, 255, 191, 25);
+		tipo_membro.setModel(new DefaultComboBoxModel<Tipo_Membro>(Tipo_Membro.values()));
+
+		membros.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(tipo_membro));
+
 		JScrollPane jsLivros = new JScrollPane(membros);
 		add(jsLivros, BorderLayout.CENTER);
 
@@ -290,24 +294,58 @@ public class MembroPanel extends JPanel {
 		pInferior = new JPanel(new BorderLayout());
 		add(pInferior, BorderLayout.SOUTH);
 		panel2 = new JPanel(new GridLayout(2, 1));
-		panel3 = new JPanel();
-		JLabel total = new JLabel("Total: ");
-		jtfTotal = new JTextField(String.valueOf(modelMembro.getRowCount()));
-		jtfTotal.setEditable(false);
-		panel3.add(total);
-		panel3.add(jtfTotal);
-		panel2.add(panel3);
 
 		inicializarBotoes();
 
 		inicializarPanelAdd();
 
+		inicializarMenus();
+
+		membros.getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "deleteRow");
+		membros.getActionMap().put("deleteRow", new DeleteAction());
+
+		membros.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent mouseEvent) {
+				JTable table = (JTable) mouseEvent.getSource();
+				Point point = mouseEvent.getPoint();
+				int column = table.columnAtPoint(point);
+				int rowAtPoint = table.rowAtPoint(point);
+				if (rowAtPoint != -1) {
+					int row = table.convertRowIndexToModel(rowAtPoint);
+					if (mouseEvent.getClickCount() == 2 && !table.isCellEditable(row, column)
+							&& table.getSelectedRow() != -1) {
+						abrir(modelMembro.getUser(row));
+					}
+				}
+			}
+		});
+
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		membros.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "solve");
+		membros.getActionMap().put("solve", new AbstractAction() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -833616209546223519L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (membros.getSelectedRows().length == 1)
+					abrir(modelMembro.getUser(membros.convertRowIndexToModel(membros.getSelectedRow())));
+
+			}
+		});
+
+	}
+
+	private void inicializarMenus() {
 		JMenuItem delete = new JMenuItem("Apagar");
 		delete.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removerUsers();
+				removerMembros();
 			}
 		});
 
@@ -380,43 +418,7 @@ public class MembroPanel extends JPanel {
 		popupMenu.setPopupSize(350, 150);
 
 		membros.setComponentPopupMenu(popupMenu);
-
-		membros.getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "deleteRow");
-		membros.getActionMap().put("deleteRow", new DeleteAction());
-
-		membros.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent mouseEvent) {
-				JTable table = (JTable) mouseEvent.getSource();
-				Point point = mouseEvent.getPoint();
-				int column = table.columnAtPoint(point);
-				int rowAtPoint = table.rowAtPoint(point);
-				if (rowAtPoint != -1) {
-					int row = table.convertRowIndexToModel(rowAtPoint);
-					if (mouseEvent.getClickCount() == 2 && !table.isCellEditable(row, column)
-							&& table.getSelectedRow() != -1) {
-						abrir(modelMembro.getUser(row));
-					}
-				}
-			}
-		});
-
-		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-		membros.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "solve");
-		membros.getActionMap().put("solve", new AbstractAction() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -833616209546223519L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (membros.getSelectedRows().length == 1)
-					abrir(modelMembro.getUser(membros.convertRowIndexToModel(membros.getSelectedRow())));
-
-			}
-		});
-
+		
 	}
 
 	public void inicializarBotoes() {
@@ -435,171 +437,84 @@ public class MembroPanel extends JPanel {
 		bAdd.setForeground(MaterialColors.WHITE);
 		bAdd.setBackground(MaterialColors.LIGHT_GREEN_500);
 		personalizarBotao(bAdd);
-		bAdd.setEnabled(false);
 		bAdd.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				adicionarUser();
-
+				new MembroDetail().open();
 			}
 		});
 		panel4.add(bAdd);
 	}
 
 	private void inicializarPanelAdd() {
-		panelAdd = new JPanel(new GridLayout(1, 5));
 
-		JPanel panelNome = new JPanel(new BorderLayout());
-		JLabel lNome = new JLabel("Nome: ");
-		lNome.setFont(new Font("Roboto", Font.BOLD, 15));
-		panelNome.add(lNome, BorderLayout.WEST);
-
-		nome = new JTextField();
-		nome.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER)
-					adicionarUser();
-			}
-		});
-		panelNome.add(nome, BorderLayout.CENTER);
-
-		panelAdd.add(panelNome);
-
-		JPanel panelDataNascimento = new JPanel(new BorderLayout());
-		JLabel lDateNasc = new JLabel("Data de Nascimento: ");
-		lDateNasc.setFont(new Font("Roboto", Font.BOLD, 15));
-		panelDataNascimento.add(lDateNasc, BorderLayout.WEST);
-
-		date_nasc = new JDateChooser();
-		date_nasc.setLocale(new Locale("pt", "BR"));
-		date_nasc.setDateFormatString("dd/MM/yyyy");
-		date_nasc.setMaxSelectableDate(new Date());
-		date_nasc.setDate(new Date());
-
-		date_nasc.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER)
-					adicionarUser();
-			}
-		});
-		panelDataNascimento.add(date_nasc, BorderLayout.CENTER);
-		panelAdd.add(panelDataNascimento);
-
-		JPanel last = new JPanel();
-
-		try {
-			mascaraCpf = new MaskFormatter("###.###.###-##");
-			mascaraCpf.setCommitsOnValidEdit(true);
-			cpf = new JFormattedTextField(mascaraCpf);
-		} catch (ParseException e1) {
-			cpf = new JFormattedTextField();
-			e1.printStackTrace();
-		}
-
-		cpf.setFont(new Font("Arial", Font.PLAIN, 15));
-		cpf.setBounds(90, 162, 181, 20);
-		cpf.setColumns(10);
-
-		cpf.addFocusListener(new FocusAdapter() {
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				validar();
-				super.focusLost(e);
-			}
-
-		});
-
-		JLabel lCpf = new JLabel("CPF: ");
-		lCpf.setFont(new Font("Roboto", Font.BOLD, 15));
-
-		last.add(lCpf);
-		last.add(cpf);
-
-		try {
-			maskPhone = new MaskFormatter("(##) # ####-####");
-			maskPhone.setCommitsOnValidEdit(true);
-			telefone = new JFormattedTextField(maskPhone);
-		} catch (ParseException e1) {
-			telefone = new JFormattedTextField();
-			e1.printStackTrace();
-		}
-
-		telefone.setFont(new Font("Arial", Font.PLAIN, 15));
-		telefone.setBounds(120, 162, 181, 20);
-		telefone.setColumns(12);
-
-		JLabel lPhone = new JLabel("Telefone: ");
-		lPhone.setFont(new Font("Roboto", Font.BOLD, 15));
-
-		last.add(lPhone);
-		last.add(telefone);
-
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER)
-					adicionarUser();
-			}
-		});
-
-		JPanel both = new JPanel(new GridLayout(2, 1));
-		both.add(last);
-		both.add(panelAdd);
+		JPanel both = new JPanel(new GridLayout(0, 6));
 
 		pInferior.add(both, BorderLayout.CENTER);
-	}
 
-	public boolean validar() {
-		String cpfString;
-		cpfString = cpf.getText();
-		cpfString = cpfString.replace(".", "").replace("-", "");
-		if (!cpfString.trim().equals("")) {
-			if (CpfValidator.isCPF(cpfString)) {
-				if (Membro.existe(cpfString)) {
-					bAdd.setEnabled(false);
-					String nomeUser = Membro.getUser(cpfString).getNome();
-					JOptionPane.showMessageDialog(this, "Já existe um usuário registado com esse CPF! - " + nomeUser,
-							"Erro", JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
-					return false;
-				} else {
-					bAdd.setEnabled(true);
-					return true;
-				}
-			} else {
-				bAdd.setEnabled(false);
-				JOptionPane.showMessageDialog(this, "Número de CPF inválido!", "Erro", JOptionPane.ERROR_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
-				return false;
-			}
-		}
-		return false;
+		panel_total = new JPanel();
+		both.add(panel_total);
+		JLabel lblTotal = new JLabel("Total: ");
+		panel_total.add(lblTotal);
+		jtfTotal = new JTextField(String.valueOf(modelMembro.getRowCount()));
+		panel_total.add(jtfTotal);
+		jtfTotal.setEditable(false);
+
+		panel = new JPanel();
+		both.add(panel);
+
+		lblNmeroDeMembros = new JLabel("Membros ativos: ");
+		panel.add(lblNmeroDeMembros);
+
+		jft_membros_ativos = new JTextField("0");
+		jft_membros_ativos.setEditable(false);
+		panel.add(jft_membros_ativos);
+
+		panel_1 = new JPanel();
+		both.add(panel_1);
+
+		lblMembrosNominais = new JLabel("Membros nominais: ");
+		panel_1.add(lblMembrosNominais);
+
+		jft_membros_nominais = new JTextField("0");
+		jft_membros_nominais.setEditable(false);
+		panel_1.add(jft_membros_nominais);
+
+		panel_2 = new JPanel();
+		both.add(panel_2);
+
+		lblCongregados = new JLabel("Congregados: ");
+		panel_2.add(lblCongregados);
+
+		jft_congregados = new JTextField("0");
+		jft_congregados.setEditable(false);
+		panel_2.add(jft_congregados);
+
+		panel_3 = new JPanel();
+		both.add(panel_3);
+
+		lblLiderana = new JLabel("Lideran\u00E7a: ");
+		panel_3.add(lblLiderana);
+
+		jft_lideranca = new JTextField("0");
+		jft_lideranca.setEditable(false);
+		panel_3.add(jft_lideranca);
+
+		panel_4 = new JPanel();
+		both.add(panel_4);
+
+		lblExmembros = new JLabel("Ex-membros: ");
+		panel_4.add(lblExmembros);
+
+		jft_ex_membros = new JTextField("0");
+		jft_ex_membros.setEditable(false);
+		panel_4.add(jft_ex_membros);
 	}
 
 	public void personalizarBotao(JButton jb) {
 		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
 		MaterialUIMovement.add(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
-	}
-
-	public void adicionarUser() {
-		if (nome.getText().trim().equals(""))
-			JOptionPane.showMessageDialog(this, "Deve inserir um nome para o cliente!", "ADICIONAR",
-					JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
-		else {
-			if (validar()) {
-				TableModelMembro.getInstance().addUser(
-						new Membro(nome.getText(), date_nasc.getDate(),
-								telefone.getText().replace("-", "").replace("(", "").replace(")", "").replace(" ", ""),
-								0, false));
-				Log.getInstance().printLog("Cliente adicionado com sucesso!");
-			} else
-				JOptionPane.showMessageDialog(this, "CPF inválido!", "ADICIONAR", JOptionPane.INFORMATION_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
-		}
-
 	}
 
 	public int[] convertRowsIndextoModel() {
@@ -610,17 +525,10 @@ public class MembroPanel extends JPanel {
 		return rows;
 	}
 
-	public void clearTextFields() {
-		nome.setText("");
-		date_nasc.cleanup();
-		cpf.setText("");
-		telefone.setText("");
-	}
-
-	public void removerUsers() {
+	public void removerMembros() {
 		int[] rows = convertRowsIndextoModel();
 		if (rows.length > 0) {
-			int ok = JOptionPane.showConfirmDialog(this, "Tem certeza que quer apagar o(s) cliente(s) selecionado(s)?",
+			int ok = JOptionPane.showConfirmDialog(this, "Tem certeza que quer apagar o(s) membro(s) selecionado(s)?",
 					"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 			if (ok == JOptionPane.OK_OPTION) {
@@ -629,12 +537,12 @@ public class MembroPanel extends JPanel {
 		}
 	}
 
-	public JTable getUsers() {
+	public JTable getMembros() {
 		return membros;
 	}
 
-	public void abrir(Membro user) {
-		new MembroDetail(user).open();
+	public void abrir(Membro membro) {
+		new MembroDetail(membro).open();
 	}
 
 	public JTextField getJtfTotal() {
@@ -650,7 +558,7 @@ public class MembroPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			removerUsers();
+			removerMembros();
 		}
 	}
 

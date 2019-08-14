@@ -1,5 +1,6 @@
 package dad.fam_com_cristo.table;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,13 +8,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
+import dad.fam_com_cristo.Estado_Civil;
 import dad.fam_com_cristo.Membro;
+import dad.fam_com_cristo.Sexo;
+import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.recursos.Command;
-import dad.recursos.ConexaoUser;
-import dad.recursos.CriptografiaAES;
+import dad.recursos.ConexaoMembro;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
 
@@ -24,8 +28,8 @@ public class TableModelMembro extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 3247984074345998765L;
 	private static TableModelMembro INSTANCE;
-	private ArrayList<Membro> users;
-	private String[] colunas = { "Nome", "Data de Nascimento", "Telefone", "Data de Batismo" };
+	private ArrayList<Membro> membros;
+	private String[] colunas = { "Nome", "Data de Nascimento", "Telefone", "Tipo" };
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
@@ -37,26 +41,45 @@ public class TableModelMembro extends AbstractTableModel {
 	}
 
 	public void uploadDataBase() {
-		users = new ArrayList<>();
+		membros = new ArrayList<>();
+		int maior = 0;
 		try {
-			con = ConexaoUser.getConnection();
-			pst = con.prepareStatement("select * from usuarios order by CPF");
+			con = ConexaoMembro.getConnection();
+			pst = con.prepareStatement("select * from membros order by Nome");
 			rs = pst.executeQuery();
 			if (rs.next()) {
 				do {
-					String cpf = rs.getString(1);
-					CriptografiaAES.setKey(Membro.key);
-					CriptografiaAES.decrypt(cpf);
-					cpf = CriptografiaAES.getDecryptedString();
-					Membro user = Membro.getUser(cpf);
-					users.add(user);
+					int id = rs.getInt(1);
+					String nome = rs.getString(2);
+					Date data_nascimento = rs.getDate(3);
+					Sexo sexo = Sexo.valueOf(rs.getString(4));
+					Estado_Civil estado_civil = Estado_Civil.valueOf(rs.getString(5));
+					String profissao = rs.getString(6);
+					String endereco = rs.getString(7);
+					String telefone = rs.getString(8);
+					String email = rs.getString(9);
+					String igreja_origem = rs.getString(10);
+					Tipo_Membro tipo_membro = Tipo_Membro.valueOf(rs.getString(11));
+					Date membro_desde = rs.getDate(12);
+					Date data_batismo = rs.getDate(13);
+					String observacoes = rs.getString(14);
+					ImageIcon img = null;
+					File f = new File(Membro.imgPath + id + ".jpg");
+					if (f.exists())
+						img = new ImageIcon(f.getPath());
+					Membro membro = new Membro(nome, data_nascimento, sexo, estado_civil, profissao, endereco, telefone,
+							email, igreja_origem, tipo_membro, membro_desde, data_batismo, observacoes, img);
+					membro.setId(id);
+					if (id > maior)
+						maior = id;
+					membros.add(membro);
 				} while (rs.next());
 			}
 			fireTableDataChanged();
-			Log.getInstance().printLog("Base de dados users carregada com sucesso!");
+			Log.getInstance().printLog("Base de dados membros carregada com sucesso!");
 		} catch (Exception e) {
 			Log.getInstance()
-					.printLog("Erro ao carregar a base de dados dos Users: " + e.getMessage() + "\n" + getClass());
+					.printLog("Erro ao carregar a base de dados dos Membros: " + e.getMessage() + "\n" + getClass());
 			e.printStackTrace();
 		}
 	}
@@ -86,7 +109,7 @@ public class TableModelMembro extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return users.size();
+		return membros.size();
 	}
 
 	@Override
@@ -100,22 +123,21 @@ public class TableModelMembro extends AbstractTableModel {
 	}
 
 	public ArrayList<Membro> getUsers() {
-		return users;
+		return membros;
 	}
 
 	public void addUser(Membro user) {
 		undoManager.execute(new AddUser(user));
-		MembroPanel.getInstance().clearTextFields();
 		fireTableDataChanged();
 	}
 
 	public Membro getUser(int rowIndex) {
-		return users.get(rowIndex);
+		return membros.get(rowIndex);
 	}
-	
+
 	public int getRow(Membro user) {
-		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).getId() == user.getId())
+		for (int i = 0; i < membros.size(); i++) {
+			if (membros.get(i).getId() == user.getId())
 				return i;
 		}
 		return -1;
@@ -129,17 +151,17 @@ public class TableModelMembro extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return users.get(rowIndex).getNome();
+			return membros.get(rowIndex).getNome();
 		case 1:
-			return new SimpleDateFormat("dd/MM/yyyy").format(users.get(rowIndex).getData_nascimento());
+			return new SimpleDateFormat("dd/MM/yyyy").format(membros.get(rowIndex).getData_nascimento());
 		case 3:
-			String phone = users.get(rowIndex).getTelefone();
+			String phone = membros.get(rowIndex).getTelefone();
 			return "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
 					+ phone.substring(7);
 		case 4:
-			return new SimpleDateFormat("dd/MM/yyyy").format(users.get(rowIndex).getData_batismo());
+			return new SimpleDateFormat("dd/MM/yyyy").format(membros.get(rowIndex).getData_batismo());
 		default:
-			return users.get(rowIndex);
+			return membros.get(rowIndex);
 		}
 	}
 
@@ -162,7 +184,7 @@ public class TableModelMembro extends AbstractTableModel {
 			if (!(columnIndex == 1 && (String.valueOf(valor)).trim().equals(""))) {
 				if ((String.valueOf(valor).trim().equals("")))
 					valor = "-";
-				Membro user = users.get(rowIndex);
+				Membro user = membros.get(rowIndex);
 				switch (columnIndex) {
 				case 1:
 					if (!((String) valor).equals(user.getNome())) {
@@ -183,7 +205,7 @@ public class TableModelMembro extends AbstractTableModel {
 							undoManager.execute(new AtualizaMembro(this, "Telefone", user, valor));
 					break;
 				default:
-					users.get(rowIndex);
+					membros.get(rowIndex);
 					break;
 				}
 				fireTableDataChanged();
@@ -196,7 +218,7 @@ public class TableModelMembro extends AbstractTableModel {
 
 	public void insertUser(Membro user, int pos) {
 		user.adicionarNaBaseDeDados();
-		users.add(pos, user);
+		membros.add(pos, user);
 
 	}
 
@@ -212,14 +234,14 @@ public class TableModelMembro extends AbstractTableModel {
 		@Override
 		public void execute() {
 			try {
-				con = ConexaoUser.getConnection();
+				con = ConexaoMembro.getConnection();
 				for (int i = 0; i < rows.length; i++) {
-					users.get(rows[i]).removerBaseDeDados();
-					remover.add(users.get(rows[i]));
+					membros.get(rows[i]).removerBaseDeDados();
+					remover.add(membros.get(rows[i]));
 				}
-				users.removeAll(remover);
+				membros.removeAll(remover);
 				fireTableDataChanged();
-				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
+				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
 				Log.getInstance().printLog("Usuários apagados com sucesso!");
 			} catch (Exception e) {
 				Log.getInstance().printLog("Erro ao apagar o(s) usuário(s)\n" + e.getMessage());
@@ -258,8 +280,8 @@ public class TableModelMembro extends AbstractTableModel {
 		public void execute() {
 			try {
 				user.adicionarNaBaseDeDados();
-				users.add(user);
-				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
+				membros.add(user);
+				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
 			} catch (Exception e) {
 				Log.getInstance().printLog("Erro ao criar cliente! " + e.getMessage());
 				e.printStackTrace();
@@ -269,8 +291,8 @@ public class TableModelMembro extends AbstractTableModel {
 		@Override
 		public void undo() {
 			user.removerBaseDeDados();
-			users.remove(user);
-			MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
+			membros.remove(user);
+			MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
 			fireTableDataChanged();
 		}
 

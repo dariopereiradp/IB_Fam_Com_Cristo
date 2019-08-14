@@ -14,7 +14,7 @@ import javax.swing.ImageIcon;
 import org.apache.commons.lang.WordUtils;
 
 import dad.fam_com_cristo.gui.DataGui;
-import dad.recursos.ConexaoUser;
+import dad.recursos.ConexaoMembro;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.ImageCompression;
 import dad.recursos.Log;
@@ -28,30 +28,40 @@ public class Membro {
 	private static Connection con;
 	private static PreparedStatement pst;
 	private static ResultSet rs;
-	private String nome, profissao, endereco, igreja_origem, telefone, observacoes, motivo_saida;
-	private Date data_nascimento, data_batismo, data_termino;
-	private boolean casado;
+	private Tipo_Membro tipo_membro;
+	private Sexo sexo;
+	private Estado_Civil estado_civil;
+	private String nome, profissao, endereco, igreja_origem, email, telefone, observacoes;
+	private Date data_nascimento, data_batismo, membro_desde;
+	private Sim_Nao batizado;
 	private ImageIcon img;
 
-	public Membro(String nome, Date data_nascimento, String telefone, int n_emprestimos, boolean adicionar) {
-		con = ConexaoUser.getConnection();
+	public Membro(String nome, Date data_nascimento, Sexo sexo, Estado_Civil estado_civil, String profissao,
+			String endereco, String telefone, String email, String igreja_origem, Tipo_Membro tipo_membro,
+			Date membro_desde, Date data_batismo, String observacoes, ImageIcon img) {
+		con = ConexaoMembro.getConnection();
 		setId(++countID);
-		nome = WordUtils.capitalize(nome);
-		this.setNome(nome);
-		this.setData_nascimento(data_nascimento);;
-		if (telefone.length() == 11)
-			this.setTelefone(telefone);
-		else
-			this.setTelefone("00000000000");
-		if (adicionar) {
-			adicionarNaBaseDeDados();
-		}
+		this.nome = WordUtils.capitalize(nome);
+		this.data_nascimento = data_nascimento;
+		this.setSexo(sexo);
+		this.setEstado_civil(estado_civil);
+		this.profissao = profissao;
+		this.endereco = endereco;
+		this.telefone = telefone;
+		this.setEmail(email);
+		this.igreja_origem = igreja_origem;
+		this.setTipo_membro(tipo_membro);
+		this.setMembro_desde(membro_desde);
+		this.data_batismo = data_batismo;
+		this.observacoes = observacoes;
+		this.img = img;
+		setBatizado();
 	}
 
 	public void adicionarNaBaseDeDados() {
 		try {
 			CriptografiaAES.setKey(key);
-//			CriptografiaAES.encrypt(cpf);
+			// CriptografiaAES.encrypt(cpf);
 			pst = con.prepareStatement("insert into usuarios(CPF,Nome,Data_Nascimento) values (?,?,?)");
 			pst.setString(1, CriptografiaAES.getEncryptedString());
 			pst.setString(2, getNome());
@@ -67,7 +77,7 @@ public class Membro {
 	public void removerBaseDeDados() {
 		try {
 			CriptografiaAES.setKey(key);
-//			CriptografiaAES.encrypt(cpf);
+			// CriptografiaAES.encrypt(cpf);
 			pst = con.prepareStatement("delete from usuarios where CPF=?");
 			pst.setString(1, CriptografiaAES.getEncryptedString());
 			pst.execute();
@@ -93,14 +103,13 @@ public class Membro {
 		this.data_nascimento = data_nascimento;
 	}
 
-
 	public void atualizarDados() {
 		try {
-//			String cpf = this.cpf;
+			// String cpf = this.cpf;
 			pst = con.prepareStatement("update usuarios set nome=?,Data_Nascimento=? where cpf=?");
 			CriptografiaAES.setKey(key);
-//			CriptografiaAES.encrypt(cpf);
-//			cpf = CriptografiaAES.getEncryptedString();
+			// CriptografiaAES.encrypt(cpf);
+			// cpf = CriptografiaAES.getEncryptedString();
 			pst.setString(1, getNome());
 			String data = new SimpleDateFormat("yyyy-M-d").format(data_nascimento);
 			pst.setDate(2, java.sql.Date.valueOf(data));
@@ -117,7 +126,7 @@ public class Membro {
 			CriptografiaAES.setKey(key);
 			CriptografiaAES.encrypt(cpf);
 			cpf = CriptografiaAES.getEncryptedString();
-			con = ConexaoUser.getConnection();
+			con = ConexaoMembro.getConnection();
 			pst = con.prepareStatement("select * from usuarios where cpf = ?");
 			pst.setString(1, cpf);
 			rs = pst.executeQuery();
@@ -130,40 +139,6 @@ public class Membro {
 			return false;
 		}
 
-	}
-
-	public static Membro getUser(String cpf) {
-		String nome = "";
-		Date data_nascimento = new Date();
-		String telefone = "";
-		int n_emprestimos = 0;
-		try {
-			CriptografiaAES.setKey(key);
-			CriptografiaAES.encrypt(cpf);
-			con = ConexaoUser.getConnection();
-			pst = con.prepareStatement("select * from usuarios where cpf=?");
-			pst.setString(1, CriptografiaAES.getEncryptedString());
-			rs = pst.executeQuery();
-			rs.next();
-			nome = rs.getString(2);
-			data_nascimento = rs.getDate(3);
-			n_emprestimos = rs.getInt(4);
-			telefone = rs.getString(5);
-			if (telefone == null)
-				telefone = "-";
-			// data_nascimento =
-			// DateFormat.getDateInstance().parse(rs.getString(3));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new Membro(nome, data_nascimento, telefone, n_emprestimos, false);
-	}
-
-	public static Membro newUser(String nome, Date data_nascimento, String cpf, String telefone, int n_emprestimos) {
-		if (existe(cpf))
-			return getUser(cpf);
-		else
-			return new Membro(nome, data_nascimento, telefone, n_emprestimos, true);
 	}
 
 	@Override
@@ -182,7 +157,15 @@ public class Membro {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public ImageIcon getImg() {
 		return img;
 	}
@@ -190,7 +173,7 @@ public class Membro {
 	public void setImg(ImageIcon img) {
 		this.img = img;
 	}
-	
+
 	public void addImg() {
 		FileDialog fd = new FileDialog(DataGui.getInstance(), "Escolher uma imagem", FileDialog.LOAD);
 		fd.setDirectory(System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures");
@@ -246,14 +229,6 @@ public class Membro {
 		this.igreja_origem = igreja_origem;
 	}
 
-	public String getMotivo_saida() {
-		return motivo_saida;
-	}
-
-	public void setMotivo_saida(String motivo_saida) {
-		this.motivo_saida = motivo_saida;
-	}
-
 	public Date getData_batismo() {
 		return data_batismo;
 	}
@@ -262,20 +237,57 @@ public class Membro {
 		this.data_batismo = data_batismo;
 	}
 
-	public Date getData_termino() {
-		return data_termino;
+	public Date getMembro_desde() {
+		return membro_desde;
 	}
 
-	public void setData_termino(Date data_termino) {
-		this.data_termino = data_termino;
+	public void setMembro_desde(Date membro_desde) {
+		this.membro_desde = membro_desde;
 	}
 
-	public boolean isCasado() {
-		return casado;
+	public Tipo_Membro getTipo_membro() {
+		return tipo_membro;
 	}
 
-	public void setCasado(boolean casado) {
-		this.casado = casado;
+	public void setTipo_membro(Tipo_Membro tipo_membro) {
+		this.tipo_membro = tipo_membro;
 	}
 
+	public Sexo getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(Sexo sexo) {
+		this.sexo = sexo;
+	}
+
+	public Estado_Civil getEstado_civil() {
+		return estado_civil;
+	}
+
+	public void setEstado_civil(Estado_Civil estado_civil) {
+		this.estado_civil = estado_civil;
+	}
+
+	public boolean isBatizado() {
+		if(batizado==Sim_Nao.SIM)
+			return true;
+		return false;
+	}
+	
+	public Sim_Nao eBatizado(){
+		return batizado;
+	}
+
+	public void setBatizado() {
+		if (tipo_membro == Tipo_Membro.CONGREGADO) {
+			batizado = Sim_Nao.NAO;
+		} else if (tipo_membro == Tipo_Membro.LIDERANCA || tipo_membro == Tipo_Membro.MEMBRO_ATIVO
+				|| tipo_membro == Tipo_Membro.MEMBRO_NOMINAL)
+			batizado = Sim_Nao.SIM;
+	}
+
+	public void setBatizado(Sim_Nao sim_nao) {
+		batizado = sim_nao;
+	}
 }

@@ -69,7 +69,7 @@ public class DataGui extends JFrame {
 			menuOrdenar, menuAtualizar, menuConfig;
 	private JTextField pesquisa;
 	private JPanel filtrosPanel;
-	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca;
+	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca, check_ex_membros;
 	private JMenuItem mntmRelatarErro;
 	private JMenuItem mnLimpar;
 	private JMenuItem menuManual;
@@ -78,8 +78,8 @@ public class DataGui extends JFrame {
 		INSTANCE = this;
 		setTitle(Main.TITLE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/DAD.jpg"))));
-		setMinimumSize(new Dimension(800, 600));
+		setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
+		setMinimumSize(new Dimension(1100, 600));
 		setExtendedState(MAXIMIZED_BOTH);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -118,13 +118,17 @@ public class DataGui extends JFrame {
 		checkLideranca.setSelected(true);
 		filtrosPanel.add(checkLideranca);
 
+		check_ex_membros = new JCheckBox("Ex-Membros");
+		check_ex_membros.setSelected(false);
+		filtrosPanel.add(check_ex_membros);
+
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		tabbedPane.addTab("Pessoas associadas", MembroPanel.getInstance());
 
-		tabbedPane.setToolTipTextAt(1,
-				"Pessoas que vão à IBFC com alguma regularidade: membros ativos, membros nominais e congregados");
+		tabbedPane.setToolTipTextAt(0,
+				"Pessoas que vão à IBFC com alguma regularidade: liderança, membros ativos, membros nominais e congregados ou alguém que já foi membro");
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -423,8 +427,8 @@ public class DataGui extends JFrame {
 	}
 
 	public void ordenar() {
-//		if (tabbedPane.getSelectedIndex() == 0)
-//			TableModelUser.getInstance().ordenar();
+		// if (tabbedPane.getSelectedIndex() == 0)
+		// TableModelUser.getInstance().ordenar();
 	}
 
 	private int num_checkboxEnabled() {
@@ -469,8 +473,9 @@ public class DataGui extends JFrame {
 
 	public void filter(String filtro) {
 		if (tabbedPane.getSelectedIndex() == 0) {
-			TableRowSorter<TableModelMembro> sorter = new TableRowSorter<TableModelMembro>(TableModelMembro.getInstance());
-			MembroPanel.getInstance().getUsers().setRowSorter(sorter);
+			TableRowSorter<TableModelMembro> sorter = new TableRowSorter<TableModelMembro>(
+					TableModelMembro.getInstance());
+			MembroPanel.getInstance().getMembros().setRowSorter(sorter);
 			RowFilter<TableModelMembro, Object> filter;
 			if (filtro.trim().equals("")) {
 				sorter.setRowFilter(null);
@@ -478,7 +483,7 @@ public class DataGui extends JFrame {
 				if (num_checkboxEnabled() == 6 || num_checkboxEnabled() == 0) {
 					filter = RowFilter
 							.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()));
-					MembroPanel.getInstance().getUsers().setDefaultRenderer(Object.class, new CellRenderer());
+					MembroPanel.getInstance().getMembros().setDefaultRenderer(Object.class, new CellRenderer());
 				} else
 					filter = RowFilter.regexFilter(
 							(Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()), checkBoxEnabled());
@@ -490,7 +495,7 @@ public class DataGui extends JFrame {
 
 	public void setRenderers() {
 		if (tabbedPane.getSelectedIndex() == 0) {
-			TableColumnModel tcl = MembroPanel.getInstance().getUsers().getColumnModel();
+			TableColumnModel tcl = MembroPanel.getInstance().getMembros().getColumnModel();
 			if (checkMembroAtivo.isSelected())
 				tcl.getColumn(0).setCellRenderer(new CellRendererNoImage());
 			else
