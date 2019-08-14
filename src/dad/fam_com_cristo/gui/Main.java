@@ -27,9 +27,9 @@ import javax.swing.UIManager;
 
 import org.apache.commons.io.FileUtils;
 
-import dad.fam_com_cristo.Item;
+import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.table.TableModelFuncionario;
-import dad.fam_com_cristo.table.TableModelUser;
+import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.ConexaoUser;
 import dad.recursos.CriptografiaAES;
@@ -46,10 +46,10 @@ public class Main {
 	public static final String USER = "admin";
 	public static final String PASS = "dad";
 	public static final String BACKUP_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
-			+ "Documents/BibliotecaDAD/Backups/";
+			+ "Documents/IB_Fam_Com_Cristo/Backups/";
 	public static final String BUG_REPORTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
-			+ "Documents/BibliotecaDAD/BugReports/";
-	public static final String DATA_DIR = System.getenv("APPDATA") + "/BibliotecaDAD/";
+			+ "Documents/IB_Fam_Com_Cristo/BugReports/";
+	public static final String DATA_DIR = System.getenv("APPDATA") + "/IB_Fam_Com_Cristo/";
 	public static final String DATABASE_DIR = DATA_DIR + "Databases/";
 	public static long inicialTime;
 	private Connection con;
@@ -71,7 +71,7 @@ public class Main {
 				@Override
 				public void run() {
 					createTables();
-					TableModelUser.getInstance().uploadDataBase();
+					TableModelMembro.getInstance().uploadDataBase();
 					TableModelFuncionario.getInstance().uploadDataBase();
 				}
 			});
@@ -220,7 +220,7 @@ public class Main {
 				con.close();
 			}
 
-			File imgs = new File(Item.imgPath);
+			File imgs = new File(Membro.imgPath);
 			if (!imgs.exists())
 				imgs.mkdirs();
 

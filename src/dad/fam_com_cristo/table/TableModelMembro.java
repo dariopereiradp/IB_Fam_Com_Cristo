@@ -9,7 +9,7 @@ import java.util.Date;
 
 import javax.swing.table.AbstractTableModel;
 
-import dad.fam_com_cristo.User;
+import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.recursos.Command;
 import dad.recursos.ConexaoUser;
@@ -17,21 +17,21 @@ import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
 
-public class TableModelUser extends AbstractTableModel {
+public class TableModelMembro extends AbstractTableModel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3247984074345998765L;
-	private static TableModelUser INSTANCE;
-	private ArrayList<User> users;
-	private String[] colunas = { "CPF", "Nome", "Data de Nascimento", "Telefone", "Número de Empréstmos" };
+	private static TableModelMembro INSTANCE;
+	private ArrayList<Membro> users;
+	private String[] colunas = { "Nome", "Data de Nascimento", "Telefone", "Data de Batismo" };
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
 	private UndoManager undoManager;
 
-	private TableModelUser() {
+	private TableModelMembro() {
 		INSTANCE = this;
 		undoManager = new UndoManager();
 	}
@@ -45,10 +45,10 @@ public class TableModelUser extends AbstractTableModel {
 			if (rs.next()) {
 				do {
 					String cpf = rs.getString(1);
-					CriptografiaAES.setKey(User.key);
+					CriptografiaAES.setKey(Membro.key);
 					CriptografiaAES.decrypt(cpf);
 					cpf = CriptografiaAES.getDecryptedString();
-					User user = User.getUser(cpf);
+					Membro user = Membro.getUser(cpf);
 					users.add(user);
 				} while (rs.next());
 			}
@@ -61,9 +61,9 @@ public class TableModelUser extends AbstractTableModel {
 		}
 	}
 
-	public static TableModelUser getInstance() {
+	public static TableModelMembro getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new TableModelUser();
+			INSTANCE = new TableModelMembro();
 		}
 		return INSTANCE;
 	}
@@ -99,26 +99,26 @@ public class TableModelUser extends AbstractTableModel {
 		return colunas[columnIndex];
 	}
 
-	public ArrayList<User> getUsers() {
+	public ArrayList<Membro> getUsers() {
 		return users;
 	}
 
-	public void addUser(User user) {
+	public void addUser(Membro user) {
 		undoManager.execute(new AddUser(user));
-		UserPanel.getInstance().clearTextFields();
+		MembroPanel.getInstance().clearTextFields();
 		fireTableDataChanged();
 	}
 
-	public User getUser(int rowIndex) {
+	public Membro getUser(int rowIndex) {
 		return users.get(rowIndex);
 	}
-
-	public User getUserByCpf(String cpf) {
-		for (User user : users) {
-			if (user.getCpf().equals(cpf))
-				return user;
+	
+	public int getRow(Membro user) {
+		for (int i = 0; i < users.size(); i++) {
+			if (users.get(i).getId() == user.getId())
+				return i;
 		}
-		return null;
+		return -1;
 	}
 
 	public void removeUser(int[] rows) {
@@ -129,17 +129,15 @@ public class TableModelUser extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return users.get(rowIndex).getCpf();
-		case 1:
 			return users.get(rowIndex).getNome();
-		case 2:
+		case 1:
 			return new SimpleDateFormat("dd/MM/yyyy").format(users.get(rowIndex).getData_nascimento());
 		case 3:
 			String phone = users.get(rowIndex).getTelefone();
 			return "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
 					+ phone.substring(7);
 		case 4:
-			return users.get(rowIndex).getN_emprestimos();
+			return new SimpleDateFormat("dd/MM/yyyy").format(users.get(rowIndex).getData_batismo());
 		default:
 			return users.get(rowIndex);
 		}
@@ -164,25 +162,25 @@ public class TableModelUser extends AbstractTableModel {
 			if (!(columnIndex == 1 && (String.valueOf(valor)).trim().equals(""))) {
 				if ((String.valueOf(valor).trim().equals("")))
 					valor = "-";
-				User user = users.get(rowIndex);
+				Membro user = users.get(rowIndex);
 				switch (columnIndex) {
 				case 1:
 					if (!((String) valor).equals(user.getNome())) {
-						undoManager.execute(new AtualizaUser(this, "Nome", user, valor));
+						undoManager.execute(new AtualizaMembro(this, "Nome", user, valor));
 					}
 					break;
 				case 2:
 					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					Date data_nasc = dateFormat.parse((String) valor);
 					if (!dateFormat.format(user.getData_nascimento()).equals(dateFormat.format(data_nasc)))
-						undoManager.execute(new AtualizaUser(this, "Data_Nascimento", user, valor));
+						undoManager.execute(new AtualizaMembro(this, "Data_Nascimento", user, valor));
 					break;
 				case 3:
 					String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ",
 							"");
 					if (!user.getTelefone().equals(telefone))
 						if (telefone.length() == 11)
-							undoManager.execute(new AtualizaUser(this, "Telefone", user, valor));
+							undoManager.execute(new AtualizaMembro(this, "Telefone", user, valor));
 					break;
 				default:
 					users.get(rowIndex);
@@ -196,7 +194,7 @@ public class TableModelUser extends AbstractTableModel {
 		}
 	}
 
-	public void insertUser(User user, int pos) {
+	public void insertUser(Membro user, int pos) {
 		user.adicionarNaBaseDeDados();
 		users.add(pos, user);
 
@@ -205,7 +203,7 @@ public class TableModelUser extends AbstractTableModel {
 	private class RemoverUser implements Command {
 
 		private int[] rows;
-		private ArrayList<User> remover = new ArrayList<>();
+		private ArrayList<Membro> remover = new ArrayList<>();
 
 		public RemoverUser(int[] rows) {
 			this.rows = rows;
@@ -221,7 +219,7 @@ public class TableModelUser extends AbstractTableModel {
 				}
 				users.removeAll(remover);
 				fireTableDataChanged();
-				UserPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
+				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
 				Log.getInstance().printLog("Usuários apagados com sucesso!");
 			} catch (Exception e) {
 				Log.getInstance().printLog("Erro ao apagar o(s) usuário(s)\n" + e.getMessage());
@@ -250,9 +248,9 @@ public class TableModelUser extends AbstractTableModel {
 
 	private class AddUser implements Command {
 
-		private User user;
+		private Membro user;
 
-		public AddUser(User user) {
+		public AddUser(Membro user) {
 			this.user = user;
 		}
 
@@ -261,7 +259,7 @@ public class TableModelUser extends AbstractTableModel {
 			try {
 				user.adicionarNaBaseDeDados();
 				users.add(user);
-				UserPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
+				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
 			} catch (Exception e) {
 				Log.getInstance().printLog("Erro ao criar cliente! " + e.getMessage());
 				e.printStackTrace();
@@ -272,7 +270,7 @@ public class TableModelUser extends AbstractTableModel {
 		public void undo() {
 			user.removerBaseDeDados();
 			users.remove(user);
-			UserPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
+			MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(users.size()));
 			fireTableDataChanged();
 		}
 

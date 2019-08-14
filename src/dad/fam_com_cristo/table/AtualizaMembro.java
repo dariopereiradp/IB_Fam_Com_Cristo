@@ -7,23 +7,23 @@ import java.util.Date;
 
 import javax.swing.table.AbstractTableModel;
 
-import dad.fam_com_cristo.User;
+import dad.fam_com_cristo.Membro;
 import dad.recursos.Command;
 import dad.recursos.ConexaoUser;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 
-public class AtualizaUser implements Command {
+public class AtualizaMembro implements Command {
 
 	private Connection con;
 	private PreparedStatement pst;
-	private User user;
+	private Membro user;
 	private String coluna;
 	private Object valor;
 	private Object old;
 	private AbstractTableModel table;
 
-	public AtualizaUser(AbstractTableModel table, String coluna, User user, Object valor) {
+	public AtualizaMembro(AbstractTableModel table, String coluna, Membro user, Object valor) {
 		this.table = table;
 		this.coluna = coluna;
 		this.user = user;
@@ -47,7 +47,7 @@ public class AtualizaUser implements Command {
 	@Override
 	public void execute() {
 		try {
-			CriptografiaAES.setKey(User.key);
+			CriptografiaAES.setKey(Membro.key);
 //			CriptografiaAES.encrypt(user.getCpf());
 			pst = con.prepareStatement("update usuarios set " + coluna + "=? where CPF=?");
 			switch (coluna) {
@@ -84,7 +84,7 @@ public class AtualizaUser implements Command {
 	@Override
 	public void undo() {
 		try {
-			CriptografiaAES.setKey(User.key);
+			CriptografiaAES.setKey(Membro.key);
 //			CriptografiaAES.encrypt(user.getCpf());
 			pst = con.prepareStatement("update usuarios set " + coluna + "=? where CPF=?");
 			switch (coluna) {

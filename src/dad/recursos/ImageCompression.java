@@ -16,7 +16,7 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
 
-import dad.fam_com_cristo.Item;
+import dad.fam_com_cristo.Membro;
 
 /**
  * 
@@ -26,8 +26,8 @@ import dad.fam_com_cristo.Item;
 public class ImageCompression {
 	
     @SuppressWarnings("resource")
-	public static void compress (File imageFile, Item item) throws FileNotFoundException, IOException{
-        File compressedImageFile = new File(Item.imgPath + item.getId() + ".jpg");
+	public static void compress (File imageFile, Membro user) throws FileNotFoundException, IOException{
+        File compressedImageFile = new File(Membro.imgPath + user.getId() + ".jpg");
 
         InputStream inputStream = new FileInputStream(imageFile);
         OutputStream outputStream = new FileOutputStream(compressedImageFile);
@@ -56,7 +56,7 @@ public class ImageCompression {
         //Created image
         imageWriter.write(null, new IIOImage(bufferedImage, null, null), imageWriteParam);
         
-        item.setImg (new ImageIcon(compressedImageFile.getPath()));
+        user.setImg (new ImageIcon(compressedImageFile.getPath()));
 
         // close all streams
         inputStream.close();

@@ -15,50 +15,51 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.text.ParseException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.text.MaskFormatter;
 
-import dad.fam_com_cristo.Item;
-import dad.fam_com_cristo.Livro;
-import dad.fam_com_cristo.table.AtualizaExemplares;
-import dad.fam_com_cristo.table.AtualizaLivro;
-import dad.fam_com_cristo.table.CompositeCommand;
-import dad.fam_com_cristo.table.EmprestimoPanel;
-import dad.fam_com_cristo.table.TableModelLivro;
+import com.toedter.calendar.JDateChooser;
+
+import dad.fam_com_cristo.Membro;
+import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.ImageViewer;
-import dad.recursos.RealizarEmprestimo;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.utils.MaterialColors;
 import net.miginfocom.swing.MigLayout;
 
-public class LivroDetail {
+public class MembroDetail extends JDialog {
 
-	private Livro l;
-	private JTextField titulo, autor, editora, classificacao, local, exemp, exempDisp, disp, exempEmp;
-	private JDialog dial;
-	// private JTable emprestimos;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3749457691601361568L;
+	private Membro membro;
+	private JTextField nome, profissao, endereco, igreja_origem, observacoes, motivo_saida, casado;
+	private JFormattedTextField telefone;
+	private JDateChooser data_nascimento, data_batismo, data_termino;
 
-	public LivroDetail(Livro l) {
-		this.l = l;
-		int oldExemplares = l.getNumero_exemplares();
-		System.out.println(l);
-		dial = new JDialog(DataGui.getInstance(), l.getNome());
-		dial.setSize(new Dimension(750, 500));
-		dial.setMinimumSize(new Dimension(750, 500));
-		dial.getContentPane().setLayout(new BorderLayout());
+	public MembroDetail(Membro membro) {
+		this.membro = membro;
+		System.out.println(membro);
+		this.setTitle(membro.getNome());
+		setSize(new Dimension(750, 500));
+		setMinimumSize(new Dimension(750, 500));
+		getContentPane().setLayout(new BorderLayout());
 
 		JPanel principal = new JPanel(new BorderLayout());
 		JPanel botoesPrincipais = new JPanel();
@@ -83,24 +84,15 @@ public class LivroDetail {
 						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 				if (ok == JOptionPane.YES_OPTION) {
 					int[] rows = new int[1];
-					rows[0] = TableModelLivro.getInstance().getRow(l);
-					TableModelLivro.getInstance().removeLivros(rows);
-					dial.dispose();
+					rows[0] = TableModelMembro.getInstance().getRow(membro);
+					TableModelMembro.getInstance().removeUser(rows);
+					dispose();
 				}
 			}
 		});
 		botoesPrincipais.add(apagar, "cell 0 0,alignx left,aligny center");
 		apagar.setBackground(MaterialColors.RED_400);
 		personalizarBotao(apagar);
-
-		JButton emprestar = new JButton("Realizar Empréstimo");
-		emprestar.setBackground(MaterialColors.LIGHT_GREEN_500);
-		personalizarBotao(emprestar);
-		botoesPrincipais.add(emprestar, "cell 5 0,alignx left,aligny center");
-		if (!l.isDisponivel()) {
-			emprestar.setEnabled(false);
-			emprestar.setToolTipText("Não há exemplares disponíveis para empréstimo!");
-		}
 
 		JButton ok = new JButton("Ok");
 		ok.setBackground(MaterialColors.LIGHT_BLUE_200);
@@ -118,43 +110,52 @@ public class LivroDetail {
 		botoesSecund.add(salvar, "cell 17 0,alignx left,aligny center");
 		salvar.setEnabled(false);
 
-		titulo = new JTextField(l.getNome());
-		titulo.setEditable(false);
-		autor = new JTextField(l.getAutor());
-		autor.setEditable(false);
-		editora = new JTextField(l.getEditora());
-		editora.setEditable(false);
-		classificacao = new JTextField(l.getClassificacao());
-		classificacao.setEditable(false);
-		local = new JTextField(l.getLocal());
-		local.setEditable(false);
-		exemp = new JTextField(String.valueOf(l.getNumero_exemplares()));
-		exemp.setEditable(false);
-		exempDisp = new JTextField(String.valueOf(l.getN_exemp_disponiveis()));
-		exempDisp.setEditable(false);
-		disp = new JTextField(l.isDisponivel() ? "Sim" : "Não");
-		disp.setEditable(false);
-		exempEmp = new JTextField(String.valueOf(l.getN_exemp_emprestados()));
-		exempEmp.setEditable(false);
+		nome = new JTextField(membro.getNome());
+		nome.setEditable(false);
+		profissao = new JTextField(membro.getProfissao());
+		profissao.setEditable(false);
+		endereco = new JTextField(membro.getEndereco());
+		endereco.setEditable(false);
+		igreja_origem = new JTextField(membro.getIgreja_origem());
+		igreja_origem.setEditable(false);
+		observacoes = new JTextField(String.valueOf(membro.getObservacoes()));
+		observacoes.setEditable(false);
+		motivo_saida = new JTextField(String.valueOf(membro.getMotivo_saida()));
+		motivo_saida.setEditable(false);
+		casado = new JTextField(membro.isCasado() ? "Sim" : "Não");
+		casado.setEditable(false);
+		
+		MaskFormatter maskPhone;
 
-		infoPanel.add(new JLabel("Título: "));
-		infoPanel.add(titulo);
-		infoPanel.add(new JLabel("Autor: "));
-		infoPanel.add(autor);
-		infoPanel.add(new JLabel("Editora: "));
-		infoPanel.add(editora);
-		infoPanel.add(new JLabel("Classificação: "));
-		infoPanel.add(classificacao);
-		infoPanel.add(new JLabel("Localização: "));
-		infoPanel.add(local);
-		infoPanel.add(new JLabel("Número de Exemplares: "));
-		infoPanel.add(exemp);
-		infoPanel.add(new JLabel("Número de Exemplares Disponíveis: "));
-		infoPanel.add(exempDisp);
-		infoPanel.add(new JLabel("Disponível? "));
-		infoPanel.add(disp);
-		infoPanel.add(new JLabel("Número de Exemplares emprestados: "));
-		infoPanel.add(exempEmp);
+		try {
+			maskPhone = new MaskFormatter("(##) # ####-####");
+			maskPhone.setCommitsOnValidEdit(true);
+			telefone = new JFormattedTextField(maskPhone);
+		} catch (ParseException e1) {
+			telefone = new JFormattedTextField();
+			e1.printStackTrace();
+		}
+		
+		telefone.setFont(new Font("Arial", Font.PLAIN, 15));
+		telefone.setBounds(90, 162, 181, 20);
+		telefone.setColumns(12);
+		telefone.setText(membro.getTelefone());
+		telefone.setEditable(false);
+
+		infoPanel.add(new JLabel("Nome: "));
+		infoPanel.add(nome);
+		infoPanel.add(new JLabel("Profissão: "));
+		infoPanel.add(profissao);
+		infoPanel.add(new JLabel("Endereço: "));
+		infoPanel.add(endereco);
+		infoPanel.add(new JLabel("Igreja de Origem: "));
+		infoPanel.add(igreja_origem);
+		infoPanel.add(new JLabel("Observações: "));
+		infoPanel.add(observacoes);
+		infoPanel.add(new JLabel("Motivo de Saída: "));
+		infoPanel.add(motivo_saida);
+		infoPanel.add(new JLabel("Casado? "));
+		infoPanel.add(casado);
 
 		infoPanelWithButtons.add(infoPanel, BorderLayout.CENTER);
 		infoPanelWithButtons.add(botoesSecund, BorderLayout.SOUTH);
@@ -163,8 +164,8 @@ public class LivroDetail {
 		image.setHorizontalAlignment(JLabel.CENTER);
 		image.setVerticalAlignment(JLabel.CENTER);
 		image.setMinimumSize(new Dimension(177, 236));
-		if (l.getImg() != null)
-			image.setIcon(new ImageIcon(l.getImg().getImage().getScaledInstance(177, 236, Image.SCALE_DEFAULT)));
+		if (membro.getImg() != null)
+			image.setIcon(new ImageIcon(membro.getImg().getImage().getScaledInstance(177, 236, Image.SCALE_DEFAULT)));
 		else
 			image.setText("         Sem Imagem         ");
 		image.setBorder(new LineBorder(Color.BLACK, 3));
@@ -173,11 +174,11 @@ public class LivroDetail {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				l.addImg();
-				if (l.getImg() != null) {
+				membro.addImg();
+				if (membro.getImg() != null) {
 					image.setText(null);
 					image.setIcon(
-							new ImageIcon(l.getImg().getImage().getScaledInstance(177, 236, Image.SCALE_DEFAULT)));
+							new ImageIcon(membro.getImg().getImage().getScaledInstance(177, 236, Image.SCALE_DEFAULT)));
 				}
 
 			}
@@ -191,9 +192,9 @@ public class LivroDetail {
 						"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 				if (ok == JOptionPane.OK_OPTION) {
-					l.setImg(null);
+					membro.setImg(null);
 					image.setIcon(null);
-					File f = new File(Item.imgPath + l.getId() + ".jpg");
+					File f = new File(Membro.imgPath + membro.getId() + ".jpg");
 					f.delete();
 				}
 			}
@@ -206,7 +207,7 @@ public class LivroDetail {
 
 		JPopupMenu menuApagar = new JPopupMenu();
 		JMenuItem mAdd = new JMenuItem();
-		if (l.getImg() == null) {
+		if (membro.getImg() == null) {
 			mAdd.setText("Adicionar Imagem");
 		} else
 			mAdd.setText("Alterar Imagem");
@@ -251,7 +252,7 @@ public class LivroDetail {
 			public void mouseClicked(MouseEvent evt) {
 				int count = evt.getClickCount();
 				if (count == 2) {
-					ImageViewer.show(l.getImg());
+					ImageViewer.show(membro.getImg());
 				}
 			}
 
@@ -273,12 +274,9 @@ public class LivroDetail {
 		cimaPanel.add(rightPanel, BorderLayout.EAST);
 
 		principal.add(cimaPanel, BorderLayout.CENTER);
-		JScrollPane jsp = new JScrollPane(EmprestimoPanel.getInstance().getSmallTable(l));
-		jsp.setPreferredSize(new Dimension(744, 100));
-		principal.add(jsp, BorderLayout.SOUTH);
 
-		dial.getContentPane().add(principal, BorderLayout.CENTER);
-		dial.getContentPane().add(botoesPrincipais, BorderLayout.SOUTH);
+		getContentPane().add(principal, BorderLayout.CENTER);
+		getContentPane().add(botoesPrincipais, BorderLayout.SOUTH);
 
 		PropertyChangeListener listener = new PropertyChangeListener() {
 
@@ -301,12 +299,11 @@ public class LivroDetail {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				titulo.setEditable(true);
-				autor.setEditable(true);
-				editora.setEditable(true);
-				classificacao.setEditable(true);
-				local.setEditable(true);
-				exemp.setEditable(true);
+				nome.setEditable(true);
+				profissao.setEditable(true);
+				endereco.setEditable(true);
+				igreja_origem.setEditable(true);
+				observacoes.setEditable(true);
 				editar.setEnabled(false);
 				salvar.setEnabled(true);
 
@@ -325,12 +322,12 @@ public class LivroDetail {
 			public void actionPerformed(ActionEvent e) {
 				editar.setEnabled(true);
 				salvar.setEnabled(false);
-				if (close && titulo.isEditable())
-					save(oldExemplares, close);
-				else if (close && !titulo.isEditable()) {
-					dial.dispose();
+				if (close && nome.isEditable())
+					save(close);
+				else if (close && !nome.isEditable()) {
+					dispose();
 				} else
-					save(oldExemplares, close);
+					save(close);
 			}
 		}
 
@@ -338,75 +335,33 @@ public class LivroDetail {
 
 		ok.addActionListener(new Salvar(true));
 
-		dial.addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if (titulo.isEditable())
-					save(oldExemplares, true);
+				if (nome.isEditable())
+					save(true);
 				else {
-					dial.dispose();
+					dispose();
 				}
 			}
 
 		});
 
 		addImage.addActionListener(new Add());
-
-		emprestar.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (l.getN_exemp_disponiveis() > 0) {
-					new RealizarEmprestimo(l).open();
-					dial.dispose();
-				}
-
-				else
-					JOptionPane.showMessageDialog(DataGui.getInstance(),
-							"Não há exemplares disponíveis para empréstimo...", "Realiza Empréstimo",
-							JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
-			}
-		});
-
 	}
 
-	public void save(int oldExemplares, boolean close) {
-		titulo.setEditable(false);
-		autor.setEditable(false);
-		editora.setEditable(false);
-		classificacao.setEditable(false);
-		local.setEditable(false);
-		try {
-			int n = Integer.parseInt(exemp.getText());
-			int d = Integer.parseInt(exempDisp.getText());
-			if (n <= 0)
-				exemp.setText(String.valueOf(oldExemplares));
-			else {
-				exempDisp.setText(String.valueOf(n - l.getN_exemp_emprestados()));
-				if (d == 0) {
-					disp.setText("Não");
-				} else if (d > 0)
-					disp.setText("Sim");
-			}
+	public void save(boolean close) {
+		nome.setEditable(false);
+		profissao.setEditable(false);
+		endereco.setEditable(false);
+		igreja_origem.setEditable(false);
+		observacoes.setEditable(false);
 
-		} catch (NumberFormatException e1) {
-			exemp.setText(String.valueOf(oldExemplares));
-		}
-		exemp.setEditable(false);
-
-		TableModelLivro.getInstance().getUndoManager()
-				.execute(new CompositeCommand("Atualizar Livro",
-						new AtualizaLivro(TableModelLivro.getInstance(), "Título", l, titulo.getText()),
-						new AtualizaLivro(TableModelLivro.getInstance(), "Autor", l, autor.getText()),
-						new AtualizaLivro(TableModelLivro.getInstance(), "Editora", l, editora.getText()),
-						new AtualizaLivro(TableModelLivro.getInstance(), "Classificação", l, classificacao.getText()),
-						new AtualizaLivro(TableModelLivro.getInstance(), "Local", l, local.getText()),
-						new AtualizaExemplares(l.isDisponivel(), l, Integer.parseInt(exemp.getText()))));
-		TableModelLivro.getInstance().fireTableDataChanged();
+		TableModelMembro.getInstance().fireTableDataChanged();
 
 		if (close) {
-			dial.dispose();
+			dispose();
 		}
 
 	}
@@ -417,7 +372,7 @@ public class LivroDetail {
 	}
 
 	public void open() {
-		dial.setVisible(true);
+		setVisible(true);
 
 	}
 

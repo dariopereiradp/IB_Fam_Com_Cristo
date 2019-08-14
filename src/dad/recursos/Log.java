@@ -25,7 +25,7 @@ public class Log {
 		String month_year = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMyyyy")).toUpperCase();
 		logger = Logger.getLogger(logFormatName);
 		try {
-			File dir = new File(System.getenv("APPDATA") + "/BibliotecaDAD/Logs/" + month_year + "/");
+			File dir = new File(System.getenv("APPDATA") + "/IB_Fam_Com_Cristo/Logs/" + month_year + "/");
 			if (!dir.exists())
 				dir.mkdirs();
 			name = dir.getAbsolutePath() + "/" + logFormatName + ".log";

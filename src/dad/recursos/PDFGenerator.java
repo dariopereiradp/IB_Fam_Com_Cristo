@@ -14,10 +14,7 @@ import com.qoppa.pdfWriter.PDFDocument;
 import com.qoppa.pdfWriter.PDFGraphics;
 import com.qoppa.pdfWriter.PDFPage;
 
-import dad.fam_com_cristo.Emprestimo;
-import dad.fam_com_cristo.Livro;
-import dad.fam_com_cristo.Multimedia;
-import dad.fam_com_cristo.Outros;
+import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.gui.Login;
 
 /**
@@ -28,10 +25,10 @@ import dad.fam_com_cristo.gui.Login;
  */
 public class PDFGenerator {
 
-	private Emprestimo emprestimo;
+	private Membro membro;
 
-	public PDFGenerator(Emprestimo emprestimo) {
-		this.emprestimo = emprestimo;
+	public PDFGenerator(Membro membro) {
+		this.membro = membro;
 	}
 
 	public PDFDocument generatePDF() {
@@ -63,7 +60,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 120);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(15f).deriveFont(Font.BOLD));
-		text = "Empréstimo nº" + emprestimo.getId();
+		text = "Empréstimo nº" + membro.getId();
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(15f).deriveFont(Font.BOLD)).stringWidth(text);
 		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 150);
 
@@ -71,9 +68,9 @@ public class PDFGenerator {
 		g2d.setColor(Color.black);
 		g2d.drawRoundRect((int) width / 8, 220, (int) ((width / 8) * 6), 350, 10, 10);
 
-		if (emprestimo.getItem().getImg() != null) {
+		if (membro.getImg() != null) {
 
-			Image image = emprestimo.getItem().getImg().getImage().getScaledInstance(177 * 3, 236 * 3,
+			Image image = membro.getImg().getImage().getScaledInstance(177 * 3, 236 * 3,
 					Image.SCALE_AREA_AVERAGING);
 
 			MediaTracker tracker = new MediaTracker(new java.awt.Container());
@@ -101,7 +98,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 30 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = String.valueOf(emprestimo.getItem().getId());
+		text = String.valueOf(membro.getId());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 30 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -110,7 +107,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 45 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = emprestimo.getItem().getTipo();
+//		text = membro.getItem().getTipo();
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 45 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -119,7 +116,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 45 + 20 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = emprestimo.getItem().getNome();
+		text = membro.getNome();
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 45 + 20 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -128,17 +125,17 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 90 + 20 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = emprestimo.getItem().getClassificacao();
+//		text = membro.getItem().getClassificacao();
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 90 + 20 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
-		if (emprestimo.getItem() instanceof Livro) {
+		if (membro instanceof Membro) {
 			text = "Autor: ";
 			sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 			g2d.drawString(text, (int) (width / 8) + 5, 220 + 60 + 20 + 5);
 
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-			text = emprestimo.getItem().getAutor();
+//			text = membro.getItem().getAutor();
 			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 60 + 20 + 5);
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -147,27 +144,7 @@ public class PDFGenerator {
 			g2d.drawString(text, (int) (width / 8) + 5, 220 + 75 + 20 + 5);
 
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-			text = ((Livro) emprestimo.getItem()).getEditora();
-			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 75 + 20 + 5);
-			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		} else if (emprestimo.getItem() instanceof Multimedia) {
-			text = "Artista: ";
-			sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-			g2d.drawString(text, (int) (width / 8) + 5, 220 + 60 + 20 + 5);
-
-			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-			text = emprestimo.getItem().getAutor();
-			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 60 + 20 + 5);
-			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		} else if (emprestimo.getItem() instanceof Outros) {
-			text = "Outras informações: ";
-			sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-			g2d.drawString(text, (int) (width / 8) + 5, 220 + 75 + 20 + 5);
-
-			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-			text = ((Outros) emprestimo.getItem()).getOutrasInf();
+//			text = ((Livro) membro.getItem()).getEditora();
 			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 75 + 20 + 5);
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -186,7 +163,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 130 + 20 + 10 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = String.valueOf(emprestimo.getId());
+		text = String.valueOf(membro.getId());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 130 + 20 + 10 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -195,7 +172,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 145 + 20 + 10 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = new SimpleDateFormat("dd/MMM/yyyy").format(emprestimo.getData_emprestimo());
+//		text = new SimpleDateFormat("dd/MMM/yyyy").format(membro.getData_emprestimo());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 145 + 20 + 10 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -204,7 +181,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 160 + 20 + 10 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
-		text = new SimpleDateFormat("EEEE', 'dd 'de' MMMM 'de' yyyy").format(emprestimo.getData_entrega());
+//		text = new SimpleDateFormat("EEEE', 'dd 'de' MMMM 'de' yyyy").format(membro.getData_entrega());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 160 + 20 + 10 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -213,7 +190,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 175 + 20 + 10 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = String.valueOf(emprestimo.getNum_dias());
+//		text = String.valueOf(membro.getNum_dias());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 175 + 20 + 10 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -230,7 +207,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 215 + 20 + 10 + 10 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = emprestimo.getUser().getNome();
+		text = membro.getNome();
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 215 + 20 + 10 + 10 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -239,7 +216,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 230 + 20 + 10 + 10 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = new SimpleDateFormat("dd/MMM/yyyy").format(emprestimo.getUser().getData_nascimento());
+		text = new SimpleDateFormat("dd/MMM/yyyy").format(membro.getData_nascimento());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 230 + 20 + 10 + 10 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -248,7 +225,7 @@ public class PDFGenerator {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 245 + 20 + 10 + 10 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = String.valueOf(emprestimo.getUser().getCpf());
+//		text = String.valueOf(membro.getUser().getCpf());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 245 + 20 + 10 + 10 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
@@ -264,7 +241,7 @@ public class PDFGenerator {
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(9f).deriveFont(Font.PLAIN));
-		text = "Atenção: Após a data limite de entrega será cobrado um valor de R$" + Emprestimo.MULTA
+		text = "Atenção: Após a data limite de entrega será cobrado um valor de R$"
 				+ " por cada dia de atraso!";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(9f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 590);

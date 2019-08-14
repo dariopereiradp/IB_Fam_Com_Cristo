@@ -39,8 +39,8 @@ import javax.swing.table.TableRowSorter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
-import dad.fam_com_cristo.table.TableModelUser;
-import dad.fam_com_cristo.table.UserPanel;
+import dad.fam_com_cristo.table.TableModelMembro;
+import dad.fam_com_cristo.table.MembroPanel;
 import dad.recursos.CellRenderer;
 import dad.recursos.CellRendererNoImage;
 import dad.recursos.DefaultCellRenderer;
@@ -121,7 +121,7 @@ public class DataGui extends JFrame {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.addTab("Pessoas associadas", UserPanel.getInstance());
+		tabbedPane.addTab("Pessoas associadas", MembroPanel.getInstance());
 
 		tabbedPane.setToolTipTextAt(1,
 				"Pessoas que vão à IBFC com alguma regularidade: membros ativos, membros nominais e congregados");
@@ -258,7 +258,7 @@ public class DataGui extends JFrame {
 		});
 		mnAjuda.add(menuSobre);
 
-		getRootPane().setDefaultButton(UserPanel.getInstance().getbAdd());
+		getRootPane().setDefaultButton(MembroPanel.getInstance().getbAdd());
 
 		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		manager.addKeyEventDispatcher(new MyDispatcher());
@@ -291,7 +291,7 @@ public class DataGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				TableModelUser.getInstance().fireTableDataChanged();
+				TableModelMembro.getInstance().fireTableDataChanged();
 			}
 		});
 
@@ -304,7 +304,7 @@ public class DataGui extends JFrame {
 
 		});
 
-		TableModelUser.getInstance().addListeners();
+		TableModelMembro.getInstance().addListeners();
 
 		tabbedPane.addChangeListener(new ChangeListener() {
 
@@ -368,7 +368,7 @@ public class DataGui extends JFrame {
 	}
 
 	public void updateItems() {
-		TableModelUser.getInstance().updateItems();
+		TableModelMembro.getInstance().updateItems();
 	}
 
 	private class MyDispatcher implements KeyEventDispatcher {
@@ -414,12 +414,12 @@ public class DataGui extends JFrame {
 
 	public void anular() {
 
-		TableModelUser.getInstance().getUndoManager().undo();
+		TableModelMembro.getInstance().getUndoManager().undo();
 	}
 
 	public void refazer() {
 
-		TableModelUser.getInstance().getUndoManager().redo();
+		TableModelMembro.getInstance().getUndoManager().redo();
 	}
 
 	public void ordenar() {
@@ -469,16 +469,16 @@ public class DataGui extends JFrame {
 
 	public void filter(String filtro) {
 		if (tabbedPane.getSelectedIndex() == 0) {
-			TableRowSorter<TableModelUser> sorter = new TableRowSorter<TableModelUser>(TableModelUser.getInstance());
-			UserPanel.getInstance().getUsers().setRowSorter(sorter);
-			RowFilter<TableModelUser, Object> filter;
+			TableRowSorter<TableModelMembro> sorter = new TableRowSorter<TableModelMembro>(TableModelMembro.getInstance());
+			MembroPanel.getInstance().getUsers().setRowSorter(sorter);
+			RowFilter<TableModelMembro, Object> filter;
 			if (filtro.trim().equals("")) {
 				sorter.setRowFilter(null);
 			} else {
 				if (num_checkboxEnabled() == 6 || num_checkboxEnabled() == 0) {
 					filter = RowFilter
 							.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()));
-					UserPanel.getInstance().getUsers().setDefaultRenderer(Object.class, new CellRenderer());
+					MembroPanel.getInstance().getUsers().setDefaultRenderer(Object.class, new CellRenderer());
 				} else
 					filter = RowFilter.regexFilter(
 							(Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()), checkBoxEnabled());
@@ -490,7 +490,7 @@ public class DataGui extends JFrame {
 
 	public void setRenderers() {
 		if (tabbedPane.getSelectedIndex() == 0) {
-			TableColumnModel tcl = UserPanel.getInstance().getUsers().getColumnModel();
+			TableColumnModel tcl = MembroPanel.getInstance().getUsers().getColumnModel();
 			if (checkMembroAtivo.isSelected())
 				tcl.getColumn(0).setCellRenderer(new CellRendererNoImage());
 			else

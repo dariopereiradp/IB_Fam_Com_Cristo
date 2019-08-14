@@ -55,23 +55,21 @@ import javax.swing.text.MaskFormatter;
 
 import com.toedter.calendar.JDateChooser;
 
-import dad.fam_com_cristo.Livro;
-import dad.fam_com_cristo.User;
-import dad.fam_com_cristo.gui.UserDetail;
+import dad.fam_com_cristo.Membro;
+import dad.fam_com_cristo.gui.MembroDetail;
 import dad.recursos.CellRenderer;
 import dad.recursos.CellRendererNoImage;
 import dad.recursos.CpfValidator;
 import dad.recursos.Log;
-import dad.recursos.RealizarEmprestimo;
 import dad.recursos.SairAction;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.utils.MaterialColors;
 
-public class UserPanel extends JPanel {
+public class MembroPanel extends JPanel {
 
-	private static UserPanel INSTANCE;
-	private JTable users;
-	private TableModelUser modelUser;
+	private static MembroPanel INSTANCE;
+	private JTable membros;
+	private TableModelMembro modelMembro;
 	private JPanel panelAdd, pInferior, panel2, panel3;
 	private JTextField nome;
 	private JFormattedTextField cpf, telefone;
@@ -87,12 +85,12 @@ public class UserPanel extends JPanel {
 	private String[] columnToolTips = { "CPF do cliente", "Nome do cliente", "Data de Nascimento do Cliente",
 			"Telefone do cliente", "Número de Empréstimos que o cliente fez" };
 
-	public UserPanel() {
+	public MembroPanel() {
 		super();
 		INSTANCE = this;
 		setLayout(new BorderLayout());
-		modelUser = TableModelUser.getInstance();
-		users = new JTable(modelUser) {
+		modelMembro = TableModelMembro.getInstance();
+		membros = new JTable(modelMembro) {
 			/**
 			 * 
 			 */
@@ -128,7 +126,7 @@ public class UserPanel extends JPanel {
 				int realColumnIndex = convertColumnIndexToModel(colIndex);
 				if (rowIndex != -1) {
 					int realRowIndex = convertRowIndexToModel(rowIndex);
-					tip = String.valueOf(modelUser.getValueAt(realRowIndex, realColumnIndex));
+					tip = String.valueOf(modelMembro.getValueAt(realRowIndex, realColumnIndex));
 				} else
 					tip = null;
 				return tip;
@@ -153,8 +151,8 @@ public class UserPanel extends JPanel {
 				};
 			}
 		};
-		TableCellRenderer tcr = users.getTableHeader().getDefaultRenderer();
-		users.getTableHeader().setDefaultRenderer(new TableCellRenderer() {
+		TableCellRenderer tcr = membros.getTableHeader().getDefaultRenderer();
+		membros.getTableHeader().setDefaultRenderer(new TableCellRenderer() {
 
 			private Icon ascendingIcon = UIManager.getIcon("Table.ascendingSortIcon");
 			private Icon descendingIcon = UIManager.getIcon("Table.descendingSortIcon");
@@ -200,17 +198,17 @@ public class UserPanel extends JPanel {
 			}
 		});
 
-		users.setPreferredScrollableViewportSize(new Dimension(800, 600));
-		users.setFillsViewportHeight(true);
-		users.setAutoCreateRowSorter(true);
-		users.getTableHeader().setReorderingAllowed(false);
-		users.setRowHeight(30);
+		membros.setPreferredScrollableViewportSize(new Dimension(800, 600));
+		membros.setFillsViewportHeight(true);
+		membros.setAutoCreateRowSorter(true);
+		membros.getTableHeader().setReorderingAllowed(false);
+		membros.setRowHeight(30);
 
-		users.getColumnModel().getColumn(0).setCellRenderer(new CellRendererNoImage());
-		users.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
-		users.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
-		users.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
-		users.getColumnModel().getColumn(4).setCellRenderer(new CellRendererNoImage());
+		membros.getColumnModel().getColumn(0).setCellRenderer(new CellRendererNoImage());
+		membros.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
+		membros.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
+		membros.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
+		membros.getColumnModel().getColumn(4).setCellRenderer(new CellRendererNoImage());
 
 		MaskFormatter mascaraData;
 		JFormattedTextField data;
@@ -227,7 +225,7 @@ public class UserPanel extends JPanel {
 		
 		final TableCellEditor dataEditor = new DefaultCellEditor(data);
 		
-		users.getColumnModel().getColumn(2).setCellEditor(dataEditor);
+		membros.getColumnModel().getColumn(2).setCellEditor(dataEditor);
 		// users.getColumnModel().getColumn(2).setCellEditor(new
 		// JDateChooserCellEditor());
 		
@@ -260,7 +258,7 @@ public class UserPanel extends JPanel {
 		phone.setFont(new Font("Arial", Font.PLAIN, 15));
 
 		final TableCellEditor phoneEditor = new DefaultCellEditor(phone);
-		users.getColumnModel().getColumn(3).setCellEditor(phoneEditor);
+		membros.getColumnModel().getColumn(3).setCellEditor(phoneEditor);
 
 		InputMap iMap1 = phone.getInputMap(JComponent.WHEN_FOCUSED);
 		iMap1.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
@@ -277,14 +275,14 @@ public class UserPanel extends JPanel {
 			}
 		});
 
-		JScrollPane jsLivros = new JScrollPane(users);
+		JScrollPane jsLivros = new JScrollPane(membros);
 		add(jsLivros, BorderLayout.CENTER);
 
-		users.addComponentListener(new ComponentAdapter() {
+		membros.addComponentListener(new ComponentAdapter() {
 
 			@Override
 			public void componentResized(ComponentEvent e) {
-				users.scrollRectToVisible(users.getCellRect(users.getRowCount() - 1, 0, true));
+				membros.scrollRectToVisible(membros.getCellRect(membros.getRowCount() - 1, 0, true));
 			}
 
 		});
@@ -294,7 +292,7 @@ public class UserPanel extends JPanel {
 		panel2 = new JPanel(new GridLayout(2, 1));
 		panel3 = new JPanel();
 		JLabel total = new JLabel("Total: ");
-		jtfTotal = new JTextField(String.valueOf(modelUser.getRowCount()));
+		jtfTotal = new JTextField(String.valueOf(modelMembro.getRowCount()));
 		jtfTotal.setEditable(false);
 		panel3.add(total);
 		panel3.add(jtfTotal);
@@ -318,7 +316,7 @@ public class UserPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				abrir(modelUser.getUser(users.convertRowIndexToModel(users.getSelectedRow())));
+				abrir(modelMembro.getUser(membros.convertRowIndexToModel(membros.getSelectedRow())));
 
 			}
 		});
@@ -328,7 +326,7 @@ public class UserPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				TableModelUser.getInstance().fireTableDataChanged();
+				TableModelMembro.getInstance().fireTableDataChanged();
 			}
 		});
 
@@ -340,15 +338,15 @@ public class UserPanel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						int rowAtPointOriginal = users
-								.rowAtPoint(SwingUtilities.convertPoint(popupMenu, new Point(0, 0), users));
+						int rowAtPointOriginal = membros
+								.rowAtPoint(SwingUtilities.convertPoint(popupMenu, new Point(0, 0), membros));
 						if (rowAtPointOriginal > -1) {
-							int rowAtPoint = users.convertRowIndexToModel(rowAtPointOriginal);
+							int rowAtPoint = membros.convertRowIndexToModel(rowAtPointOriginal);
 							if (rowAtPoint > -1) {
 								int[] rows = convertRowsIndextoModel();
 								if (rows.length <= 1) {
 									info.setVisible(true);
-									users.setRowSelectionInterval(rowAtPointOriginal, rowAtPointOriginal);
+									membros.setRowSelectionInterval(rowAtPointOriginal, rowAtPointOriginal);
 									delete.setVisible(true);
 								}
 							} else {
@@ -381,12 +379,12 @@ public class UserPanel extends JPanel {
 
 		popupMenu.setPopupSize(350, 150);
 
-		users.setComponentPopupMenu(popupMenu);
+		membros.setComponentPopupMenu(popupMenu);
 
-		users.getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "deleteRow");
-		users.getActionMap().put("deleteRow", new DeleteAction());
+		membros.getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "deleteRow");
+		membros.getActionMap().put("deleteRow", new DeleteAction());
 
-		users.addMouseListener(new MouseAdapter() {
+		membros.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent mouseEvent) {
 				JTable table = (JTable) mouseEvent.getSource();
 				Point point = mouseEvent.getPoint();
@@ -396,15 +394,15 @@ public class UserPanel extends JPanel {
 					int row = table.convertRowIndexToModel(rowAtPoint);
 					if (mouseEvent.getClickCount() == 2 && !table.isCellEditable(row, column)
 							&& table.getSelectedRow() != -1) {
-						abrir(modelUser.getUser(row));
+						abrir(modelMembro.getUser(row));
 					}
 				}
 			}
 		});
 
 		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-		users.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "solve");
-		users.getActionMap().put("solve", new AbstractAction() {
+		membros.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "solve");
+		membros.getActionMap().put("solve", new AbstractAction() {
 
 			/**
 			 * 
@@ -413,8 +411,8 @@ public class UserPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (users.getSelectedRows().length == 1)
-					abrir(modelUser.getUser(users.convertRowIndexToModel(users.getSelectedRow())));
+				if (membros.getSelectedRows().length == 1)
+					abrir(modelMembro.getUser(membros.convertRowIndexToModel(membros.getSelectedRow())));
 
 			}
 		});
@@ -561,9 +559,9 @@ public class UserPanel extends JPanel {
 		cpfString = cpfString.replace(".", "").replace("-", "");
 		if (!cpfString.trim().equals("")) {
 			if (CpfValidator.isCPF(cpfString)) {
-				if (User.existe(cpfString)) {
+				if (Membro.existe(cpfString)) {
 					bAdd.setEnabled(false);
-					String nomeUser = User.getUser(cpfString).getNome();
+					String nomeUser = Membro.getUser(cpfString).getNome();
 					JOptionPane.showMessageDialog(this, "Já existe um usuário registado com esse CPF! - " + nomeUser,
 							"Erro", JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 					return false;
@@ -592,8 +590,8 @@ public class UserPanel extends JPanel {
 					JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 		else {
 			if (validar()) {
-				TableModelUser.getInstance().addUser(
-						new User(nome.getText(), date_nasc.getDate(), cpf.getText().replace(".", "").replace("-", ""),
+				TableModelMembro.getInstance().addUser(
+						new Membro(nome.getText(), date_nasc.getDate(),
 								telefone.getText().replace("-", "").replace("(", "").replace(")", "").replace(" ", ""),
 								0, false));
 				Log.getInstance().printLog("Cliente adicionado com sucesso!");
@@ -605,9 +603,9 @@ public class UserPanel extends JPanel {
 	}
 
 	public int[] convertRowsIndextoModel() {
-		int[] rows = users.getSelectedRows();
+		int[] rows = membros.getSelectedRows();
 		for (int i = 0; i < rows.length; i++) {
-			rows[i] = users.convertRowIndexToModel(rows[i]);
+			rows[i] = membros.convertRowIndexToModel(rows[i]);
 		}
 		return rows;
 	}
@@ -626,22 +624,17 @@ public class UserPanel extends JPanel {
 					"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 			if (ok == JOptionPane.OK_OPTION) {
-				modelUser.removeUser(rows);
+				modelMembro.removeUser(rows);
 			}
 		}
 	}
 
 	public JTable getUsers() {
-		return users;
+		return membros;
 	}
 
-	public void abrir(User user) {
-		new UserDetail(user).open();
-	}
-
-	public void realizarEmprestimo(Livro l) {
-		new RealizarEmprestimo(l).open();
-
+	public void abrir(Membro user) {
+		new MembroDetail(user).open();
 	}
 
 	public JTextField getJtfTotal() {
@@ -661,9 +654,9 @@ public class UserPanel extends JPanel {
 		}
 	}
 
-	public static UserPanel getInstance() {
+	public static MembroPanel getInstance() {
 		if (INSTANCE == null)
-			INSTANCE = new UserPanel();
+			INSTANCE = new MembroPanel();
 		return INSTANCE;
 	}
 

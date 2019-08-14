@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import dad.fam_com_cristo.table.TableModelFuncionario;
-import dad.fam_com_cristo.table.TableModelUser;
+import dad.fam_com_cristo.table.TableModelMembro;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -102,7 +102,7 @@ public class Estatisticas extends JDialog {
 		contentPanel.add(lEmpMulta);
 		
 		n_clientes = new JTextField();
-		n_clientes.setText(String.valueOf(TableModelUser.getInstance().getRowCount()));
+		n_clientes.setText(String.valueOf(TableModelMembro.getInstance().getRowCount()));
 		n_clientes.setEditable(false);
 		n_clientes.setColumns(10);
 		n_clientes.setBounds(250, 160, 62, 25);
