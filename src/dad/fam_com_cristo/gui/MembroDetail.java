@@ -146,7 +146,7 @@ public class MembroDetail extends JDialog {
 		salvar.setEnabled(false);
 
 		nome = new JTextField("");
-		nome.setBounds(120, 45, 394, 25);
+		nome.setBounds(66, 45, 448, 25);
 		nome.setEditable(false);
 
 		data_nascimento = new JDateChooser();
@@ -156,7 +156,7 @@ public class MembroDetail extends JDialog {
 		data_nascimento.setMaxSelectableDate(new Date());
 
 		profissao = new JTextField("");
-		profissao.setBounds(650, 45, 142, 25);
+		profissao.setBounds(601, 45, 191, 25);
 		profissao.setEditable(false);
 
 		endereco = new JTextField("");
@@ -197,10 +197,10 @@ public class MembroDetail extends JDialog {
 		infoPanel.add(label_3);
 		infoPanel.add(endereco);
 		JLabel label_4 = new JLabel("Igreja de Origem: ");
-		label_4.setBounds(5, 255, 185, 25);
+		label_4.setBounds(5, 255, 149, 25);
 		infoPanel.add(label_4);
 		JLabel label_5 = new JLabel("Observações: ");
-		label_5.setBounds(4, 335, 70, 60);
+		label_5.setBounds(4, 335, 110, 60);
 		infoPanel.add(label_5);
 		JLabel label_6 = new JLabel("Motivo de Saída: ");
 		label_6.setBounds(668, -43, 83, 14);
@@ -212,8 +212,10 @@ public class MembroDetail extends JDialog {
 		infoPanelWithButtons.add(infoPanel, BorderLayout.CENTER);
 
 		observacoes = new JTextArea();
+		observacoes.setLineWrap(true);
 		JScrollPane jsp = new JScrollPane(observacoes);
-		jsp.setBounds(79, 335, 710, 60);
+		jsp.setBorder(new LineBorder(Color.BLACK, 1));
+		jsp.setBounds(118, 335, 672, 60);
 
 		infoPanel.add(jsp);
 
@@ -238,7 +240,7 @@ public class MembroDetail extends JDialog {
 		infoPanel.add(lblTelefone);
 
 		igreja_origem = new JComboBox<String>();
-		igreja_origem.setBounds(196, 255, 308, 25);
+		igreja_origem.setBounds(164, 255, 340, 25);
 		igreja_origem
 				.setModel(new DefaultComboBoxModel<String>(new String[] { "Igreja Batista Fam\u00EDlias com Cristo" }));
 		igreja_origem.setSelectedIndex(0);
@@ -246,15 +248,15 @@ public class MembroDetail extends JDialog {
 		infoPanel.add(igreja_origem);
 
 		JLabel lblBatizado = new JLabel("Batizado? ");
-		lblBatizado.setBounds(319, 295, 70, 25);
+		lblBatizado.setBounds(319, 295, 84, 25);
 		infoPanel.add(lblBatizado);
 
 		JLabel lblTipo = new JLabel("Tipo:");
-		lblTipo.setBounds(514, 255, 77, 25);
+		lblTipo.setBounds(514, 255, 56, 25);
 		infoPanel.add(lblTipo);
 
 		tipo_membro = new JComboBox<Tipo_Membro>();
-		tipo_membro.setBounds(601, 255, 191, 25);
+		tipo_membro.setBounds(572, 255, 220, 25);
 		tipo_membro.setModel(new DefaultComboBoxModel<Tipo_Membro>(Tipo_Membro.values()));
 		tipo_membro.setSelectedIndex(0);
 		infoPanel.add(tipo_membro);
@@ -287,13 +289,13 @@ public class MembroDetail extends JDialog {
 		membro_desde = new JDateChooser();
 		membro_desde.setLocale(new Locale("pt", "BR"));
 		membro_desde.setDateFormatString("dd/MM/yyyy");
-		membro_desde.setBounds(147, 295, 166, 25);
+		membro_desde.setBounds(135, 295, 178, 25);
 		infoPanel.add(membro_desde);
 		membro_desde.setEnabled(false);
 
 		batizado = new JTextField();
 		batizado.setEditable(false);
-		batizado.setBounds(386, 295, 70, 25);
+		batizado.setBounds(405, 295, 56, 25);
 		infoPanel.add(batizado);
 		batizado.setColumns(10);
 
