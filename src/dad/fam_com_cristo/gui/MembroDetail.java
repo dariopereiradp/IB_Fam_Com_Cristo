@@ -16,6 +16,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.ParseException;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,6 +28,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
@@ -41,6 +44,7 @@ import dad.recursos.ImageViewer;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.utils.MaterialColors;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextArea;
 
 public class MembroDetail extends JDialog {
 
@@ -49,7 +53,8 @@ public class MembroDetail extends JDialog {
 	 */
 	private static final long serialVersionUID = -3749457691601361568L;
 	private Membro membro;
-	private JTextField nome, profissao, endereco, igreja_origem, observacoes, motivo_saida, casado;
+	private JTextField nome, profissao, endereco, igreja_origem, motivo_saida, casado;
+	private JTextArea observacoes;
 	private JFormattedTextField telefone;
 	private JDateChooser data_nascimento, data_batismo, data_termino;
 
@@ -57,19 +62,28 @@ public class MembroDetail extends JDialog {
 		this.membro = membro;
 		System.out.println(membro);
 		this.setTitle(membro.getNome());
-		setSize(new Dimension(750, 500));
-		setMinimumSize(new Dimension(750, 500));
+		inicializar(false);
+	}
+
+	public MembroDetail() {
+		this.setTitle("Novo Membro");
+		inicializar(true);
+	}
+
+	private void inicializar(boolean criar) {
+		setSize(new Dimension(800, 500));
+		setMinimumSize(new Dimension(800, 500));
+		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 
 		JPanel principal = new JPanel(new BorderLayout());
 		JPanel botoesPrincipais = new JPanel();
-		// emprestimos = EmprestimoPanel.getInstance().getSmallTable(l);
 		JPanel cimaPanel = new JPanel(new BorderLayout());
 		JPanel infoPanelWithButtons = new JPanel(new BorderLayout());
-		JPanel infoPanel = new JPanel(new GridLayout(10, 2));
+		JPanel infoPanel = new JPanel();
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		JPanel imagePanel = new JPanel(new MigLayout("al center center, wrap, gapy 15"));
-		JPanel botoesSecund = new JPanel(new BorderLayout());
+		JPanel botoesSecund = new JPanel(new MigLayout());
 		botoesPrincipais
 				.setLayout(new MigLayout("", "[79px][129px][45px][][][][][][][][][][150px][][][][][]", "[27px]"));
 		botoesSecund.setLayout(new MigLayout("", "[79px][100px][][240px][][][][][]", "[27px]"));
@@ -111,20 +125,35 @@ public class MembroDetail extends JDialog {
 		salvar.setEnabled(false);
 
 		nome = new JTextField(membro.getNome());
+		nome.setBounds(61, 10, 532, 20);
 		nome.setEditable(false);
+		
+		data_nascimento = new JDateChooser();
+		data_nascimento.setBounds(112, 71, 144, 20);
+		data_nascimento.setEnabled(false);
+		data_nascimento.setLocale(new Locale("pt", "BR"));
+		data_nascimento.setDateFormatString("dd/MM/yyyy");
+		data_nascimento.setMaxSelectableDate(new Date());
+		if (!criar)
+			data_nascimento.setDate(membro.getData_nascimento());
+		
 		profissao = new JTextField(membro.getProfissao());
+		profissao.setBounds(355, 153, 61, 20);
 		profissao.setEditable(false);
+		
 		endereco = new JTextField(membro.getEndereco());
+		endereco.setBounds(61, 40, 532, 20);
 		endereco.setEditable(false);
 		igreja_origem = new JTextField(membro.getIgreja_origem());
+		igreja_origem.setBounds(115, 165, 61, 20);
 		igreja_origem.setEditable(false);
-		observacoes = new JTextField(String.valueOf(membro.getObservacoes()));
-		observacoes.setEditable(false);
 		motivo_saida = new JTextField(String.valueOf(membro.getMotivo_saida()));
+		motivo_saida.setBounds(756, -46, 61, 20);
 		motivo_saida.setEditable(false);
 		casado = new JTextField(membro.isCasado() ? "Sim" : "Não");
+		casado.setBounds(506, 78, 25, 20);
 		casado.setEditable(false);
-		
+
 		MaskFormatter maskPhone;
 
 		try {
@@ -135,29 +164,56 @@ public class MembroDetail extends JDialog {
 			telefone = new JFormattedTextField();
 			e1.printStackTrace();
 		}
-		
+
 		telefone.setFont(new Font("Arial", Font.PLAIN, 15));
 		telefone.setBounds(90, 162, 181, 20);
 		telefone.setColumns(12);
 		telefone.setText(membro.getTelefone());
 		telefone.setEditable(false);
+		infoPanel.setLayout(null);
 
-		infoPanel.add(new JLabel("Nome: "));
+		JLabel label = new JLabel("Nome: ");
+		label.setBounds(4, 10, 52, 20);
+		infoPanel.add(label);
 		infoPanel.add(nome);
-		infoPanel.add(new JLabel("Profissão: "));
+		JLabel label_1 = new JLabel("Data de Nascimento: ");
+		label_1.setBounds(4, 74, 103, 14);
+		infoPanel.add(label_1);
+		infoPanel.add(data_nascimento);
+		JLabel label_2 = new JLabel("Profissão: ");
+		label_2.setBounds(299, 156, 51, 14);
+		infoPanel.add(label_2);
 		infoPanel.add(profissao);
-		infoPanel.add(new JLabel("Endereço: "));
+		JLabel label_3 = new JLabel("Endereço: ");
+		label_3.setBounds(4, 40, 52, 20);
+		infoPanel.add(label_3);
 		infoPanel.add(endereco);
-		infoPanel.add(new JLabel("Igreja de Origem: "));
+		JLabel label_4 = new JLabel("Igreja de Origem: ");
+		label_4.setBounds(10, 168, 88, 14);
+		infoPanel.add(label_4);
 		infoPanel.add(igreja_origem);
-		infoPanel.add(new JLabel("Observações: "));
-		infoPanel.add(observacoes);
-		infoPanel.add(new JLabel("Motivo de Saída: "));
+		JLabel label_5 = new JLabel("Observações: ");
+		label_5.setBounds(4, 355, 70, 14);
+		infoPanel.add(label_5);
+		JLabel label_6 = new JLabel("Motivo de Saída: ");
+		label_6.setBounds(668, -43, 83, 14);
+		infoPanel.add(label_6);
 		infoPanel.add(motivo_saida);
-		infoPanel.add(new JLabel("Casado? "));
+		JLabel label_7 = new JLabel("Casado? ");
+		label_7.setBounds(457, 81, 44, 14);
+		infoPanel.add(label_7);
 		infoPanel.add(casado);
 
 		infoPanelWithButtons.add(infoPanel, BorderLayout.CENTER);
+		
+		observacoes = new JTextArea();
+		
+		
+		JScrollPane jsp = new JScrollPane(observacoes);
+		jsp.setBounds(79, 342, 514, 40);
+		
+		infoPanel.add(jsp);
+		
 		infoPanelWithButtons.add(botoesSecund, BorderLayout.SOUTH);
 
 		JLabel image = new JLabel();
@@ -349,6 +405,7 @@ public class MembroDetail extends JDialog {
 		});
 
 		addImage.addActionListener(new Add());
+
 	}
 
 	public void save(boolean close) {
@@ -375,5 +432,4 @@ public class MembroDetail extends JDialog {
 		setVisible(true);
 
 	}
-
 }
