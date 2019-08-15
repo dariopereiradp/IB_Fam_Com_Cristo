@@ -14,6 +14,7 @@ import javax.swing.table.AbstractTableModel;
 import dad.fam_com_cristo.Estado_Civil;
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.Sexo;
+import dad.fam_com_cristo.Sim_Nao;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.recursos.Command;
@@ -52,29 +53,31 @@ public class TableModelMembro extends AbstractTableModel {
 					int id = rs.getInt(1);
 					String nome = rs.getString(2);
 					Date data_nascimento = rs.getDate(3);
-					Sexo sexo = Sexo.valueOf(rs.getString(4));
-					Estado_Civil estado_civil = Estado_Civil.valueOf(rs.getString(5));
+					Sexo sexo = Sexo.getEnum(rs.getString(4));
+					Estado_Civil estado_civil = Estado_Civil.getEnum(rs.getString(5));
 					String profissao = rs.getString(6);
 					String endereco = rs.getString(7);
 					String telefone = rs.getString(8);
 					String email = rs.getString(9);
 					String igreja_origem = rs.getString(10);
-					Tipo_Membro tipo_membro = Tipo_Membro.valueOf(rs.getString(11));
-					Date membro_desde = rs.getDate(12);
-					Date data_batismo = rs.getDate(13);
-					String observacoes = rs.getString(14);
+					Tipo_Membro tipo_membro = Tipo_Membro.getEnum(rs.getString(11));
+					Sim_Nao batizado = Sim_Nao.getEnum(rs.getString(12));
+					Date membro_desde = rs.getDate(13);
+					Date data_batismo = rs.getDate(14);
+					String observacoes = rs.getString(15);
 					ImageIcon img = null;
 					File f = new File(Membro.imgPath + id + ".jpg");
 					if (f.exists())
 						img = new ImageIcon(f.getPath());
 					Membro membro = new Membro(nome, data_nascimento, sexo, estado_civil, profissao, endereco, telefone,
-							email, igreja_origem, tipo_membro, membro_desde, data_batismo, observacoes, img);
+							email, igreja_origem, tipo_membro, batizado, membro_desde, data_batismo, observacoes, img);
 					membro.setId(id);
 					if (id > maior)
 						maior = id;
 					membros.add(membro);
 				} while (rs.next());
 			}
+			Membro.countID = maior;
 			fireTableDataChanged();
 			Log.getInstance().printLog("Base de dados membros carregada com sucesso!");
 		} catch (Exception e) {
@@ -126,24 +129,24 @@ public class TableModelMembro extends AbstractTableModel {
 		return membros;
 	}
 
-	public void addUser(Membro user) {
+	public void addMembro(Membro user) {
 		undoManager.execute(new AddMembro(user));
 		fireTableDataChanged();
 	}
 
-	public Membro getUser(int rowIndex) {
+	public Membro getMembro(int rowIndex) {
 		return membros.get(rowIndex);
 	}
 
-	public int getRow(Membro user) {
+	public int getRow(Membro membro) {
 		for (int i = 0; i < membros.size(); i++) {
-			if (membros.get(i).getId() == user.getId())
+			if (membros.get(i).getId() == membro.getId())
 				return i;
 		}
 		return -1;
 	}
 
-	public void removeUser(int[] rows) {
+	public void removerMembro(int[] rows) {
 		undoManager.execute(new RemoverMembro(rows));
 	}
 
@@ -154,12 +157,15 @@ public class TableModelMembro extends AbstractTableModel {
 			return membros.get(rowIndex).getNome();
 		case 1:
 			return new SimpleDateFormat("dd/MM/yyyy").format(membros.get(rowIndex).getData_nascimento());
-		case 3:
+		case 2:
 			String phone = membros.get(rowIndex).getTelefone();
-			return "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
-					+ phone.substring(7);
-		case 4:
-			return new SimpleDateFormat("dd/MM/yyyy").format(membros.get(rowIndex).getData_batismo());
+			if (phone.length() == 11)
+				return "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
+						+ phone.substring(7);
+			else
+				return phone;
+		case 3:
+			return membros.get(rowIndex).getTipo_membro();
 		default:
 			return membros.get(rowIndex);
 		}
@@ -179,7 +185,7 @@ public class TableModelMembro extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object valor, int rowIndex, int columnIndex) {
 		try {
-			if (!(columnIndex == 1 && (String.valueOf(valor)).trim().equals(""))) {
+			if (!(columnIndex == 0 && (String.valueOf(valor)).trim().equals(""))) {
 				if ((String.valueOf(valor).trim().equals("")))
 					valor = "-";
 				Membro membro = membros.get(rowIndex);
@@ -193,17 +199,21 @@ public class TableModelMembro extends AbstractTableModel {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					Date data_nasc = dateFormat.parse((String) valor);
 					if (!dateFormat.format(membro.getData_nascimento()).equals(dateFormat.format(data_nasc)))
-						undoManager.execute(new AtualizaMembro(this, "Data_Nascimento", membro, valor));
+						undoManager.execute(new AtualizaMembro(this, "Data_Nascimento", membro, valor, true));
 					break;
 				case 2:
-					String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ","");
+					String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ",
+							"");
 					if (!membro.getTelefone().equals(telefone))
 						if (telefone.length() == 11)
 							undoManager.execute(new AtualizaMembro(this, "Telefone", membro, valor));
 					break;
 				case 3:
-					if(membro.getTipo_membro()!=(Tipo_Membro) valor)
-						undoManager.execute(new AtualizaMembro(this, "Tipo_Membro", membro, valor));
+					if (membro.getTipo_membro() != (Tipo_Membro) valor)
+						undoManager.execute(new CompositeCommand("Tipo de Membro",
+								new AtualizaMembro(this, "Tipo_Membro", membro, valor),
+								new AtualizaMembro(this, "Batizado", membro, valor)));
+
 					break;
 				default:
 					membros.get(rowIndex);
@@ -241,7 +251,7 @@ public class TableModelMembro extends AbstractTableModel {
 				}
 				membros.removeAll(remover);
 				fireTableDataChanged();
-				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
+				atualizarTextFieldsNumeros();
 				Log.getInstance().printLog("Membro(s) apagados com sucesso!");
 			} catch (Exception e) {
 				Log.getInstance().printLog("Erro ao apagar o(s) membro(s)\n" + e.getMessage());
@@ -254,6 +264,7 @@ public class TableModelMembro extends AbstractTableModel {
 			for (int i = 0; i < rows.length; i++) {
 				insertUser(remover.get(i), rows[i]);
 			}
+			atualizarTextFieldsNumeros();
 			fireTableDataChanged();
 		}
 
@@ -292,13 +303,14 @@ public class TableModelMembro extends AbstractTableModel {
 		public void undo() {
 			membro.removerBaseDeDados();
 			membros.remove(membro);
-			MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
+			atualizarTextFieldsNumeros();
 			fireTableDataChanged();
 		}
 
 		@Override
 		public void redo() {
 			execute();
+			fireTableDataChanged();
 		}
 
 		@Override
@@ -308,55 +320,125 @@ public class TableModelMembro extends AbstractTableModel {
 	}
 
 	public void atualizarTextFieldsNumeros() {
-		MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
+		MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(getTotal()));
 		MembroPanel.getInstance().getJft_congregados().setText(String.valueOf(getN_Congregados()));
 		MembroPanel.getInstance().getJft_ex_membros().setText(String.valueOf(getN_Ex_Membros()));
 		MembroPanel.getInstance().getJft_lideranca().setText(String.valueOf(getN_Lideranca()));
 		MembroPanel.getInstance().getJft_membros_ativos().setText(String.valueOf(getN_Membros_Ativos()));
 		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Membros_Nominais()));
+		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Criancas()));
+		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Adolescentes()));
+		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Adultos()));
+		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Casados()));
+		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Homens()));
+		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Mulheres()));
 		
+
 	}
 
-	private int getN_Ex_Membros() {
+	public int getTotal() {
 		int n = 0;
-		for(Membro m: membros){
-			if(m.getTipo_membro() == Tipo_Membro.EX_MEMBRO)
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO)
 				n++;
 		}
 		return n;
 	}
 
-	private int getN_Membros_Nominais() {
+	public int getN_Ex_Membros() {
 		int n = 0;
-		for(Membro m: membros){
-			if(m.getTipo_membro() == Tipo_Membro.MEMBRO_NOMINAL)
+		for (Membro m : membros) {
+			if (m.getTipo_membro() == Tipo_Membro.EX_MEMBRO)
 				n++;
 		}
 		return n;
 	}
 
-	private int getN_Membros_Ativos() {
+	public int getN_Membros_Nominais() {
 		int n = 0;
-		for(Membro m: membros){
-			if(m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO)
+		for (Membro m : membros) {
+			if (m.getTipo_membro() == Tipo_Membro.MEMBRO_NOMINAL)
 				n++;
 		}
 		return n;
 	}
 
-	private int getN_Lideranca() {
+	public int getN_Membros_Ativos() {
 		int n = 0;
-		for(Membro m: membros){
-			if(m.getTipo_membro() == Tipo_Membro.LIDERANCA)
+		for (Membro m : membros) {
+			if (m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO || m.getTipo_membro() == Tipo_Membro.LIDERANCA)
 				n++;
 		}
 		return n;
 	}
 
-	private int getN_Congregados() {
+	public int getN_Lideranca() {
 		int n = 0;
-		for(Membro m: membros){
-			if(m.getTipo_membro() == Tipo_Membro.CONGREGADO)
+		for (Membro m : membros) {
+			if (m.getTipo_membro() == Tipo_Membro.LIDERANCA)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Congregados() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() == Tipo_Membro.CONGREGADO)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.FEMININO)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Casados() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.CASADO)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Adolescentes() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getIdade() >= 13 && m.getIdade() <= 17)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Adultos() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getIdade() >= 18)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Criancas() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getIdade() <= 12)
 				n++;
 		}
 		return n;

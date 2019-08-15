@@ -26,8 +26,8 @@ import dad.fam_com_cristo.Membro;
 public class ImageCompression {
 	
     @SuppressWarnings("resource")
-	public static void compress (File imageFile, Membro user) throws FileNotFoundException, IOException{
-        File compressedImageFile = new File(Membro.imgPath + user.getId() + ".jpg");
+	public static void compress (File imageFile, Membro membro) throws FileNotFoundException, IOException{
+        File compressedImageFile = new File(Membro.imgPath + membro.getId() + ".jpg");
 
         InputStream inputStream = new FileInputStream(imageFile);
         OutputStream outputStream = new FileOutputStream(compressedImageFile);
@@ -56,7 +56,7 @@ public class ImageCompression {
         //Created image
         imageWriter.write(null, new IIOImage(bufferedImage, null, null), imageWriteParam);
         
-        user.setImg (new ImageIcon(compressedImageFile.getPath()));
+        membro.setImg (new ImageIcon(compressedImageFile.getPath()));
 
         // close all streams
         inputStream.close();

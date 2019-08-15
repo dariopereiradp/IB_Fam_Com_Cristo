@@ -222,6 +222,7 @@ public class Login {
 				inicialTime = System.currentTimeMillis();
 				frame.setVisible(false);
 				DataGui.getInstance().open();
+				DataGui.getInstance().newFilter("");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

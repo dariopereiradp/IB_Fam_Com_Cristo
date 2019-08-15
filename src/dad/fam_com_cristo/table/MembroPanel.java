@@ -87,12 +87,31 @@ public class MembroPanel extends JPanel {
 	private JPanel panel_4;
 	private JLabel lblExmembros;
 	private JTextField jft_ex_membros;
+	private JPanel panel_5;
+	private JLabel lblHomens;
+	private JTextField jft_Homens;
+	private JPanel panel_6;
+	private JLabel lblMulheres;
+	private JTextField jft_Mulheres;
+	private JPanel panel_7;
+	private JLabel Casados;
+	private JTextField jftCasados;
+	private JPanel panel_8;
+	private JLabel lblAdultos;
+	private JTextField jft_adultos;
+	private JPanel panel_9;
+	private JLabel lblAdolescentes;
+	private JTextField jft_adolescentes;
+	private JPanel panel_10;
+	private JLabel lblCrianas;
+	private JTextField jft_criancas;
 
 	public MembroPanel() {
 		super();
 		INSTANCE = this;
 		setLayout(new BorderLayout());
 		modelMembro = TableModelMembro.getInstance();
+		
 		membros = new JTable(modelMembro) {
 			/**
 			 * 
@@ -257,7 +276,7 @@ public class MembroPanel extends JPanel {
 
 		final TableCellEditor phoneEditor = new DefaultCellEditor(phone);
 		membros.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
-
+		
 		InputMap iMap1 = phone.getInputMap(JComponent.WHEN_FOCUSED);
 		iMap1.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
 		ActionMap aMap1 = phone.getActionMap();
@@ -277,7 +296,7 @@ public class MembroPanel extends JPanel {
 		tipo_membro.setBounds(370, 255, 191, 25);
 		tipo_membro.setModel(new DefaultComboBoxModel<Tipo_Membro>(Tipo_Membro.values()));
 
-		membros.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(tipo_membro));
+		membros.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_membro));
 
 		JScrollPane jsLivros = new JScrollPane(membros);
 		add(jsLivros, BorderLayout.CENTER);
@@ -314,7 +333,7 @@ public class MembroPanel extends JPanel {
 					int row = table.convertRowIndexToModel(rowAtPoint);
 					if (mouseEvent.getClickCount() == 2 && !table.isCellEditable(row, column)
 							&& table.getSelectedRow() != -1) {
-						abrir(modelMembro.getUser(row));
+						abrir(modelMembro.getMembro(row));
 					}
 				}
 			}
@@ -332,10 +351,11 @@ public class MembroPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (membros.getSelectedRows().length == 1)
-					abrir(modelMembro.getUser(membros.convertRowIndexToModel(membros.getSelectedRow())));
+					abrir(modelMembro.getMembro(membros.convertRowIndexToModel(membros.getSelectedRow())));
 
 			}
 		});
+		modelMembro.atualizarTextFieldsNumeros();
 
 	}
 
@@ -354,7 +374,7 @@ public class MembroPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				abrir(modelMembro.getUser(membros.convertRowIndexToModel(membros.getSelectedRow())));
+				abrir(modelMembro.getMembro(membros.convertRowIndexToModel(membros.getSelectedRow())));
 
 			}
 		});
@@ -510,6 +530,66 @@ public class MembroPanel extends JPanel {
 		jft_ex_membros = new JTextField("0");
 		jft_ex_membros.setEditable(false);
 		panel_4.add(jft_ex_membros);
+		
+		panel_5 = new JPanel();
+		both.add(panel_5);
+		
+		lblHomens = new JLabel("Homens: ");
+		panel_5.add(lblHomens);
+		
+		jft_Homens = new JTextField("0");
+		jft_Homens.setEditable(false);
+		panel_5.add(jft_Homens);
+		
+		panel_6 = new JPanel();
+		both.add(panel_6);
+		
+		lblMulheres = new JLabel("Mulheres: ");
+		panel_6.add(lblMulheres);
+		
+		jft_Mulheres = new JTextField("0");
+		jft_Mulheres.setEditable(false);
+		panel_6.add(jft_Mulheres);
+		
+		panel_7 = new JPanel();
+		both.add(panel_7);
+		
+		Casados = new JLabel("Casados: ");
+		panel_7.add(Casados);
+		
+		jftCasados = new JTextField("0");
+		jftCasados.setEditable(false);
+		panel_7.add(jftCasados);
+		
+		panel_8 = new JPanel();
+		both.add(panel_8);
+		
+		lblAdultos = new JLabel("Adultos (+18): ");
+		panel_8.add(lblAdultos);
+		
+		jft_adultos = new JTextField("0");
+		jft_adultos.setEditable(false);
+		panel_8.add(jft_adultos);
+		
+		panel_9 = new JPanel();
+		both.add(panel_9);
+		
+		lblAdolescentes = new JLabel("Adolescentes (13-17): ");
+		panel_9.add(lblAdolescentes);
+		
+		jft_adolescentes = new JTextField("0");
+		jft_adolescentes.setEditable(false);
+		panel_9.add(jft_adolescentes);
+		
+		panel_10 = new JPanel();
+		both.add(panel_10);
+		
+		lblCrianas = new JLabel("Crian\u00E7as (12-)");
+		panel_10.add(lblCrianas);
+		
+		jft_criancas = new JTextField("0");
+		jft_criancas.setEditable(false);
+		panel_10.add(jft_criancas);
 	}
 
 	public void personalizarBotao(JButton jb) {
@@ -532,7 +612,7 @@ public class MembroPanel extends JPanel {
 					"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 			if (ok == JOptionPane.OK_OPTION) {
-				modelMembro.removeUser(rows);
+				modelMembro.removerMembro(rows);
 			}
 		}
 	}
@@ -568,7 +648,33 @@ public class MembroPanel extends JPanel {
 	public JTextField getJft_membros_nominais() {
 		return jft_membros_nominais;
 	}
-
+	
+	public JTextField getJft_Homens() {
+		return jft_Homens;
+	}
+	
+	public JTextField getJft_Mulheres() {
+		return jft_Mulheres;
+	}
+	
+	public JTextField getJftCasados() {
+		return jftCasados;
+	}
+	
+	public JTextField getJft_adolescentes() {
+		return jft_adolescentes;
+	}
+	
+	public JTextField getJft_adultos() {
+		return jft_adultos;
+	}
+	
+	public JTextField getJft_criancas() {
+		return jft_criancas;
+	}
+	
+	
+	
 	private class DeleteAction extends AbstractAction {
 
 		/**

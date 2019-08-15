@@ -24,4 +24,10 @@ public enum Tipo_Membro {
 	public String toString() {
 		return descricao;
 	}
+	
+	public static Tipo_Membro getEnum(String descricao){
+		for(Tipo_Membro tipo_membro : values())
+            if(tipo_membro.getDescricao().equals(descricao)) return tipo_membro;
+        throw new IllegalArgumentException("A descrição dada não corresponde a nenhum enumerado!");
+	}
 }

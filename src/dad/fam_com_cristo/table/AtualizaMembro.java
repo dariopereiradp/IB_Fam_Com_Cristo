@@ -10,6 +10,7 @@ import javax.swing.table.AbstractTableModel;
 import dad.fam_com_cristo.Estado_Civil;
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.Sexo;
+import dad.fam_com_cristo.Sim_Nao;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.recursos.Command;
 import dad.recursos.ConexaoMembro;
@@ -24,6 +25,7 @@ public class AtualizaMembro implements Command {
 	private Object valor;
 	private Object old;
 	private AbstractTableModel table;
+	private boolean data_string;
 
 	public AtualizaMembro(AbstractTableModel table, String coluna, Membro membro, Object valor) {
 		this.table = table;
@@ -31,6 +33,21 @@ public class AtualizaMembro implements Command {
 		this.membro = membro;
 		this.valor = valor;
 		con = ConexaoMembro.getConnection();
+		inicializar();
+		data_string = false;
+	}
+
+	public AtualizaMembro(TableModelMembro table, String coluna, Membro membro, Object valor, boolean data_string) {
+		this.table = table;
+		this.coluna = coluna;
+		this.membro = membro;
+		this.valor = valor;
+		con = ConexaoMembro.getConnection();
+		inicializar();
+		this.data_string = data_string;
+	}
+
+	private void inicializar() {
 		switch (coluna) {
 		case "Nome":
 			old = membro.getNome();
@@ -62,6 +79,9 @@ public class AtualizaMembro implements Command {
 		case "Tipo_Membro":
 			old = membro.getTipo_membro();
 			break;
+		case "Batizado":
+			old = membro.eBatizado();
+			break;
 		case "Membro_Desde":
 			old = membro.getMembro_desde();
 			break;
@@ -74,23 +94,31 @@ public class AtualizaMembro implements Command {
 		default:
 			break;
 		}
+
 	}
 
 	@Override
 	public void execute() {
 		try {
-			pst = con.prepareStatement("update membros set " + coluna + "=? where ID=?");
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			pst = con.prepareStatement("update membros set " + coluna + "=? where ID=" + membro.getId());
 			switch (coluna) {
 			case "Nome":
 				pst.setString(1, (String) valor);
 				membro.setNome((String) valor);
 				break;
 			case "Data_Nascimento":
-				Date data_nasc = dateFormat.parse((String) valor);
-				membro.setData_nascimento(data_nasc);
-				String data = new SimpleDateFormat("yyyy-M-d").format(data_nasc);
-				pst.setDate(1, java.sql.Date.valueOf(data));
+				if (data_string) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					Date data_nasc = dateFormat.parse((String) valor);
+					membro.setData_nascimento(data_nasc);
+					String data = new SimpleDateFormat("yyyy-M-d").format(data_nasc);
+					pst.setDate(1, java.sql.Date.valueOf(data));
+				} else {
+					Date data_nasc = (Date) valor;
+					membro.setData_nascimento(data_nasc);
+					String data = new SimpleDateFormat("yyyy-M-d").format(data_nasc);
+					pst.setDate(1, java.sql.Date.valueOf(data));
+				}
 				break;
 			case "Sexo":
 				Sexo sexo = (Sexo) valor;
@@ -111,11 +139,12 @@ public class AtualizaMembro implements Command {
 				membro.setEndereco((String) valor);
 				break;
 			case "Telefone":
-				String telefone = ((String) valor);
+				String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ","");
 				if (telefone.length() != 11)
 					telefone = "00000000000";
 				pst.setString(1, telefone);
 				membro.setTelefone(telefone);
+				break;
 			case "Email":
 				pst.setString(1, (String) valor);
 				membro.setEmail((String) valor);
@@ -130,14 +159,19 @@ public class AtualizaMembro implements Command {
 				pst.setString(1, tipo_Membro.getDescricao());
 				membro.setTipo_membro(tipo_Membro);
 				break;
+			case "Batizado":
+				Sim_Nao sim_Nao = membro.newBatizadoState();
+				pst.setString(1, sim_Nao.getDescricao());
+				membro.setBatizado(sim_Nao);
+				break;
 			case "Membro_Desde":
-				Date membro_desde = dateFormat.parse((String) valor);
+				Date membro_desde = (Date) valor;
 				membro.setMembro_desde(membro_desde);
 				String data_membro = new SimpleDateFormat("yyyy-M-d").format(membro_desde);
 				pst.setDate(1, java.sql.Date.valueOf(data_membro));
 				break;
 			case "Data_Batismo":
-				Date data_batismo = dateFormat.parse((String) valor);
+				Date data_batismo = (Date) valor;
 				membro.setData_batismo(data_batismo);
 				String batismo_data = new SimpleDateFormat("yyyy-M-d").format(data_batismo);
 				pst.setDate(1, java.sql.Date.valueOf(batismo_data));
@@ -149,7 +183,7 @@ public class AtualizaMembro implements Command {
 			default:
 				break;
 			}
-			pst.setInt(2, membro.getId());
+//			pst.setInt(2, membro.getId());
 			pst.execute();
 			table.fireTableDataChanged();
 		} catch (Exception e) {
@@ -208,6 +242,11 @@ public class AtualizaMembro implements Command {
 				Tipo_Membro tipo_Membro = (Tipo_Membro) old;
 				pst.setString(1, tipo_Membro.getDescricao());
 				membro.setTipo_membro(tipo_Membro);
+				break;
+			case "Batizado":
+				Sim_Nao sim_Nao = (Sim_Nao) old;
+				pst.setString(1, sim_Nao.getDescricao());
+				membro.setBatizado(sim_Nao);
 				break;
 			case "Membro_Desde":
 				String membro_desde = new SimpleDateFormat("yyyy-M-d").format((Date) old);

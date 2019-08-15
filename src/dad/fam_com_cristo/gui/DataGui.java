@@ -18,7 +18,9 @@ import java.time.format.DateTimeFormatter;
 
 import javax.swing.Timer;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
@@ -33,17 +35,14 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
 import dad.fam_com_cristo.table.TableModelMembro;
+import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.table.MembroPanel;
-import dad.recursos.CellRenderer;
-import dad.recursos.CellRendererNoImage;
-import dad.recursos.DefaultCellRenderer;
 import dad.recursos.Log;
 import dad.recursos.SairAction;
 import dad.recursos.ZipCompress;
@@ -79,7 +78,7 @@ public class DataGui extends JFrame {
 		setTitle(Main.TITLE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
-		setMinimumSize(new Dimension(1100, 600));
+		setMinimumSize(new Dimension(1350, 600));
 		setExtendedState(MAXIMIZED_BOTH);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -105,22 +104,27 @@ public class DataGui extends JFrame {
 		checkMembroAtivo = new JCheckBox("Membro Ativo");
 		checkMembroAtivo.setSelected(true);
 		filtrosPanel.add(checkMembroAtivo);
+		checkMembroAtivo.setToolTipText("Pessoas batizadas que participam ativamente na igreja");
 
 		checkMembroNominal = new JCheckBox("Membro Nominal");
 		checkMembroNominal.setSelected(true);
 		filtrosPanel.add(checkMembroNominal);
+		checkMembroNominal.setToolTipText("Pessoas que já foram batizadas mas não são muito envolvidas na igreja");
 
 		checkCongregados = new JCheckBox("Congregados");
 		checkCongregados.setSelected(true);
 		filtrosPanel.add(checkCongregados);
+		checkCongregados.setToolTipText("Pessoas que vão à igreja com regularidade mas não são batizadas");
 
 		checkLideranca = new JCheckBox("Liderança");
 		checkLideranca.setSelected(true);
 		filtrosPanel.add(checkLideranca);
+		checkLideranca.setToolTipText("Líderes da igreja e dos ministérios da igreja. São também membros ativos");
 
 		check_ex_membros = new JCheckBox("Ex-Membros");
 		check_ex_membros.setSelected(false);
 		filtrosPanel.add(check_ex_membros);
+		check_ex_membros.setToolTipText("Pessoas que já foram membros mas saíram por transferência ou abandono");
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -303,9 +307,47 @@ public class DataGui extends JFrame {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				filter(pesquisa.getText().toLowerCase());
+				newFilter(pesquisa.getText().toLowerCase());
 			}
 
+		});
+
+		checkMembroAtivo.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				newFilter(pesquisa.getText().toLowerCase());
+			}
+		});
+		checkMembroNominal.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				newFilter(pesquisa.getText().toLowerCase());
+			}
+		});
+		checkCongregados.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				newFilter(pesquisa.getText().toLowerCase());
+			}
+		});
+
+		checkLideranca.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				newFilter(pesquisa.getText().toLowerCase());
+			}
+		});
+
+		check_ex_membros.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				newFilter(pesquisa.getText().toLowerCase());
+			}
 		});
 
 		TableModelMembro.getInstance().addListeners();
@@ -314,7 +356,7 @@ public class DataGui extends JFrame {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				filter("");
+				newFilter("");
 				updateItems();
 			}
 		});
@@ -398,6 +440,16 @@ public class DataGui extends JFrame {
 		return menuRefazer;
 	}
 
+	public void anular() {
+
+		TableModelMembro.getInstance().getUndoManager().undo();
+	}
+
+	public void refazer() {
+
+		TableModelMembro.getInstance().getUndoManager().redo();
+	}
+
 	public void open() {
 		setVisible(true);
 		JOptionPane pane = new JOptionPane("Bem vindo " + Login.NOME + "!", JOptionPane.INFORMATION_MESSAGE,
@@ -416,54 +468,43 @@ public class DataGui extends JFrame {
 		dialog.setVisible(true);
 	}
 
-	public void anular() {
-
-		TableModelMembro.getInstance().getUndoManager().undo();
-	}
-
-	public void refazer() {
-
-		TableModelMembro.getInstance().getUndoManager().redo();
-	}
-
 	public void ordenar() {
 		// if (tabbedPane.getSelectedIndex() == 0)
 		// TableModelUser.getInstance().ordenar();
 	}
 
-	private int num_checkboxEnabled() {
-		int count = 0;
-		if (tabbedPane.getSelectedIndex() == 0) {
-			if (checkMembroAtivo.isSelected())
-				count++;
-			if (checkMembroNominal.isSelected())
-				count++;
-			if (checkCongregados.isSelected())
-				count++;
-			if (checkLideranca.isSelected())
-				count++;
-		}
-		return count;
-	}
-
-	public int[] checkBoxEnabled() {
-		int count = 0;
-		int[] columns = new int[num_checkboxEnabled() + 3];
-		if (tabbedPane.getSelectedIndex() == 0) {
-			if (checkMembroAtivo.isSelected())
-				columns[count++] = 0;
-			if (checkMembroNominal.isSelected())
-				columns[count++] = 1;
-			if (checkCongregados.isSelected())
-				columns[count++] = 2;
-			if (checkLideranca.isSelected())
-				columns[count++] = 3;
-			columns[count++] = 5;
-			columns[count++] = 6;
-			columns[count++] = 7;
-		}
-		return columns;
-	}
+//	private int num_checkboxEnabled() {
+//		int count = 0;
+//		if (tabbedPane.getSelectedIndex() == 0) {
+//			if (checkMembroAtivo.isSelected())
+//				count++;
+//			if (checkMembroNominal.isSelected())
+//				count++;
+//			if (checkCongregados.isSelected())
+//				count++;
+//			if (checkLideranca.isSelected())
+//				count++;
+//			if (check_ex_membros.isSelected())
+//				count++;
+//		}
+//		return count;
+//	}
+//
+//	public int[] checkBoxEnabled() {
+//		int count = 0;
+//		int[] check = new int[num_checkboxEnabled()];
+//		if (checkMembroAtivo.isSelected())
+//			check[count++] = 0;
+//		if (checkMembroNominal.isSelected())
+//			check[count++] = 1;
+//		if (checkCongregados.isSelected())
+//			check[count++] = 2;
+//		if (checkLideranca.isSelected())
+//			check[count++] = 3;
+//		if (check_ex_membros.isSelected())
+//			check[count++] = 4;
+//		return check;
+//	}
 
 	public static DataGui getInstance() {
 		if (INSTANCE == null)
@@ -471,48 +512,57 @@ public class DataGui extends JFrame {
 		return INSTANCE;
 	}
 
-	public void filter(String filtro) {
-		if (tabbedPane.getSelectedIndex() == 0) {
-			TableRowSorter<TableModelMembro> sorter = new TableRowSorter<TableModelMembro>(
-					TableModelMembro.getInstance());
-			MembroPanel.getInstance().getMembros().setRowSorter(sorter);
-			RowFilter<TableModelMembro, Object> filter;
-			if (filtro.trim().equals("")) {
-				sorter.setRowFilter(null);
-			} else {
-				if (num_checkboxEnabled() == 6 || num_checkboxEnabled() == 0) {
-					filter = RowFilter
-							.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()));
-					MembroPanel.getInstance().getMembros().setDefaultRenderer(Object.class, new CellRenderer());
-				} else
-					filter = RowFilter.regexFilter(
-							(Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString()), checkBoxEnabled());
-				sorter.setRowFilter(filter);
-				setRenderers();
-			}
-		}
-	}
+	// public void filter(String filtro) {
+	// if (tabbedPane.getSelectedIndex() == 0) {
+	// TableRowSorter<TableModelMembro> sorter = new
+	// TableRowSorter<TableModelMembro>(
+	// TableModelMembro.getInstance());
+	// MembroPanel.getInstance().getMembros().setRowSorter(sorter);
+	// RowFilter<TableModelMembro, Object> filter;
+	// if (filtro.trim().equals("")) {
+	// sorter.setRowFilter(null);
+	// } else {
+	// filter = RowFilter.regexFilter((Pattern.compile("(?i)" + filtro,
+	// Pattern.CASE_INSENSITIVE).toString()));
+	// MembroPanel.getInstance().getMembros().setDefaultRenderer(Object.class,
+	// new CellRenderer());
+	// sorter.setRowFilter(filter);
+	// }
+	// }
+	// }
 
-	public void setRenderers() {
-		if (tabbedPane.getSelectedIndex() == 0) {
-			TableColumnModel tcl = MembroPanel.getInstance().getMembros().getColumnModel();
-			if (checkMembroAtivo.isSelected())
-				tcl.getColumn(0).setCellRenderer(new CellRendererNoImage());
-			else
-				tcl.getColumn(0).setCellRenderer(new DefaultCellRenderer());
-			if (checkMembroNominal.isSelected())
-				tcl.getColumn(1).setCellRenderer(new CellRenderer());
-			else
-				tcl.getColumn(1).setCellRenderer(new DefaultCellRenderer());
-			if (checkCongregados.isSelected())
-				tcl.getColumn(2).setCellRenderer(new CellRenderer());
-			else
-				tcl.getColumn(2).setCellRenderer(new DefaultCellRenderer());
-			if (checkLideranca.isSelected())
-				tcl.getColumn(3).setCellRenderer(new CellRenderer());
-			else
-				tcl.getColumn(3).setCellRenderer(new DefaultCellRenderer());
+	public void newFilter(String filtro) {
+		RowFilter<TableModelMembro, Object> rf = null;
+		RowFilter<TableModelMembro, Object> rowFilter = null;
+		TableRowSorter<TableModelMembro> sorter = new TableRowSorter<TableModelMembro>(TableModelMembro.getInstance());
+		List<RowFilter<TableModelMembro, Object>> filters = new ArrayList<RowFilter<TableModelMembro, Object>>(5);
+		List<RowFilter<TableModelMembro, Object>> andFilters = new ArrayList<RowFilter<TableModelMembro, Object>>(1);
+		MembroPanel.getInstance().getMembros().setRowSorter(sorter);
+		andFilters.add(RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString())));
+		if (checkMembroAtivo.isSelected()) {
+			filters.add(RowFilter.regexFilter(Tipo_Membro.MEMBRO_ATIVO.getDescricao(), 3));
 		}
+		if (checkMembroNominal.isSelected()) {
+			filters.add(RowFilter.regexFilter(Tipo_Membro.MEMBRO_NOMINAL.getDescricao(), 3));
+		}
+		if (check_ex_membros.isSelected()) {
+			filters.add(RowFilter.regexFilter(Tipo_Membro.EX_MEMBRO.getDescricao(), 3));
+		}
+		if (checkCongregados.isSelected()) {
+			filters.add(RowFilter.regexFilter(Tipo_Membro.CONGREGADO.getDescricao(), 3));
+		}
+		if (checkLideranca.isSelected()) {
+			filters.add(RowFilter.regexFilter(Tipo_Membro.LIDERANCA.getDescricao(), 3));
+		}
+
+		try {
+			rf = RowFilter.orFilter(filters);
+			andFilters.add(rf);
+			rowFilter = RowFilter.andFilter(andFilters);
+		} catch (java.util.regex.PatternSyntaxException e) {
+			return;
+		}
+		sorter.setRowFilter(rowFilter);
 	}
 
 	public JTextField getPesquisa() {

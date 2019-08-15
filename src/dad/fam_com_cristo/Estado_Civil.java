@@ -24,4 +24,10 @@ public enum Estado_Civil {
 	public String toString() {
 		return descricao;
 	}
+	
+	public static Estado_Civil getEnum(String descricao){
+		for(Estado_Civil estado_civil : values())
+            if(estado_civil.getDescricao().equals(descricao)) return estado_civil;
+        throw new IllegalArgumentException("A descrição dada não corresponde a nenhum enumerado!");
+	}
 }

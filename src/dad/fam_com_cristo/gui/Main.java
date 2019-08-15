@@ -43,12 +43,14 @@ public class Main {
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String USER = "admin";
 	public static final String PASS = "dad";
-	public static final String BACKUP_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
-			+ "Documents/IB_Fam_Com_Cristo/Backups/";
-	public static final String BUG_REPORTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
-			+ "Documents/IB_Fam_Com_Cristo/BugReports/";
+	public static final String DOCUMENTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
+			+ "Documents/IB_Fam_Com_Cristo/";
+	public static final String BACKUP_DIR = DOCUMENTS_DIR + "Backups/";
+	public static final String BUG_REPORTS_DIR = DOCUMENTS_DIR + "BugReports/";
 	public static final String DATA_DIR = System.getenv("APPDATA") + "/IB_Fam_Com_Cristo/";
 	public static final String DATABASE_DIR = DATA_DIR + "Databases/";
+	public static final String MEMBROS_PDF_PATH = DOCUMENTS_DIR + "Comprovantes/";
+	public static final String[] OPTIONS = { "Sim", "Não" };
 	public static long inicialTime;
 	private Connection con;
 
@@ -131,6 +133,10 @@ public class Main {
 		File dir = new File(DATABASE_DIR);
 		if (!dir.exists())
 			dir.mkdirs();
+		
+		File membrosPDF = new File(Main.MEMBROS_PDF_PATH);
+		if (!membrosPDF.exists())
+			membrosPDF.mkdirs();
 
 		File backdir = new File(Main.BACKUP_DIR);
 		if (!backdir.exists())
@@ -204,7 +210,7 @@ public class Main {
 						s.executeUpdate("CREATE TABLE Membros (ID int NOT NULL, Nome varchar(255) NOT NULL,"
 								+ "Data_Nascimento date, Sexo varchar(10), Estado_Civil varchar(25), Profissao varchar(50),"
 								+ "Endereco memo, Telefone varchar(15), Email varchar(255), Igreja_Origem varchar(255),"
-								+ "Tipo_Membro varchar(127), Membro_Desde date, Data_Batismo date, Observacoes memo,"
+								+ "Tipo_Membro varchar(127), Batizado varchar(5), Membro_Desde date, Data_Batismo date, Observacoes memo,"
 								+ "CONSTRAINT PK_Membros PRIMARY KEY (ID));");
 						Log.getInstance().printLog("Base de dados membros.mbd criada com sucesso");
 					}

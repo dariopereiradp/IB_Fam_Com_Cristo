@@ -20,4 +20,10 @@ public enum Sim_Nao {
 		return descricao;
 	}
 	
+	public static Sim_Nao getEnum(String descricao){
+		for(Sim_Nao sim_nao : values())
+            if(sim_nao.getDescricao().equals(descricao)) return sim_nao;
+        throw new IllegalArgumentException("A descrição dada não corresponde a nenhum enumerado!");
+	}
+	
 }
