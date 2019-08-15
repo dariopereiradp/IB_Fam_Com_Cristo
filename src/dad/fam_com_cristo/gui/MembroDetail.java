@@ -69,7 +69,8 @@ public class MembroDetail extends JDialog {
 	private JComboBox<Tipo_Membro> tipo_membro;
 	private JComboBox<Estado_Civil> estado_civil;
 	private JButton ok, b_imprimir, editar, salvar;
-	
+	private JLabel image;
+
 	public MembroDetail(Membro membro) {
 		this.membro = membro;
 		System.out.println(membro);
@@ -154,6 +155,7 @@ public class MembroDetail extends JDialog {
 		data_nascimento.setLocale(new Locale("pt", "BR"));
 		data_nascimento.setDateFormatString("dd/MM/yyyy");
 		data_nascimento.setMaxSelectableDate(new Date());
+		data_nascimento.setDate(new Date());
 
 		profissao = new JTextField("");
 		profissao.setBounds(601, 45, 191, 25);
@@ -276,6 +278,7 @@ public class MembroDetail extends JDialog {
 		data_batismo.setLocale(new Locale("pt", "BR"));
 		data_batismo.setDateFormatString("dd/MM/yyyy");
 		data_batismo.setEnabled(false);
+		data_batismo.setDate(new Date());
 		infoPanel.add(data_batismo);
 
 		JLabel lblDataDeBatismo = new JLabel("Data de Batismo: ");
@@ -291,6 +294,7 @@ public class MembroDetail extends JDialog {
 		membro_desde.setDateFormatString("dd/MM/yyyy");
 		membro_desde.setBounds(135, 295, 178, 25);
 		infoPanel.add(membro_desde);
+		membro_desde.setDate(new Date());
 		membro_desde.setEnabled(false);
 
 		batizado = new JTextField();
@@ -327,7 +331,7 @@ public class MembroDetail extends JDialog {
 
 		infoPanelWithButtons.add(botoesSecund, BorderLayout.SOUTH);
 
-		JLabel image = new JLabel();
+		image = new JLabel();
 		image.setHorizontalAlignment(JLabel.CENTER);
 		image.setVerticalAlignment(JLabel.CENTER);
 		image.setMinimumSize(new Dimension(177, 236));
@@ -511,7 +515,7 @@ public class MembroDetail extends JDialog {
 		addImage.addActionListener(new Add());
 
 	}
-	
+
 	protected void editState() {
 		nome.setEditable(true);
 		profissao.setEditable(true);
@@ -527,9 +531,9 @@ public class MembroDetail extends JDialog {
 		data_batismo.setEnabled(true);
 		observacoes.setEditable(true);
 		editar.setEnabled(false);
-		salvar.setEnabled(true);		
+		salvar.setEnabled(true);
 	}
-	
+
 	protected void savedState() {
 		nome.setEditable(false);
 		profissao.setEditable(false);
@@ -545,11 +549,11 @@ public class MembroDetail extends JDialog {
 		data_batismo.setEnabled(false);
 		observacoes.setEditable(false);
 		editar.setEnabled(true);
-		salvar.setEnabled(false);		
+		salvar.setEnabled(false);
 	}
 
-	private void preencher (){
-		if(membro != null){
+	private void preencher() {
+		if (membro != null) {
 			nome.setText(membro.getNome());
 			profissao.setText(membro.getProfissao());
 			data_nascimento.setDate(membro.getData_nascimento());
@@ -563,18 +567,43 @@ public class MembroDetail extends JDialog {
 			membro_desde.setDate(membro.getMembro_desde());
 			batizado.setText(membro.eBatizado().getDescricao());
 			data_batismo.setDate(membro.getData_batismo());
-			observacoes.setText(membro.getObservacoes());			
+			observacoes.setText(membro.getObservacoes());
 		}
 	}
 
 	public void save(boolean close) {
-		nome.setEditable(false);
-		profissao.setEditable(false);
-		endereco.setEditable(false);
-		observacoes.setEditable(false);
-
+		savedState();
+		String nome = this.nome.getText();
+		Date data_nascimento = this.data_nascimento.getDate();
+		Sexo sexo = (Sexo) this.sexo.getSelectedItem();
+		Estado_Civil estado_civil = (Estado_Civil) this.estado_civil.getSelectedItem();
+		String profissao = this.profissao.getText();
+		String endereco = this.endereco.getText();
+		String telefone = this.telefone.getText().replace("-", "").replace("(", "").replace(")", "").replace(" ", "");
+		String email = this.email.getText();
+		String igreja_origem = (String) this.igreja_origem.getSelectedItem();
+		Tipo_Membro tipo_membro = (Tipo_Membro) this.tipo_membro.getSelectedItem();
+		Date membro_desde = this.membro_desde.getDate();
+		Date data_batismo = this.data_batismo.getDate();
+		String observacoes = this.observacoes.getText();
+		ImageIcon img = (ImageIcon) image.getIcon();
 		TableModelMembro.getInstance().fireTableDataChanged();
 
+		if (membro == null) {
+			membro = new Membro(nome, data_nascimento, sexo, estado_civil, profissao, endereco, telefone, email,
+					igreja_origem, tipo_membro, membro_desde, data_batismo, observacoes, img);
+			membro.adicionarNaBaseDeDados();
+		}
+		else {
+			membro.setNome(nome);
+			membro.setData_nascimento(data_nascimento);
+			membro.setSexo(sexo);
+			membro.setEstado_civil(estado_civil);
+			membro.setProfissao(profissao);
+			membro.setEndereco(endereco);
+			membro.setTelefone(telefone);
+			membro.setEmail(email);
+		}
 		if (close) {
 			dispose();
 		}

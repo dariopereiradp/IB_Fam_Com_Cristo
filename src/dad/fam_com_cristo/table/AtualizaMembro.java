@@ -17,27 +17,57 @@ public class AtualizaMembro implements Command {
 
 	private Connection con;
 	private PreparedStatement pst;
-	private Membro user;
+	private Membro membro;
 	private String coluna;
 	private Object valor;
 	private Object old;
 	private AbstractTableModel table;
 
-	public AtualizaMembro(AbstractTableModel table, String coluna, Membro user, Object valor) {
+	public AtualizaMembro(AbstractTableModel table, String coluna, Membro membro, Object valor) {
 		this.table = table;
 		this.coluna = coluna;
-		this.user = user;
+		this.membro = membro;
 		this.valor = valor;
 		con = ConexaoMembro.getConnection();
 		switch (coluna) {
 		case "Nome":
-			old = user.getNome();
+			old = membro.getNome();
 			break;
 		case "Data_Nascimento":
-			old = user.getData_nascimento();
+			old = membro.getData_nascimento();
+			break;
+		case "Sexo":
+			old = membro.getSexo();
+			break;
+		case "Estado_Civil":
+			old = membro.getEstado_civil();
+			break;
+		case "Profissao":
+			old = membro.getProfissao();
+			break;
+		case "Endereco":
+			old = membro.getEndereco();
 			break;
 		case "Telefone":
-			old = user.getTelefone();
+			old = membro.getTelefone();
+			break;
+		case "Email":
+			old = membro.getEmail();
+			break;
+		case "Igreja_Origem":
+			old = membro.getIgreja_origem();
+			break;
+		case "Tipo_Membro":
+			old = membro.getTipo_membro();
+			break;
+		case "Membro_Desde":
+			old = membro.getMembro_desde();
+			break;
+		case "Data_Batismo":
+			old = membro.getData_batismo();
+			break;
+		case "Observacoes":
+			old = membro.getObservacoes();
 			break;
 		default:
 			break;
@@ -49,29 +79,58 @@ public class AtualizaMembro implements Command {
 		try {
 			CriptografiaAES.setKey(Membro.key);
 //			CriptografiaAES.encrypt(user.getCpf());
-			pst = con.prepareStatement("update usuarios set " + coluna + "=? where CPF=?");
+			pst = con.prepareStatement("update usuarios set " + coluna + "=? where ID=?");
 			switch (coluna) {
 			case "Nome":
 				pst.setString(1, (String) valor);
-				user.setNome((String) valor);
-				break;
+				membro.setNome((String) valor);
 			case "Data_Nascimento":
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				Date data_nasc = dateFormat.parse((String) valor);
-				user.setData_nascimento(data_nasc);
+				membro.setData_nascimento(data_nasc);
 				String data = new SimpleDateFormat("yyyy-M-d").format(data_nasc);
 				pst.setDate(1, java.sql.Date.valueOf(data));
+				break;
+			case "Sexo":
+				old = membro.getSexo();
+				break;
+			case "Estado_Civil":
+				old = membro.getEstado_civil();
+				break;
+			case "Profissao":
+				old = membro.getProfissao();
+				break;
+			case "Endereco":
+				old = membro.getEndereco();
 				break;
 			case "Telefone":
 				String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ", "");
 				if(telefone.length()!=11)
 					telefone = "00000000000";
 				pst.setString(1, telefone);
-				user.setTelefone(telefone);
+				membro.setTelefone(telefone);
+			case "Email":
+				old = membro.getEmail();
+				break;
+			case "Igreja_Origem":
+				old = membro.getIgreja_origem();
+				break;
+			case "Tipo_Membro":
+				old = membro.getTipo_membro();
+				break;
+			case "Membro_Desde":
+				old = membro.getMembro_desde();
+				break;
+			case "Data_Batismo":
+				old = membro.getData_batismo();
+				break;
+			case "Observacoes":
+				old = membro.getObservacoes();
+				break;
 			default:
 				break;
 			}
-			pst.setString(2, CriptografiaAES.getEncryptedString());
+			pst.setInt(2, membro.getId());
 			pst.execute();
 			table.fireTableDataChanged();
 		} catch (Exception e) {
@@ -90,16 +149,16 @@ public class AtualizaMembro implements Command {
 			switch (coluna) {
 			case "Nome":
 				pst.setString(1, (String) old);
-				user.setNome((String) old);
+				membro.setNome((String) old);
 				break;
 			case "Data_Nascimento":
 				String data = new SimpleDateFormat("yyyy-M-d").format((Date) old);
 				pst.setDate(1, java.sql.Date.valueOf(data));
-				user.setData_nascimento((Date) old);
+				membro.setData_nascimento((Date) old);
 				break;
 			case "Telefone":
 				pst.setString(1, (String) old);
-				user.setTelefone((String) old);
+				membro.setTelefone((String) old);
 				break;
 			default:
 				break;
