@@ -484,8 +484,6 @@ public class MembroDetail extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				editar.setEnabled(true);
-				salvar.setEnabled(false);
 				if (close && nome.isEditable())
 					save(close);
 				else if (close && !nome.isEditable()) {

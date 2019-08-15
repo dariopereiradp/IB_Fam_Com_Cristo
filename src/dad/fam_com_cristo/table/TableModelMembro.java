@@ -127,7 +127,7 @@ public class TableModelMembro extends AbstractTableModel {
 	}
 
 	public void addUser(Membro user) {
-		undoManager.execute(new AddUser(user));
+		undoManager.execute(new AddMembro(user));
 		fireTableDataChanged();
 	}
 
@@ -144,7 +144,7 @@ public class TableModelMembro extends AbstractTableModel {
 	}
 
 	public void removeUser(int[] rows) {
-		undoManager.execute(new RemoverUser(rows));
+		undoManager.execute(new RemoverMembro(rows));
 	}
 
 	@Override
@@ -169,10 +169,8 @@ public class TableModelMembro extends AbstractTableModel {
 	@Override
 	public Class getColumnClass(int column) {
 		switch (column) {
-		case 0:
-			return Long.class;
-		case 4:
-			return Integer.class;
+		case 3:
+			return Tipo_Membro.class;
 		default:
 			return String.class;
 		}
@@ -184,25 +182,28 @@ public class TableModelMembro extends AbstractTableModel {
 			if (!(columnIndex == 1 && (String.valueOf(valor)).trim().equals(""))) {
 				if ((String.valueOf(valor).trim().equals("")))
 					valor = "-";
-				Membro user = membros.get(rowIndex);
+				Membro membro = membros.get(rowIndex);
 				switch (columnIndex) {
-				case 1:
-					if (!((String) valor).equals(user.getNome())) {
-						undoManager.execute(new AtualizaMembro(this, "Nome", user, valor));
+				case 0:
+					if (!((String) valor).equals(membro.getNome())) {
+						undoManager.execute(new AtualizaMembro(this, "Nome", membro, valor));
 					}
 					break;
-				case 2:
+				case 1:
 					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 					Date data_nasc = dateFormat.parse((String) valor);
-					if (!dateFormat.format(user.getData_nascimento()).equals(dateFormat.format(data_nasc)))
-						undoManager.execute(new AtualizaMembro(this, "Data_Nascimento", user, valor));
+					if (!dateFormat.format(membro.getData_nascimento()).equals(dateFormat.format(data_nasc)))
+						undoManager.execute(new AtualizaMembro(this, "Data_Nascimento", membro, valor));
+					break;
+				case 2:
+					String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ","");
+					if (!membro.getTelefone().equals(telefone))
+						if (telefone.length() == 11)
+							undoManager.execute(new AtualizaMembro(this, "Telefone", membro, valor));
 					break;
 				case 3:
-					String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ",
-							"");
-					if (!user.getTelefone().equals(telefone))
-						if (telefone.length() == 11)
-							undoManager.execute(new AtualizaMembro(this, "Telefone", user, valor));
+					if(membro.getTipo_membro()!=(Tipo_Membro) valor)
+						undoManager.execute(new AtualizaMembro(this, "Tipo_Membro", membro, valor));
 					break;
 				default:
 					membros.get(rowIndex);
@@ -222,19 +223,18 @@ public class TableModelMembro extends AbstractTableModel {
 
 	}
 
-	private class RemoverUser implements Command {
+	private class RemoverMembro implements Command {
 
 		private int[] rows;
 		private ArrayList<Membro> remover = new ArrayList<>();
 
-		public RemoverUser(int[] rows) {
+		public RemoverMembro(int[] rows) {
 			this.rows = rows;
 		}
 
 		@Override
 		public void execute() {
 			try {
-				con = ConexaoMembro.getConnection();
 				for (int i = 0; i < rows.length; i++) {
 					membros.get(rows[i]).removerBaseDeDados();
 					remover.add(membros.get(rows[i]));
@@ -242,9 +242,9 @@ public class TableModelMembro extends AbstractTableModel {
 				membros.removeAll(remover);
 				fireTableDataChanged();
 				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
-				Log.getInstance().printLog("Usuários apagados com sucesso!");
+				Log.getInstance().printLog("Membro(s) apagados com sucesso!");
 			} catch (Exception e) {
-				Log.getInstance().printLog("Erro ao apagar o(s) usuário(s)\n" + e.getMessage());
+				Log.getInstance().printLog("Erro ao apagar o(s) membro(s)\n" + e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -264,34 +264,34 @@ public class TableModelMembro extends AbstractTableModel {
 
 		@Override
 		public String getName() {
-			return "Remover Usuário";
+			return "Remover Membro";
 		}
 	}
 
-	private class AddUser implements Command {
+	private class AddMembro implements Command {
 
-		private Membro user;
+		private Membro membro;
 
-		public AddUser(Membro user) {
-			this.user = user;
+		public AddMembro(Membro membro) {
+			this.membro = membro;
 		}
 
 		@Override
 		public void execute() {
 			try {
-				user.adicionarNaBaseDeDados();
-				membros.add(user);
-				MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
+				membro.adicionarNaBaseDeDados();
+				membros.add(membro);
+				atualizarTextFieldsNumeros();
 			} catch (Exception e) {
-				Log.getInstance().printLog("Erro ao criar cliente! " + e.getMessage());
+				Log.getInstance().printLog("Erro ao criar membro! " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
 
 		@Override
 		public void undo() {
-			user.removerBaseDeDados();
-			membros.remove(user);
+			membro.removerBaseDeDados();
+			membros.remove(membro);
 			MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
 			fireTableDataChanged();
 		}
@@ -303,8 +303,63 @@ public class TableModelMembro extends AbstractTableModel {
 
 		@Override
 		public String getName() {
-			return "Adicionar Cliente";
+			return "Adicionar Membro";
 		}
+	}
+
+	public void atualizarTextFieldsNumeros() {
+		MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(membros.size()));
+		MembroPanel.getInstance().getJft_congregados().setText(String.valueOf(getN_Congregados()));
+		MembroPanel.getInstance().getJft_ex_membros().setText(String.valueOf(getN_Ex_Membros()));
+		MembroPanel.getInstance().getJft_lideranca().setText(String.valueOf(getN_Lideranca()));
+		MembroPanel.getInstance().getJft_membros_ativos().setText(String.valueOf(getN_Membros_Ativos()));
+		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Membros_Nominais()));
+		
+	}
+
+	private int getN_Ex_Membros() {
+		int n = 0;
+		for(Membro m: membros){
+			if(m.getTipo_membro() == Tipo_Membro.EX_MEMBRO)
+				n++;
+		}
+		return n;
+	}
+
+	private int getN_Membros_Nominais() {
+		int n = 0;
+		for(Membro m: membros){
+			if(m.getTipo_membro() == Tipo_Membro.MEMBRO_NOMINAL)
+				n++;
+		}
+		return n;
+	}
+
+	private int getN_Membros_Ativos() {
+		int n = 0;
+		for(Membro m: membros){
+			if(m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO)
+				n++;
+		}
+		return n;
+	}
+
+	private int getN_Lideranca() {
+		int n = 0;
+		for(Membro m: membros){
+			if(m.getTipo_membro() == Tipo_Membro.LIDERANCA)
+				n++;
+		}
+		return n;
+	}
+
+	private int getN_Congregados() {
+		int n = 0;
+		for(Membro m: membros){
+			if(m.getTipo_membro() == Tipo_Membro.CONGREGADO)
+				n++;
+		}
+		return n;
 	}
 
 }

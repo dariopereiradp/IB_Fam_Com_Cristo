@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,7 +14,6 @@ import org.apache.commons.lang.WordUtils;
 
 import dad.fam_com_cristo.gui.DataGui;
 import dad.recursos.ConexaoMembro;
-import dad.recursos.CriptografiaAES;
 import dad.recursos.ImageCompression;
 import dad.recursos.Log;
 
@@ -27,7 +25,6 @@ public class Membro {
 	private int id;
 	private static Connection con;
 	private static PreparedStatement pst;
-	private static ResultSet rs;
 	private Tipo_Membro tipo_membro;
 	private Sexo sexo;
 	private Estado_Civil estado_civil;
@@ -60,29 +57,39 @@ public class Membro {
 
 	public void adicionarNaBaseDeDados() {
 		try {
-			CriptografiaAES.setKey(key);
-			// CriptografiaAES.encrypt(cpf);
-			pst = con.prepareStatement("insert into usuarios(CPF,Nome,Data_Nascimento) values (?,?,?)");
-			pst.setString(1, CriptografiaAES.getEncryptedString());
+			pst = con.prepareStatement("insert into membros(ID,Nome,Data_Nascimento,Sexo,Estado_Civil,Profissao,Endereco,Telefone,Email,"
+					+ "Igreja_Origem,Tipo_Membro,Membro_Desde,Data_Batismo,Observacoes) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			pst.setInt(1, getId());
 			pst.setString(2, getNome());
 			String data = new SimpleDateFormat("yyyy-M-d").format(data_nascimento);
 			pst.setDate(3, java.sql.Date.valueOf(data));
+			pst.setString(4, getSexo().getDescricao());
+			pst.setString(5, getEstado_civil().getDescricao());
+			pst.setString(6, getProfissao());
+			pst.setString(7, getEndereco());
+			pst.setString(8, getTelefone());
+			pst.setString(9, getEmail());
+			pst.setString(10, getIgreja_origem());
+			pst.setString(11, getTipo_membro().getDescricao());
+			data = new SimpleDateFormat("yyyy-M-d").format(getMembro_desde());
+			pst.setDate(12, java.sql.Date.valueOf(data));
+			data = new SimpleDateFormat("yyyy-M-d").format(getData_batismo());
+			pst.setDate(13, java.sql.Date.valueOf(data));
+			pst.setString(14, getObservacoes());
 			pst.execute();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			Log.getInstance().printLog("Erro ao adicionar membro na base de dados! - " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
 	public void removerBaseDeDados() {
 		try {
-			CriptografiaAES.setKey(key);
-			// CriptografiaAES.encrypt(cpf);
-			pst = con.prepareStatement("delete from usuarios where CPF=?");
-			pst.setString(1, CriptografiaAES.getEncryptedString());
+			pst = con.prepareStatement("delete from usuarios where ID=?");
+			pst.setInt(1, getId());
 			pst.execute();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			Log.getInstance().printLog("Erro ao adicionar membro na base de dados! - " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -101,44 +108,6 @@ public class Membro {
 
 	public void setData_nascimento(Date data_nascimento) {
 		this.data_nascimento = data_nascimento;
-	}
-
-	public void atualizarDados() {
-		try {
-			// String cpf = this.cpf;
-			pst = con.prepareStatement("update usuarios set nome=?,Data_Nascimento=? where cpf=?");
-			CriptografiaAES.setKey(key);
-			// CriptografiaAES.encrypt(cpf);
-			// cpf = CriptografiaAES.getEncryptedString();
-			pst.setString(1, getNome());
-			String data = new SimpleDateFormat("yyyy-M-d").format(data_nascimento);
-			pst.setDate(2, java.sql.Date.valueOf(data));
-			pst.setString(3, CriptografiaAES.getEncryptedString());
-			pst.execute();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public static boolean existe(String cpf) {
-		try {
-			CriptografiaAES.setKey(key);
-			CriptografiaAES.encrypt(cpf);
-			cpf = CriptografiaAES.getEncryptedString();
-			con = ConexaoMembro.getConnection();
-			pst = con.prepareStatement("select * from usuarios where cpf = ?");
-			pst.setString(1, cpf);
-			rs = pst.executeQuery();
-			if (rs.next())
-				return true;
-			else
-				return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
 	}
 
 	@Override

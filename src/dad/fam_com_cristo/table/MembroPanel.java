@@ -548,6 +548,26 @@ public class MembroPanel extends JPanel {
 	public JTextField getJtfTotal() {
 		return jtfTotal;
 	}
+	
+	public JTextField getJft_congregados() {
+		return jft_congregados;
+	}
+	
+	public JTextField getJft_ex_membros() {
+		return jft_ex_membros;
+	}
+	
+	public JTextField getJft_lideranca() {
+		return jft_lideranca;
+	}
+	
+	public JTextField getJft_membros_ativos() {
+		return jft_membros_ativos;
+	}
+	
+	public JTextField getJft_membros_nominais() {
+		return jft_membros_nominais;
+	}
 
 	private class DeleteAction extends AbstractAction {
 
