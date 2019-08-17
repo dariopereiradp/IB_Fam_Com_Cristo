@@ -246,7 +246,7 @@ public class DataGui extends JFrame {
 									+ "Consulte o manual que veio com o programa ou entre em contato com '"
 									+ Main.EMAIL_SUPORTE + "'",
 							"Manual de Instruções - Erro", JOptionPane.OK_OPTION,
-							new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+							new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 					e1.printStackTrace();
 				}
 

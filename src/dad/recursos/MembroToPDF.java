@@ -15,7 +15,7 @@ import com.qoppa.pdfWriter.PDFGraphics;
 import com.qoppa.pdfWriter.PDFPage;
 
 import dad.fam_com_cristo.Membro;
-import dad.fam_com_cristo.gui.Login;
+import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.Main;
 
 /**
@@ -51,19 +51,19 @@ public class MembroToPDF {
 
 		ImageIcon fc_icon;
 		fc_icon = new ImageIcon(getClass().getResource("/FC.jpg"));
-		g2d.drawImage(fc_icon.getImage(), (int) (width / 2) - fc_icon.getIconWidth() / 36, 10,
-				fc_icon.getIconWidth() / 18, fc_icon.getIconHeight() / 18, null);
+		g2d.drawImage(fc_icon.getImage(), (int) (width / 2) - fc_icon.getIconWidth() / 40, 10,
+				fc_icon.getIconWidth() / 20, fc_icon.getIconHeight() / 20, null);
 
-		g2d.setFont(PDFGraphics.HELVETICA.deriveFont(20f).deriveFont(Font.BOLD));
+		g2d.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 20));
 		g2d.setColor(Color.BLACK);
-		String text = Main.TITLE;
-		int sWidth = g2d.getFontMetrics(PDFGraphics.HELVETICA.deriveFont(20f).deriveFont(Font.BOLD)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 200);
+		String text = "Igreja Batista Famílias com Cristo";
+		int sWidth = g2d.getFontMetrics(new Font("Matura MT Script Capitals", Font.PLAIN, 20)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 160);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(15f).deriveFont(Font.BOLD));
-		text = "Empréstimo nº" + membro.getId();
+		text = "FICHA DE MEMBRESIA";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(15f).deriveFont(Font.BOLD)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 150);
+		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 200);
 
 		g2d.setStroke(new BasicStroke(1));
 		g2d.setColor(Color.black);
@@ -71,8 +71,7 @@ public class MembroToPDF {
 
 		if (membro.getImg() != null) {
 
-			Image image = membro.getImg().getImage().getScaledInstance(177 * 3, 236 * 3,
-					Image.SCALE_AREA_AVERAGING);
+			Image image = membro.getImg().getImage().getScaledInstance(177 * 3, 236 * 3, Image.SCALE_AREA_AVERAGING);
 
 			MediaTracker tracker = new MediaTracker(new java.awt.Container());
 			tracker.addImage(image, 0);
@@ -90,171 +89,209 @@ public class MembroToPDF {
 		g2d.drawRect((int) (width / 11) * 8, 220 + 25, 177 / 3, 236 / 3);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
-		text = "DADOS DO ITEM";
+		text = "INFORMAÇÕES PESSOAIS";
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 15);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
 
-		text = "ID do item: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
+		text = "Nome: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 30 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = String.valueOf(membro.getId());
+		text = membro.getNome();
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 30 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
 
-		text = "Tipo: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
+		text = "Data de Nascimento: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 45 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-//		text = membro.getItem().getTipo();
+		text = new SimpleDateFormat("dd/MM/yyyy").format(membro.getData_nascimento());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 45 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
 
-		text = "Título: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 45 + 20 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = membro.getNome();
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 45 + 20 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "Classificação: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 90 + 20 + 5);
+		text = "Sexo: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 45 + 15 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-//		text = membro.getItem().getClassificacao();
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 90 + 20 + 5);
+		text = membro.getSexo().getDescricao();
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 45 + 15 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		text = "Estado Civil: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 60 + 15 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+		text = membro.getEstado_Civil_String();
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 60 + 15 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		text = "Profissão: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 75 + 15 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+		text = membro.getProfissao();
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 75 + 15 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
-		if (membro instanceof Membro) {
-			text = "Autor: ";
-			sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-			g2d.drawString(text, (int) (width / 8) + 5, 220 + 60 + 20 + 5);
+		text = "--------------------------------------------------------------------------";
+		g2d.drawString(text, (int) (width / 8) + 2, 220 + 90 + 15 + 5 + 5);
 
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+		text = "CONTATOS";
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 100 + 15 + 5 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		text = "Endereço: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 115 + 15 + 5 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+		text = membro.getEndereco();
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 115 + 15 + 5 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		text = "Telefone: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 130 + 15 + 5 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+		String phone = membro.getTelefone();
+		text = "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
+				+ phone.substring(7);
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 130 + 15 + 5 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		text = "Email: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 145 + 15 + 5 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+		text = membro.getEmail();
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 145 + 15 + 5 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
+
+		text = "--------------------------------------------------------------------------";
+		g2d.drawString(text, (int) (width / 8) + 2, 220 + 160 + 15 + 10 + 5 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+		text = "VIDA CRISTÃ";
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 170 + 15 + 10 + 5 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		text = "Igreja de Origem: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 185 + 15 + 10 + 5 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+		text = membro.getIgreja_origem();
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 185 + 15 + 10 + 5 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		text = "Tipo de membro: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 200 + 15 + 10 + 5 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+		text = membro.getTipo_membro().getDescricao();
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 200 + 15 + 10 + 5 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		text = "Membro desde: ";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 215 + 15 + 10 + 5 + 5);
+
+		if (membro.getTipo_membro() != Tipo_Membro.CONGREGADO) {
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-//			text = membro.getItem().getAutor();
-			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 60 + 20 + 5);
-			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-			text = "Editora: ";
-			sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-			g2d.drawString(text, (int) (width / 8) + 5, 220 + 75 + 20 + 5);
-
+			text = new SimpleDateFormat("dd/MM/yyyy").format(membro.getMembro_desde());
+			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 215 + 15 + 10 + 5 + 5);
+			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+		} else {
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-//			text = ((Livro) membro.getItem()).getEditora();
-			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 75 + 20 + 5);
-			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
+			text = "-";
+			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 215 + 15 + 10 + 5 + 5);
+			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
 		}
 
-		text = "--------------------------------------------------------------------------";
-		g2d.drawString(text, (int) (width / 8) + 2, 220 + 105 + 20 + 5 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
-		text = "DADOS DO EMPRÉSTIMO";
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 115 + 20 + 5 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "ID do empréstimo: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 130 + 20 + 10 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = String.valueOf(membro.getId());
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 130 + 20 + 10 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "Data do empréstimo: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 145 + 20 + 10 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-//		text = new SimpleDateFormat("dd/MMM/yyyy").format(membro.getData_emprestimo());
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 145 + 20 + 10 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "Data limite para devolução: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 160 + 20 + 10 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
-//		text = new SimpleDateFormat("EEEE', 'dd 'de' MMMM 'de' yyyy").format(membro.getData_entrega());
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 160 + 20 + 10 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "Número de dias: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 175 + 20 + 10 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-//		text = String.valueOf(membro.getNum_dias());
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 175 + 20 + 10 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "--------------------------------------------------------------------------";
-		g2d.drawString(text, (int) (width / 8) + 2, 220 + 190 + 20 + 10 + 5 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
-		text = "DADOS DA PESSOA";
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 200 + 20 + 10 + 5 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "Nome: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 215 + 20 + 10 + 10 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = membro.getNome();
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 215 + 20 + 10 + 10 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "Data de Nascimento: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 230 + 20 + 10 + 10 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = new SimpleDateFormat("dd/MMM/yyyy").format(membro.getData_nascimento());
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 230 + 20 + 10 + 10 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		text = "CPF: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 245 + 20 + 10 + 10 + 5);
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-//		text = String.valueOf(membro.getUser().getCpf());
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 245 + 20 + 10 + 10 + 5);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
-		text = "Funcionário: ";
+		text = "Batizado? ";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 350 - 20);
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 230 + 15 + 10 + 5 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = Login.NOME;
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 350 - 20);
+		text = membro.eBatizado().getDescricao();
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 230 + 15 + 10 + 5 + 5);
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+
+		if (membro.isBatizado()) {
+			text = "Data do batismo: ";
+			sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+			g2d.drawString(text, (int) (width / 8) + 5 + 250, 220 + 230 + 15 + 10 + 5 + 5);
+
+			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+			text = new SimpleDateFormat("dd/MM/yyyy").format(membro.getData_batismo());
+			;
+			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3 + 250, 220 + 230 + 15 + 10 + 5 + 5);
+			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+		}
+
+		text = "Observações: ";
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 245 + 15 + 10 + 5 + 5);
+
+		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
+		text = membro.getObservacoes();
+		int sWidth2 = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC)).stringWidth(text);
+		System.out.println(sWidth2);
+		System.out.println(g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC))
+				.stringWidth("Obedientes à chamada, temos servido ao Senhor, no interior "));
+		if (text.length() < 60)
+			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 245 + 15 + 10 + 5 + 5);
+		else {
+			g2d.drawString(text.substring(0, 59), (int) (width / 8) + 5 + sWidth + 3, 220 + 245 + 15 + 10 + 5 + 5);
+			if (text.length() < 130) {
+				g2d.drawString(text.substring(59), (int) (width / 8) + 5, 220 + 260 + 15 + 10 + 5 + 5);
+			} else {
+				g2d.drawString(text.substring(59, 129), (int) (width / 8) + 5, 220 + 260 + 15 + 10 + 5 + 5);
+				if (text.length() < 200) {
+					g2d.drawString(text.substring(129), (int) (width / 8) + 5, 220 + 275 + 15 + 10 + 5 + 5);
+				} else {
+					g2d.drawString(text.substring(129, 199), (int) (width / 8) + 5, 220 + 275 + 15 + 10 + 5 + 5);
+					if (text.length() < 270) {
+						g2d.drawString(text.substring(199), (int) (width / 8) + 5, 220 + 290 + 15 + 10 + 5 + 5);
+					} else {
+						g2d.drawString(text.substring(199, 269), (int) (width / 8) + 5, 220 + 290 + 15 + 10 + 5 + 5);
+						if (text.length() < 340) {
+							g2d.drawString(text.substring(269), (int) (width / 8) + 5, 220 + 305 + 15 + 10 + 5 + 5);
+						} else {
+							g2d.drawString(text.substring(269, 339), (int) (width / 8) + 5,
+									220 + 305 + 15 + 10 + 5 + 5);
+							if (text.length() >= 340) {
+								int sWidth3 = g2d
+										.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC))
+										.stringWidth(text.substring(269, 339));
+								g2d.drawString("...", (int) (width / 8) + 5 + sWidth3, 220 + 305 + 15 + 10 + 5 + 5);
+							}
+						}
+					}
+				}
+			}
+		}
+
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(9f).deriveFont(Font.PLAIN));
-		text = "Atenção: Após a data limite de entrega será cobrado um valor de R$"
-				+ " por cada dia de atraso!";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(9f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 590);
-
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-		text = "__________________________________________";
+		text = "____________________________________________________";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 3 / 15));
 
-		text = Login.NOME;
+		text = Main.PASTOR + " (pastor titular)";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 12) + 3, (int) (height - height * 3 / 15) + 15);
+		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 20) + 3, (int) (height - height * 3 / 15) + 15);
 
 		text = "Nazária, " + new SimpleDateFormat("dd 'de' MMMMM 'de' yyyy").format(new Date());
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
@@ -264,46 +301,6 @@ public class MembroToPDF {
 		text = "Gerado automaticamente em " + new SimpleDateFormat("dd/MMM/yyyy 'às' HH:mm:ss").format(new Date());
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(6f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height / 15));
-		
-		g2d.drawRoundRect((int) width / 8, 220 + 350 + 60 , 170, 170, 10, 10);
-		
-		g2d.setFont(PDFGraphics.COURIER.deriveFont(8f).deriveFont(Font.PLAIN));
-		text = "Devolvido em: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(8f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 350 + 60 + 20);
-		
-		text = "_____/_____/_____";
-		g2d.drawString(text, (int) (width / 8) + 5 + 3 + sWidth, 220 + 350 + 60 + 20);
-		
-		text = "Dias de atraso: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(8f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 350 + 60 + 45);
-		
-		text = "_________";
-		g2d.drawString(text, (int) (width / 8) + 5 + 3 + sWidth, 220 + 350 + 60 + 45);
-		
-		text = "Valor pago: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(8f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 350 + 60 + 70);
-		
-		text = "R$_________";
-		g2d.drawString(text, (int) (width / 8) + 5 + 3 + sWidth, 220 + 350 + 60 + 70);
-		
-		text = "Funcionário: ";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(8f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 350 + 60 + 95);
-		
-		text = "__________________";
-		g2d.drawString(text, (int) (width / 8) + 5 + 3 + sWidth, 220 + 350 + 60 + 95);
-		
-		
-		text = "________________________________";
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 350 + 60 + 170 - 25);
-		
-		text = "Assinatura";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(8f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 170/2- sWidth/2, 220 + 350 + 60 + 170 - 15);
-		
 
 		return pdfDoc;
 	}

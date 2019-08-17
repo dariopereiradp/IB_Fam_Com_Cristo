@@ -593,6 +593,8 @@ public class MembroDetail extends JDialog {
 		membro_desde.setEnabled(true);
 		data_batismo.setEnabled(true);
 		observacoes.setEditable(true);
+		if(membro.getTipo_membro()==Tipo_Membro.EX_MEMBRO)
+			batizado_cb.setEnabled(true);
 		editar.setEnabled(false);
 		salvar.setEnabled(true);
 	}

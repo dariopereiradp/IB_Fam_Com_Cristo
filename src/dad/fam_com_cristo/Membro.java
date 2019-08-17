@@ -250,6 +250,40 @@ public class Membro {
 		return estado_civil;
 	}
 
+	public String getEstado_Civil_String() {
+		if (sexo == Sexo.MASCULINO) {
+			switch (estado_civil) {
+			case CASADO:
+				return "Casado";
+			case SOLTEIRO:
+				return "Solteiro";
+			case DIVORCIADO:
+				return "Divorciado";
+			case UNIAO:
+				return "União";
+			case VIUVO:
+				return "Viúvo";
+			default:
+				return estado_civil.getDescricao();
+			}
+		} else {
+			switch (estado_civil) {
+			case CASADO:
+				return "Casada";
+			case SOLTEIRO:
+				return "Solteira";
+			case DIVORCIADO:
+				return "Divorciada";
+			case UNIAO:
+				return "União";
+			case VIUVO:
+				return "Viúva";
+			default:
+				return estado_civil.getDescricao();
+			}
+		}
+	}
+
 	public void setEstado_civil(Estado_Civil estado_civil) {
 		this.estado_civil = estado_civil;
 	}
@@ -285,31 +319,38 @@ public class Membro {
 	public void setBatizado(Sim_Nao sim_nao) {
 		batizado = sim_nao;
 	}
-	
+
 	/**
 	 * Cria um recibo PDF do empréstimo.
+	 * 
 	 * @return
 	 */
 	public PDFDocument toPdf() {
 		return new MembroToPDF(this).generatePDF();
 	}
-	
+
 	public void savePdf() {
 		PDFDocument pdf = toPdf();
 		try {
 			pdf.saveDocument(Main.MEMBROS_PDF_PATH + toString() + ".pdf");
 			String message = "A ficha do membro " + getNome()
-					+ " foi criada com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n" + Main.MEMBROS_PDF_PATH
-					+ "\nVocê quer abrir o documento agora?";
-			int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso", JOptionPane.YES_NO_OPTION,
-					JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
+					+ " foi criada com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"
+					+ Main.MEMBROS_PDF_PATH + "\nVocê quer abrir o documento agora?";
+			int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso",
+					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+					new ImageIcon(getClass().getResource("/DAD_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
 			Log.getInstance().printLog(message);
 			if (ok == JOptionPane.YES_OPTION) {
 				Desktop.getDesktop().open(new File(Main.MEMBROS_PDF_PATH));
 				Desktop.getDesktop().open(new File(Main.MEMBROS_PDF_PATH + toString() + ".pdf"));
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Log.getInstance().printLog("Erro ao salvar PDF de ficha de membro - " + e.getMessage());
+			JOptionPane.showMessageDialog(null,
+					"Não foi possível criar o PDF da Ficha de Membro!\n"
+							+ "Se tiver uma ficha de membro aberta, por favor feche e tente novamente!",
+					"Criar ficha de membro - Erro", JOptionPane.OK_OPTION,
+					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 			e.printStackTrace();
 		}
 

@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.awt.Color;
 import javax.swing.JFormattedTextField;
+import javax.swing.JTextField;
 
 public class Config extends JDialog {
 
@@ -30,7 +31,7 @@ public class Config extends JDialog {
 	 */
 	private static final long serialVersionUID = -1792634540833333974L;
 	private final JPanel contentPanel = new JPanel();
-	private JFormattedTextField multa;
+	private JTextField pastor;
 
 	public Config() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -48,26 +49,11 @@ public class Config extends JDialog {
 		lblConfiguraes.setBounds(0, 0, 444, 25);
 		contentPanel.add(lblConfiguraes);
 
-		JLabel lblValorDaMulta = new JLabel("Valor da Multa (di\u00E1rio): ");
-		lblValorDaMulta.setBackground(new Color(255, 255, 255));
-		lblValorDaMulta.setFont(new Font("Perpetua", Font.PLAIN, 15));
-		lblValorDaMulta.setBounds(25, 72, 145, 30);
-		contentPanel.add(lblValorDaMulta);
-
-		MaskFormatter mask;
-		try {
-			mask = new MaskFormatter("R$ #.##");
-			mask.setCommitsOnValidEdit(true);
-			multa = new JFormattedTextField(mask);
-		} catch (ParseException e1) {
-			multa = new JFormattedTextField();
-			e1.printStackTrace();
-		}
-
-		multa.setFont(new Font("Arial", Font.PLAIN, 14));
-		multa.setBounds(180, 72, 60, 30);
-		multa.setValue("R$ " + String.valueOf(0.0));
-		contentPanel.add(multa);
+		JLabel lNome = new JLabel("Nome do Pastor Titular: ");
+		lNome.setBackground(new Color(255, 255, 255));
+		lNome.setFont(new Font("Perpetua", Font.PLAIN, 15));
+		lNome.setBounds(25, 72, 145, 30);
+		contentPanel.add(lNome);
 
 		JButton bAddFuncionrio = new JButton("ADICIONAR FUNCION\u00C1RIO");
 		bAddFuncionrio.addActionListener(new ActionListener() {
@@ -119,6 +105,11 @@ public class Config extends JDialog {
 			bAlterarPass.setToolTipText("Não é possível alterar a senha do utilizador 'admin'!");
 		}
 		contentPanel.add(bAlterarPass);
+		
+		pastor = new JTextField();
+		pastor.setBounds(183, 77, 240, 25);
+		contentPanel.add(pastor);
+		pastor.setColumns(10);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
