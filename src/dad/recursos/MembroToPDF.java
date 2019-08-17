@@ -285,13 +285,17 @@ public class MembroToPDF {
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-		text = "____________________________________________________";
+		text = "_____________________________________________";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 3 / 15));
 
-		text = Main.PASTOR + " (pastor titular)";
+		text = Main.PASTOR;
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 20) + 3, (int) (height - height * 3 / 15) + 15);
+		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 16) + 3, (int) (height - height * 3 / 15) + 15);
+		
+		text = "(Pastor Titular)";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
+		g2d.drawString(text, (int) (width - sWidth - width * 3.4 / 14) + 3, (int) (height - height * 3 / 15) + 15 + 15);
 
 		text = "Nazária, " + new SimpleDateFormat("dd 'de' MMMMM 'de' yyyy").format(new Date());
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
