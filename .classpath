@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="libs/commons-logging-1.1.3.jar"/>
 	<classpathentry kind="lib" path="libs/zip4j-2.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="libs/itextpdf-5.4.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

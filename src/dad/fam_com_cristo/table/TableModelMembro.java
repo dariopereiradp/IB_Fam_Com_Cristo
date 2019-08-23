@@ -326,12 +326,12 @@ public class TableModelMembro extends AbstractTableModel {
 		MembroPanel.getInstance().getJft_lideranca().setText(String.valueOf(getN_Lideranca()));
 		MembroPanel.getInstance().getJft_membros_ativos().setText(String.valueOf(getN_Membros_Ativos()));
 		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Membros_Nominais()));
-		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Criancas()));
-		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Adolescentes()));
-		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Adultos()));
-		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Casados()));
-		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Homens()));
-		MembroPanel.getInstance().getJft_membros_nominais().setText(String.valueOf(getN_Mulheres()));
+		MembroPanel.getInstance().getJft_criancas().setText(String.valueOf(getN_Criancas()));
+		MembroPanel.getInstance().getJft_adolescentes().setText(String.valueOf(getN_Adolescentes()));
+		MembroPanel.getInstance().getJft_adultos().setText(String.valueOf(getN_Adultos()));
+		MembroPanel.getInstance().getJftCasados().setText(String.valueOf(getN_Casados()));
+		MembroPanel.getInstance().getJft_Homens().setText(String.valueOf(getN_Homens()));
+		MembroPanel.getInstance().getJft_Mulheres().setText(String.valueOf(getN_Mulheres()));
 		
 
 	}

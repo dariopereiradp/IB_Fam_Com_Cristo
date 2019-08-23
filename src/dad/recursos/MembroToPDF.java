@@ -56,7 +56,7 @@ public class MembroToPDF {
 
 		g2d.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 20));
 		g2d.setColor(Color.BLACK);
-		String text = "Igreja Batista Famílias com Cristo";
+		String text = Main.TITLE_SMALL;
 		int sWidth = g2d.getFontMetrics(new Font("Matura MT Script Capitals", Font.PLAIN, 20)).stringWidth(text);
 		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 160);
 

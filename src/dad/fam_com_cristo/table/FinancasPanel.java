@@ -60,13 +60,13 @@ import dad.recursos.SairAction;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.utils.MaterialColors;
 
-public class MembroPanel extends JPanel {
+public class FinancasPanel extends JPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5202224261982802705L;
-	private static MembroPanel INSTANCE;
+	private static FinancasPanel INSTANCE;
 	private JTable membros;
 	private TableModelMembro modelMembro;
 	private JPanel pInferior, panel2;
@@ -110,7 +110,7 @@ public class MembroPanel extends JPanel {
 	private JLabel lblCrianas;
 	private JTextField jft_criancas;
 
-	public MembroPanel() {
+	public FinancasPanel() {
 		super();
 		INSTANCE = this;
 		setLayout(new BorderLayout());
@@ -692,9 +692,9 @@ public class MembroPanel extends JPanel {
 		}
 	}
 
-	public static MembroPanel getInstance() {
+	public static FinancasPanel getInstance() {
 		if (INSTANCE == null)
-			INSTANCE = new MembroPanel();
+			INSTANCE = new FinancasPanel();
 		return INSTANCE;
 	}
 

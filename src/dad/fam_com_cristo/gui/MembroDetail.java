@@ -75,6 +75,7 @@ public class MembroDetail extends JDialog {
 	private JButton ok, b_imprimir, editar, salvar, apagar;
 	private JLabel image;
 	private JTextField idade;
+	private JLabel lblDataDeBatismo, lblMembroDesde;
 
 	public MembroDetail(Membro membro) {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
@@ -315,11 +316,11 @@ public class MembroDetail extends JDialog {
 		data_batismo.setDate(new Date());
 		infoPanel.add(data_batismo);
 
-		JLabel lblDataDeBatismo = new JLabel("Data de Batismo: ");
+		lblDataDeBatismo = new JLabel("Data de Batismo: ");
 		lblDataDeBatismo.setBounds(466, 295, 132, 25);
 		infoPanel.add(lblDataDeBatismo);
 
-		JLabel lblMembroDesde = new JLabel("Membro desde:");
+		lblMembroDesde = new JLabel("Membro desde:");
 		lblMembroDesde.setBounds(5, 295, 130, 25);
 		infoPanel.add(lblMembroDesde);
 
@@ -359,17 +360,27 @@ public class MembroDetail extends JDialog {
 					data_batismo.setEnabled(true);
 					membro_desde.setEnabled(true);
 					batizado_cb.setEnabled(false);
+					data_batismo.setVisible(true);
+					lblDataDeBatismo.setVisible(true);
+					lblMembroDesde.setVisible(true);
+					membro_desde.setVisible(true);
 				} else if (tipo_membro.getSelectedIndex() == 0) {
 					batizado_cb.setSelectedIndex(0);
 					data_batismo.setEnabled(false);
 					membro_desde.setEnabled(false);
 					batizado_cb.setEnabled(false);
+					data_batismo.setVisible(false);
+					lblDataDeBatismo.setVisible(false);
+					lblMembroDesde.setVisible(false);
+					membro_desde.setVisible(false);
 				}
 				if (tipo_membro.getSelectedIndex() == 4) {
 					batizado_cb.setSelectedIndex(0);
 					membro_desde.setEnabled(true);
 					data_batismo.setEnabled(false);
 					batizado_cb.setEnabled(true);
+					lblMembroDesde.setVisible(true);
+					membro_desde.setVisible(true);
 				}
 			}
 		});
@@ -380,8 +391,12 @@ public class MembroDetail extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				if (batizado_cb.getSelectedIndex() == 0) {
 					data_batismo.setEnabled(false);
+					data_batismo.setVisible(false);
+					lblDataDeBatismo.setVisible(false);
 				} else {
 					data_batismo.setEnabled(true);
+					data_batismo.setVisible(true);
+					lblDataDeBatismo.setVisible(true);
 				}
 			}
 		});
@@ -588,13 +603,20 @@ public class MembroDetail extends JDialog {
 		endereco.setEditable(true);
 		telefone.setEditable(true);
 		email.setEditable(true);
-		igreja_origem.setEditable(true);
+		igreja_origem.setEnabled(true);
 		tipo_membro.setEnabled(true);
 		membro_desde.setEnabled(true);
 		data_batismo.setEnabled(true);
 		observacoes.setEditable(true);
-		if(membro.getTipo_membro()==Tipo_Membro.EX_MEMBRO)
+		if(membro!=null && membro.getTipo_membro()==Tipo_Membro.EX_MEMBRO)
 			batizado_cb.setEnabled(true);
+		if(batizado_cb.getSelectedIndex()==0){
+			data_batismo.setEnabled(false);
+			data_batismo.setVisible(false);
+			lblDataDeBatismo.setVisible(false);
+			lblMembroDesde.setVisible(false);
+			membro_desde.setVisible(false);
+		}
 		editar.setEnabled(false);
 		salvar.setEnabled(true);
 	}
@@ -608,7 +630,7 @@ public class MembroDetail extends JDialog {
 		endereco.setEditable(false);
 		telefone.setEditable(false);
 		email.setEditable(false);
-		igreja_origem.setEditable(false);
+		igreja_origem.setEnabled(false);
 		tipo_membro.setEnabled(false);
 		membro_desde.setEnabled(false);
 		data_batismo.setEnabled(false);

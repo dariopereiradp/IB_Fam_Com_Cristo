@@ -160,7 +160,7 @@ public class AtualizaMembro implements Command {
 				membro.setTipo_membro(tipo_Membro);
 				break;
 			case "Batizado":
-				Sim_Nao sim_Nao = membro.newBatizadoState();
+				Sim_Nao sim_Nao = (Sim_Nao) valor;
 				pst.setString(1, sim_Nao.getDescricao());
 				membro.setBatizado(sim_Nao);
 				break;

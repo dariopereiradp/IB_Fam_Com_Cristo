@@ -42,9 +42,11 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.Tipo_Membro;
+import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
 import dad.recursos.Log;
 import dad.recursos.SairAction;
+import dad.recursos.TableToPDF;
 import dad.recursos.ZipCompress;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -72,6 +74,13 @@ public class DataGui extends JFrame {
 	private JMenuItem mntmRelatarErro;
 	private JMenuItem mnLimpar;
 	private JMenuItem menuManual;
+	private JMenu mnImprimir;
+	private JMenuItem mListaBatizados;
+	private JMenuItem mListaAtivos;
+	private JMenuItem mListaTotal;
+	private JMenuItem mListaNom;
+	private JMenuItem mListaCong;
+	private JMenuItem mntmListaDeLderes;
 
 	private DataGui() {
 		INSTANCE = this;
@@ -130,9 +139,12 @@ public class DataGui extends JFrame {
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		tabbedPane.addTab("Pessoas associadas", MembroPanel.getInstance());
+		
+		tabbedPane.addTab("Finanças", FinancasPanel.getInstance());
 
 		tabbedPane.setToolTipTextAt(0,
 				"Pessoas que vão à IBFC com alguma regularidade: liderança, membros ativos, membros nominais e congregados ou alguém que já foi membro");
+		tabbedPane.setToolTipTextAt(1, "Registrar entradas e saídas financeiras da igreja");
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -218,6 +230,60 @@ public class DataGui extends JFrame {
 
 		menuOrdenar = new JMenuItem("Ordenar livros (A-Z)");
 		mnEditar.add(menuOrdenar);
+
+		mnImprimir = new JMenu("Imprimir");
+		menuBar.add(mnImprimir);
+
+		mListaBatizados = new JMenuItem("Lista de Batizados (membros ativos e nominais)");
+		mListaBatizados.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Batizados"), "Batizados");
+			}
+		});
+		mnImprimir.add(mListaBatizados);
+
+		mListaAtivos = new JMenuItem("Lista de Membros Ativos");
+		mListaAtivos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Ativos"), "Ativos");
+			}
+		});
+		mnImprimir.add(mListaAtivos);
+
+		mListaNom = new JMenuItem("Lista de Membros Nominais");
+		mListaNom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Nominais"), "Nominais");
+			}
+		});
+		mnImprimir.add(mListaNom);
+
+		mListaCong = new JMenuItem("Lista de Congregados");
+		mListaCong.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Congregados"), "Congregados");
+			}
+		});
+		mnImprimir.add(mListaCong);
+
+		mntmListaDeLderes = new JMenuItem("Lista de L\u00EDderes");
+		mntmListaDeLderes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Líderes"), "Líderes");
+			}
+		});
+		mnImprimir.add(mntmListaDeLderes);
+
+		mListaTotal = new JMenuItem("Lista Total (todos, exceto ex-membros)");
+		mnImprimir.add(mListaTotal);
+		mListaTotal.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Todos"), "Todos");
+
+			}
+		});
 
 		mnAjuda = new JMenu("Ajuda");
 		menuBar.add(mnAjuda);
@@ -392,19 +458,20 @@ public class DataGui extends JFrame {
 
 	public void backup() {
 		String message = "Deseja criar uma cópia de segurança de todas as bases de dados do programa?"
-				+ "\nObs: A cópia irá incluir as configurações, livros, empréstimos, clientes, funcionários e imagens, que serão salvos em um único ficheiro.\n"
+				+ "\nObs: A cópia irá incluir as configurações, membros, finanças e imagens, que serão salvos em um único ficheiro.\n"
 				+ "Não modifique esse ficheiro!\n"
 				+ "Você deve copiá-lo para um lugar seguro (por exemplo, uma pen-drive) para mais tarde ser possível restaurar,\n"
 				+ "caso o computador seja formatado ou você pretenda usar o programa em outro computador.";
-		int ok = JOptionPane.showConfirmDialog(null, message, "Cópia de Segurança", JOptionPane.YES_NO_OPTION,
-				JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+		int ok = JOptionPane.showOptionDialog(null, message, "Cópia de Segurança", JOptionPane.YES_NO_OPTION,
+				JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS,
+				Main.OPTIONS[0]);
 		if (ok == JOptionPane.OK_OPTION) {
-			String name = "BibliotecaDAD-Backup-" + new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date())
-					+ ".dadb";
+			String name = "IB_Fam_com_Cristo-Backup-" + new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date())
+					+ ".fccb";
 			ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
 			JOptionPane.showMessageDialog(null, "Cópia de segurança salva com sucesso na pasta:\n" + Main.BACKUP_DIR,
 					"Cópia de Segurança - Sucesso", JOptionPane.OK_OPTION,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			try {
 				Desktop.getDesktop().open(new File(Main.BACKUP_DIR));
 			} catch (IOException e) {
@@ -473,38 +540,38 @@ public class DataGui extends JFrame {
 		// TableModelUser.getInstance().ordenar();
 	}
 
-//	private int num_checkboxEnabled() {
-//		int count = 0;
-//		if (tabbedPane.getSelectedIndex() == 0) {
-//			if (checkMembroAtivo.isSelected())
-//				count++;
-//			if (checkMembroNominal.isSelected())
-//				count++;
-//			if (checkCongregados.isSelected())
-//				count++;
-//			if (checkLideranca.isSelected())
-//				count++;
-//			if (check_ex_membros.isSelected())
-//				count++;
-//		}
-//		return count;
-//	}
-//
-//	public int[] checkBoxEnabled() {
-//		int count = 0;
-//		int[] check = new int[num_checkboxEnabled()];
-//		if (checkMembroAtivo.isSelected())
-//			check[count++] = 0;
-//		if (checkMembroNominal.isSelected())
-//			check[count++] = 1;
-//		if (checkCongregados.isSelected())
-//			check[count++] = 2;
-//		if (checkLideranca.isSelected())
-//			check[count++] = 3;
-//		if (check_ex_membros.isSelected())
-//			check[count++] = 4;
-//		return check;
-//	}
+	// private int num_checkboxEnabled() {
+	// int count = 0;
+	// if (tabbedPane.getSelectedIndex() == 0) {
+	// if (checkMembroAtivo.isSelected())
+	// count++;
+	// if (checkMembroNominal.isSelected())
+	// count++;
+	// if (checkCongregados.isSelected())
+	// count++;
+	// if (checkLideranca.isSelected())
+	// count++;
+	// if (check_ex_membros.isSelected())
+	// count++;
+	// }
+	// return count;
+	// }
+	//
+	// public int[] checkBoxEnabled() {
+	// int count = 0;
+	// int[] check = new int[num_checkboxEnabled()];
+	// if (checkMembroAtivo.isSelected())
+	// check[count++] = 0;
+	// if (checkMembroNominal.isSelected())
+	// check[count++] = 1;
+	// if (checkCongregados.isSelected())
+	// check[count++] = 2;
+	// if (checkLideranca.isSelected())
+	// check[count++] = 3;
+	// if (check_ex_membros.isSelected())
+	// check[count++] = 4;
+	// return check;
+	// }
 
 	public static DataGui getInstance() {
 		if (INSTANCE == null)

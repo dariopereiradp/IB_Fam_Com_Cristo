@@ -40,7 +40,7 @@ public class Restauro extends JDialog {
 	private static final long serialVersionUID = -7863423688679744400L;
 	private final JPanel contentPanel = new JPanel();
 	private File backupFile;
-	private JCheckBox conf, func, livros, emprestimos, clientes;
+	private JCheckBox conf, membros, financas, funcionarios;
 
 	/**
 	 * Create the dialog.
@@ -64,37 +64,31 @@ public class Restauro extends JDialog {
 		conf = new JCheckBox("Configura\u00E7\u00F5es");
 		conf.setSelected(true);
 		conf.setFont(new Font("Dialog", Font.PLAIN, 14));
-		conf.setBounds(6, 56, 142, 25);
+		conf.setBounds(6, 55, 142, 25);
 		contentPanel.add(conf);
 
-		func = new JCheckBox("Funcion\u00E1rios");
-		func.setSelected(true);
-		func.setFont(new Font("Dialog", Font.PLAIN, 14));
-		func.setBounds(6, 91, 142, 25);
-		contentPanel.add(func);
+		membros = new JCheckBox("Membros");
+		membros.setSelected(true);
+		membros.setFont(new Font("Dialog", Font.PLAIN, 14));
+		membros.setBounds(6, 90, 142, 25);
+		contentPanel.add(membros);
 
-		livros = new JCheckBox("Livros");
-		livros.setSelected(true);
-		livros.setFont(new Font("Dialog", Font.PLAIN, 14));
-		livros.setBounds(6, 126, 142, 25);
-		contentPanel.add(livros);
-
-		emprestimos = new JCheckBox("Empr\u00E9stimos");
-		emprestimos.setSelected(true);
-		emprestimos.setFont(new Font("Dialog", Font.PLAIN, 14));
-		emprestimos.setBounds(6, 161, 142, 25);
-		contentPanel.add(emprestimos);
-
-		clientes = new JCheckBox("Clientes");
-		clientes.setSelected(true);
-		clientes.setFont(new Font("Dialog", Font.PLAIN, 14));
-		clientes.setBounds(6, 196, 142, 25);
-		contentPanel.add(clientes);
+		financas = new JCheckBox("Finan\u00E7as");
+		financas.setSelected(true);
+		financas.setFont(new Font("Dialog", Font.PLAIN, 14));
+		financas.setBounds(6, 125, 142, 25);
+		contentPanel.add(financas);
 
 		JLabel lInfo = new JLabel("Selecione quais itens deseja restaurar");
 		lInfo.setHorizontalAlignment(SwingConstants.CENTER);
 		lInfo.setBounds(0, 35, 334, 14);
 		contentPanel.add(lInfo);
+
+		funcionarios = new JCheckBox("Funcion\u00E1rios");
+		funcionarios.setSelected(true);
+		funcionarios.setFont(new Font("Dialog", Font.PLAIN, 14));
+		funcionarios.setBounds(6, 160, 142, 25);
+		contentPanel.add(funcionarios);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -105,15 +99,16 @@ public class Restauro extends JDialog {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						int ok = JOptionPane.showConfirmDialog(null,
+						int ok = JOptionPane.showOptionDialog(null,
 								"Tem certeza que quer restaurar a cópia de segurança selecionada?\n"
 										+ "Tenha atenção que os dados selecionados serão perdidos e substituídos pelos dados da cópia!\n"
-										+ "Se clicar em 'Yes', o programa vai ser fechado. Quando você abrir outra vez os dados da cópia estarão restaurados.\n"
+										+ "Se clicar em 'Sim', o programa vai ser fechado. Quando você abrir outra vez os dados da cópia estarão restaurados.\n"
 										+ "Obs: Por segurança, vai ser realizada uma cópia de segurança dos dados atuais. Essa cópia pode ser restaurada mais tarde.",
 								"Restaurar Cópia de Segurança", JOptionPane.YES_NO_OPTION,
-								JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+								JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")),
+								Main.OPTIONS, Main.OPTIONS[0]);
 						if (ok == JOptionPane.YES_OPTION) {
-							String name = "BibliotecaDAD-Backup-"
+							String name = "IB_Fam_com_Cristo-Backup-"
 									+ new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date());
 							ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
 							restaurar();
@@ -148,23 +143,19 @@ public class Restauro extends JDialog {
 				File confFile = new File(tempDir + "conf.dad");
 				confFile.delete();
 			}
-			if (!func.isSelected()) {
-				File funcFile = new File(tempDir + "logins.mdb");
-				funcFile.delete();
-			}
-			if (!livros.isSelected()) {
-				File livrosFile = new File(tempDir + "livros.mdb");
-				livrosFile.delete();
+			if (!membros.isSelected()) {
+				File membrosFile = new File(tempDir + "membros.mdb");
+				membrosFile.delete();
 				File images = new File(tempDir + "Imagens/");
 				FileUtils.deleteDirectory(images);
 			}
-			if (!emprestimos.isSelected()) {
-				File empFile = new File(tempDir + "emprestimos.mdb");
-				empFile.delete();
+			if (!financas.isSelected()) {
+				File financasFile = new File(tempDir + "financas.mdb");
+				financasFile.delete();
 			}
-			if (!clientes.isSelected()) {
-				File userFile = new File(tempDir + "users.mdb");
-				userFile.delete();
+			if (funcionarios.isSelected()) {
+				File funcFile = new File(tempDir + "logins.mdb");
+				funcFile.delete();
 			}
 			long time = System.currentTimeMillis() - Main.inicialTime;
 			Log.getInstance().printLog("Tempo de Uso: " + DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's")
@@ -182,7 +173,7 @@ public class Restauro extends JDialog {
 		JFileChooser jfc = new JFileChooser(Main.BACKUP_DIR);
 		jfc.setDialogTitle("Selecione o arquivo da cópia de segurança que deseja restaurar");
 		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		jfc.setFileFilter(new FileNameExtensionFilter("Arquivo de backup DAD (*.dadb)", "dadb"));
+		jfc.setFileFilter(new FileNameExtensionFilter("Arquivo de backup (*.fccb)", "fccb"));
 		jfc.setAcceptAllFileFilterUsed(false);
 		if (jfc.showOpenDialog(DataGui.getInstance()) == JFileChooser.APPROVE_OPTION) {
 			backupFile = jfc.getSelectedFile();

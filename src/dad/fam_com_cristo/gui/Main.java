@@ -29,6 +29,7 @@ import org.apache.commons.io.FileUtils;
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.table.TableModelFuncionario;
 import dad.fam_com_cristo.table.TableModelMembro;
+import dad.recursos.ConexaoFinancas;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.ConexaoMembro;
 import dad.recursos.CriptografiaAES;
@@ -38,6 +39,7 @@ import mdlaf.MaterialLookAndFeel;
 public class Main {
 
 	public static final String TITLE = "IGREJA BATISTA FAMÍLIAS COM CRISTO";
+	public static final String TITLE_SMALL = "Igreja Batista Famílias com Cristo";
 	public static final String PASTOR = "Nazaré Miguel Pereira";
 	public static final String VERSION = "1.0";
 	public static final String DATA_PUBLICACAO = "20 de Agosto de 2019";
@@ -46,6 +48,7 @@ public class Main {
 	public static final String PASS = "dad";
 	public static final String DOCUMENTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
 			+ "Documents/IB_Fam_Com_Cristo/";
+	public static final String LISTAS_DIR = DOCUMENTS_DIR + "Listas/";
 	public static final String BACKUP_DIR = DOCUMENTS_DIR + "Backups/";
 	public static final String BUG_REPORTS_DIR = DOCUMENTS_DIR + "BugReports/";
 	public static final String DATA_DIR = System.getenv("APPDATA") + "/IB_Fam_Com_Cristo/";
@@ -134,10 +137,14 @@ public class Main {
 		File dir = new File(DATABASE_DIR);
 		if (!dir.exists())
 			dir.mkdirs();
-		
+
 		File membrosPDF = new File(Main.MEMBROS_PDF_PATH);
 		if (!membrosPDF.exists())
 			membrosPDF.mkdirs();
+
+		File Listdir = new File(Main.LISTAS_DIR);
+		if (!Listdir.exists())
+			Listdir.mkdirs();
 
 		File backdir = new File(Main.BACKUP_DIR);
 		if (!backdir.exists())
@@ -201,8 +208,8 @@ public class Main {
 				con.close();
 			}
 
-			File users = new File(ConexaoMembro.dbFile);
-			if (!users.exists()) {
+			File membros = new File(ConexaoMembro.dbFile);
+			if (!membros.exists()) {
 				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoMembro.dbFile
 						+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
 				DatabaseMetaData dmd = con.getMetaData();
@@ -214,6 +221,22 @@ public class Main {
 								+ "Tipo_Membro varchar(127), Batizado varchar(5), Membro_Desde date, Data_Batismo date, Observacoes memo,"
 								+ "CONSTRAINT PK_Membros PRIMARY KEY (ID));");
 						Log.getInstance().printLog("Base de dados membros.mbd criada com sucesso");
+					}
+				}
+				con.close();
+			}
+
+			File financas = new File(ConexaoFinancas.dbFile);
+			if (!financas.exists()) {
+				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoFinancas.dbFile
+						+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
+				DatabaseMetaData dmd = con.getMetaData();
+				try (ResultSet rs = dmd.getTables(null, null, "Financas", new String[] { "TABLE" })) {
+					try (Statement s = con.createStatement()) {
+						s.executeUpdate("CREATE TABLE Financas (ID int NOT NULL, Valor double NOT NULL,"
+								+ "Data date, Descricao memo, Tipo varchar(255),"
+								+ "CONSTRAINT PK_Financas PRIMARY KEY (ID));");
+						Log.getInstance().printLog("Base de dados financas.mbd criada com sucesso");
 					}
 				}
 				con.close();
@@ -260,6 +283,11 @@ public class Main {
 				File membrosDest = new File(Main.DATABASE_DIR + "membros.mdb");
 				if (membrosFile.exists())
 					Files.copy(membrosFile.toPath(), membrosDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+				File financasFile = new File(path + "financas.mdb");
+				File financasDest = new File(Main.DATABASE_DIR + "financas.mdb");
+				if (financasFile.exists())
+					Files.copy(financasFile.toPath(), financasDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 				FileUtils.deleteDirectory(tmp);
 			} catch (Exception e) {
