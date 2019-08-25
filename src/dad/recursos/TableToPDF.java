@@ -40,7 +40,7 @@ public class TableToPDF {
 		String title = "IBFC_Lista de Membros_" + descricao + "_"
 				+ new SimpleDateFormat("ddMMMyyyy").format(new Date()) + ".pdf";
 		try {
-			Document doc = new Document(PageSize.A4, 10, 10, 35, 35);
+			Document doc = new Document(PageSize.A4, 10, 10, 50, 50);
 
 			PdfWriter.getInstance(doc, new FileOutputStream(Main.LISTAS_DIR + title))
 					.setPageEvent(new HeaderFooterPageEvent());
@@ -174,8 +174,8 @@ public class TableToPDF {
 			try {
 				image = Image.getInstance(DataGui.getInstance().getClass().getResource("/FC.jpg"));
 				image.setAlignment(Element.ALIGN_CENTER);
-				image.setAbsolutePosition(296, 20);
-				image.scalePercent(1f);
+				image.setAbsolutePosition(296, 15);
+				image.scalePercent(0.8f);
 				writer.getDirectContent().addImage(image, true);
 			} catch (IOException | DocumentException e) {
 				// TODO Auto-generated catch block

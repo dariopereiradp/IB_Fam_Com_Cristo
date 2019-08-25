@@ -72,7 +72,7 @@ public class MembroDetail extends JDialog {
 	private JComboBox<Tipo_Membro> tipo_membro;
 	private JComboBox<Estado_Civil> estado_civil;
 	private JComboBox<Sim_Nao> batizado_cb;
-	private JButton ok, b_imprimir, editar, salvar, apagar;
+	private JButton ok, b_exportar, editar, salvar, apagar;
 	private JLabel image;
 	private JTextField idade;
 	private JLabel lblDataDeBatismo, lblMembroDesde;
@@ -159,16 +159,16 @@ public class MembroDetail extends JDialog {
 		personalizarBotao(editar);
 		botoesSecund.add(editar, "cell 0 0");
 
-		b_imprimir = new JButton("Imprimir");
-		b_imprimir.addActionListener(new ActionListener() {
+		b_exportar = new JButton("Exportar");
+		b_exportar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				save(false);
 				membro.savePdf();
 			}
 		});
-		b_imprimir.setBackground(new Color(50, 205, 50));
-		botoesSecund.add(b_imprimir, "flowy,cell 3 0");
-		personalizarBotao(b_imprimir);
+		b_exportar.setBackground(new Color(50, 205, 50));
+		botoesSecund.add(b_exportar, "flowy,cell 3 0");
+		personalizarBotao(b_exportar);
 
 		salvar = new JButton("Salvar");
 		salvar.setBackground(MaterialColors.LIGHT_GREEN_300);

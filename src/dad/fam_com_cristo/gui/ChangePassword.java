@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import javax.swing.JCheckBox;
 import javax.swing.border.LineBorder;
 
+import dad.fam_com_cristo.gui.DataGui;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
@@ -47,6 +48,7 @@ public class ChangePassword extends JDialog {
 	 * Create the dialog.
 	 */
 	public ChangePassword(String nome, boolean admin) {
+		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		this.nome = nome;
 		setBounds(100, 100, 450, 210);
 		getContentPane().setLayout(new BorderLayout());

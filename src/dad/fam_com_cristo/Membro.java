@@ -338,7 +338,7 @@ public class Membro {
 					+ Main.MEMBROS_PDF_PATH + "\nVocê quer abrir o documento agora?";
 			int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
 			Log.getInstance().printLog(message);
 			if (ok == JOptionPane.YES_OPTION) {
 				Desktop.getDesktop().open(new File(Main.MEMBROS_PDF_PATH));

@@ -46,6 +46,7 @@ public class Restauro extends JDialog {
 	 * Create the dialog.
 	 */
 	public Restauro() {
+		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		setBounds(100, 100, 350, 300);
 		getContentPane().setLayout(new BorderLayout());
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

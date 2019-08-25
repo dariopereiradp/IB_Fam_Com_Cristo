@@ -371,11 +371,57 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
+	
+	public int getN_Membros_Ativos_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if ((m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO || m.getTipo_membro() == Tipo_Membro.LIDERANCA) && m.getSexo()==Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	
+	public int getN_Membros_Ativos_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if ((m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO || m.getTipo_membro() == Tipo_Membro.LIDERANCA) && m.getSexo()==Sexo.FEMININO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Membros_Ativos_Sem_Lideranca() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO)
+				n++;
+		}
+		return n;
+	}
 
 	public int getN_Lideranca() {
 		int n = 0;
 		for (Membro m : membros) {
 			if (m.getTipo_membro() == Tipo_Membro.LIDERANCA)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Lideres_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() == Tipo_Membro.LIDERANCA && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Lideres_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() == Tipo_Membro.LIDERANCA && m.getSexo() == Sexo.FEMININO)
 				n++;
 		}
 		return n;
@@ -416,6 +462,132 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
+	
+	public int getN_Solteiros() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.SOLTEIRO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Divorciados() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.DIVORCIADO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Viuvos() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.VIUVO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Uniao() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.UNIAO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Casados_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.CASADO && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Solteiros_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.SOLTEIRO && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Divorciados_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.DIVORCIADO && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Viuvos_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.VIUVO && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Uniao_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.UNIAO && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Casados_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.CASADO && m.getSexo() == Sexo.FEMININO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Solteiros_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.SOLTEIRO && m.getSexo() == Sexo.FEMININO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Divorciados_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.DIVORCIADO && m.getSexo() == Sexo.FEMININO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Viuvos_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.VIUVO && m.getSexo() == Sexo.FEMININO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Uniao_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.UNIAO && m.getSexo() == Sexo.FEMININO)
+				n++;
+		}
+		return n;
+	}
 
 	public int getN_Adolescentes() {
 		int n = 0;
@@ -439,6 +611,114 @@ public class TableModelMembro extends AbstractTableModel {
 		int n = 0;
 		for (Membro m : membros) {
 			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getIdade() <= 12)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Adolescentes_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.MASCULINO && m.getIdade() >= 13 && m.getIdade() <= 17)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Adultos_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.MASCULINO && m.getIdade() >= 18)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Criancas_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.MASCULINO && m.getIdade() <= 12)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Adolescentes_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo()==Sexo.FEMININO && m.getIdade() >= 13 && m.getIdade() <= 17)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Adultos_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo()==Sexo.FEMININO && m.getIdade() >= 18)
+				n++;
+		}
+		return n;
+	}
+
+	public int getN_Criancas_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo()==Sexo.FEMININO && m.getIdade() <= 12)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Batizados() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.isBatizado())
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Nao_Batizados() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && !m.isBatizado())
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Batizados_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.isBatizado() && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Nao_Batizados_Homens() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && !m.isBatizado() && m.getSexo() == Sexo.MASCULINO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Batizados_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.isBatizado() && m.getSexo() == Sexo.FEMININO)
+				n++;
+		}
+		return n;
+	}
+	
+	public int getN_Nao_Batizados_Mulheres() {
+		int n = 0;
+		for (Membro m : membros) {
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && !m.isBatizado() && m.getSexo() == Sexo.FEMININO)
 				n++;
 		}
 		return n;

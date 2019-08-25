@@ -74,7 +74,7 @@ public class DataGui extends JFrame {
 	private JMenuItem mntmRelatarErro;
 	private JMenuItem mnLimpar;
 	private JMenuItem menuManual;
-	private JMenu mnImprimir;
+	private JMenu mnExportar;
 	private JMenuItem mListaBatizados;
 	private JMenuItem mListaAtivos;
 	private JMenuItem mListaTotal;
@@ -231,8 +231,8 @@ public class DataGui extends JFrame {
 		menuOrdenar = new JMenuItem("Ordenar livros (A-Z)");
 		mnEditar.add(menuOrdenar);
 
-		mnImprimir = new JMenu("Imprimir");
-		menuBar.add(mnImprimir);
+		mnExportar = new JMenu("Exportar");
+		menuBar.add(mnExportar);
 
 		mListaBatizados = new JMenuItem("Lista de Batizados (membros ativos e nominais)");
 		mListaBatizados.addActionListener(new ActionListener() {
@@ -240,7 +240,7 @@ public class DataGui extends JFrame {
 				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Batizados"), "Batizados");
 			}
 		});
-		mnImprimir.add(mListaBatizados);
+		mnExportar.add(mListaBatizados);
 
 		mListaAtivos = new JMenuItem("Lista de Membros Ativos");
 		mListaAtivos.addActionListener(new ActionListener() {
@@ -248,7 +248,7 @@ public class DataGui extends JFrame {
 				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Ativos"), "Ativos");
 			}
 		});
-		mnImprimir.add(mListaAtivos);
+		mnExportar.add(mListaAtivos);
 
 		mListaNom = new JMenuItem("Lista de Membros Nominais");
 		mListaNom.addActionListener(new ActionListener() {
@@ -256,7 +256,7 @@ public class DataGui extends JFrame {
 				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Nominais"), "Nominais");
 			}
 		});
-		mnImprimir.add(mListaNom);
+		mnExportar.add(mListaNom);
 
 		mListaCong = new JMenuItem("Lista de Congregados");
 		mListaCong.addActionListener(new ActionListener() {
@@ -264,7 +264,7 @@ public class DataGui extends JFrame {
 				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Congregados"), "Congregados");
 			}
 		});
-		mnImprimir.add(mListaCong);
+		mnExportar.add(mListaCong);
 
 		mntmListaDeLderes = new JMenuItem("Lista de L\u00EDderes");
 		mntmListaDeLderes.addActionListener(new ActionListener() {
@@ -272,10 +272,10 @@ public class DataGui extends JFrame {
 				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Líderes"), "Líderes");
 			}
 		});
-		mnImprimir.add(mntmListaDeLderes);
+		mnExportar.add(mntmListaDeLderes);
 
 		mListaTotal = new JMenuItem("Lista Total (todos, exceto ex-membros)");
-		mnImprimir.add(mListaTotal);
+		mnExportar.add(mListaTotal);
 		mListaTotal.addActionListener(new ActionListener() {
 
 			@Override

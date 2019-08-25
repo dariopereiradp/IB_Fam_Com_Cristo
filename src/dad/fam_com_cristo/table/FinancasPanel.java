@@ -67,7 +67,7 @@ public class FinancasPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = -5202224261982802705L;
 	private static FinancasPanel INSTANCE;
-	private JTable membros;
+	private JTable entradas, saidas;
 	private TableModelMembro modelMembro;
 	private JPanel pInferior, panel2;
 	private JTextField jtfTotal;
@@ -77,38 +77,19 @@ public class FinancasPanel extends JPanel {
 			"Tipo de membro (Congregado, Membro Ativo, Membro Nominal, Liderança ou Ex-membro)" };
 	private JPanel panel_total;
 	private JPanel panel;
-	private JLabel lblNmeroDeMembros;
-	private JTextField jft_membros_ativos;
+	private JLabel lTotalEnt;
+	private JTextField jft_totalsaidas;
 	private JPanel panel_1;
-	private JLabel lblMembrosNominais;
-	private JTextField jft_membros_nominais;
+	private JLabel lTotalsaidas;
+	private JTextField jft_totalSaidas;
 	private JPanel panel_2;
-	private JLabel lblCongregados;
-	private JTextField jft_congregados;
+	private JLabel lTotalDizimos;
+	private JTextField jft_totalDizimos;
 	private JPanel panel_3;
-	private JLabel lblLiderana;
-	private JTextField jft_lideranca;
-	private JPanel panel_4;
-	private JLabel lblExmembros;
-	private JTextField jft_ex_membros;
-	private JPanel panel_5;
-	private JLabel lblHomens;
-	private JTextField jft_Homens;
-	private JPanel panel_6;
-	private JLabel lblMulheres;
-	private JTextField jft_Mulheres;
-	private JPanel panel_7;
-	private JLabel Casados;
-	private JTextField jftCasados;
-	private JPanel panel_8;
-	private JLabel lblAdultos;
-	private JTextField jft_adultos;
-	private JPanel panel_9;
-	private JLabel lblAdolescentes;
-	private JTextField jft_adolescentes;
-	private JPanel panel_10;
-	private JLabel lblCrianas;
-	private JTextField jft_criancas;
+	private JLabel lTotalOfertas;
+	private JTextField jft_TotalOfertas;
+	private JPanel panel_11;
+	private JScrollPane jsSaidas;
 
 	public FinancasPanel() {
 		super();
@@ -116,12 +97,82 @@ public class FinancasPanel extends JPanel {
 		setLayout(new BorderLayout());
 		modelMembro = TableModelMembro.getInstance();
 
-		membros = new JTable(modelMembro) {
+		MaskFormatter mascaraData;
+		JFormattedTextField data;
+
+		try {
+			mascaraData = new MaskFormatter("##/##/####");
+			mascaraData.setCommitsOnValidEdit(true);
+			data = new JFormattedTextField(mascaraData);
+		} catch (ParseException e1) {
+			data = new JFormattedTextField();
+			e1.printStackTrace();
+		}
+		data.setFont(new Font("Arial", Font.PLAIN, 15));
+
+		final TableCellEditor dataEditor = new DefaultCellEditor(data);
+
+		InputMap iMap = data.getInputMap(JComponent.WHEN_FOCUSED);
+		iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
+		ActionMap aMap = data.getActionMap();
+		aMap.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dataEditor.stopCellEditing();
+			}
+		});
+
+		MaskFormatter maskPhone;
+		JFormattedTextField phone;
+
+		try {
+			maskPhone = new MaskFormatter("(##) # ####-####");
+			maskPhone.setCommitsOnValidEdit(true);
+			phone = new JFormattedTextField(maskPhone);
+		} catch (ParseException e1) {
+			phone = new JFormattedTextField();
+			e1.printStackTrace();
+		}
+		phone.setFont(new Font("Arial", Font.PLAIN, 15));
+
+		final TableCellEditor phoneEditor = new DefaultCellEditor(phone);
+
+		InputMap iMap1 = phone.getInputMap(JComponent.WHEN_FOCUSED);
+		iMap1.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
+		ActionMap aMap1 = phone.getActionMap();
+		aMap1.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				phoneEditor.stopCellEditing();
+			}
+		});
+
+		JComboBox<Tipo_Membro> tipo_membro = new JComboBox<Tipo_Membro>();
+		tipo_membro.setBounds(370, 255, 191, 25);
+		tipo_membro.setModel(new DefaultComboBoxModel<Tipo_Membro>(Tipo_Membro.values()));
+
+		panel_11 = new JPanel();
+		add(panel_11, BorderLayout.CENTER);
+		panel_11.setLayout(new GridLayout(0, 2, 0, 0));
+
+		saidas = new JTable();
+
+		entradas = new JTable(modelMembro) {
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 776311897765510270L;
-			
+
 			@Override
 			public boolean isCellEditable(int data, int columns) {
 				return true;
@@ -175,8 +226,8 @@ public class FinancasPanel extends JPanel {
 				};
 			}
 		};
-		TableCellRenderer tcr = membros.getTableHeader().getDefaultRenderer();
-		membros.getTableHeader().setDefaultRenderer(new TableCellRenderer() {
+		TableCellRenderer tcr = entradas.getTableHeader().getDefaultRenderer();
+		entradas.getTableHeader().setDefaultRenderer(new TableCellRenderer() {
 
 			private Icon ascendingIcon = UIManager.getIcon("Table.ascendingSortIcon");
 			private Icon descendingIcon = UIManager.getIcon("Table.descendingSortIcon");
@@ -222,112 +273,41 @@ public class FinancasPanel extends JPanel {
 			}
 		});
 
-		membros.setPreferredScrollableViewportSize(new Dimension(800, 600));
-		membros.setFillsViewportHeight(true);
-		membros.setAutoCreateRowSorter(true);
-		membros.getTableHeader().setReorderingAllowed(false);
-		membros.setRowHeight(30);
+		entradas.setPreferredScrollableViewportSize(new Dimension(800, 600));
+		entradas.setFillsViewportHeight(true);
+		entradas.setAutoCreateRowSorter(true);
+		entradas.getTableHeader().setReorderingAllowed(false);
+		entradas.setRowHeight(30);
 
-		membros.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
-		membros.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
-		membros.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
-		membros.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
+		entradas.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
+		entradas.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
+		entradas.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
+		entradas.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
 
-		MaskFormatter mascaraData;
-		JFormattedTextField data;
+		entradas.getColumnModel().getColumn(1).setCellEditor(dataEditor);
+		entradas.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
 
-		try {
-			mascaraData = new MaskFormatter("##/##/####");
-			mascaraData.setCommitsOnValidEdit(true);
-			data = new JFormattedTextField(mascaraData);
-		} catch (ParseException e1) {
-			data = new JFormattedTextField();
-			e1.printStackTrace();
-		}
-		data.setFont(new Font("Arial", Font.PLAIN, 15));
+		entradas.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_membro));
 
-		final TableCellEditor dataEditor = new DefaultCellEditor(data);
+		JScrollPane jsEntradas = new JScrollPane(entradas);
+		panel_11.add(jsEntradas);
 
-		membros.getColumnModel().getColumn(1).setCellEditor(dataEditor);
+		jsSaidas = new JScrollPane(saidas);
+		panel_11.add(jsSaidas);
 
-		InputMap iMap = data.getInputMap(JComponent.WHEN_FOCUSED);
-		iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
-		ActionMap aMap = data.getActionMap();
-		aMap.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dataEditor.stopCellEditing();
-			}
-		});
-
-		MaskFormatter maskPhone;
-		JFormattedTextField phone;
-
-		try {
-			maskPhone = new MaskFormatter("(##) # ####-####");
-			maskPhone.setCommitsOnValidEdit(true);
-			phone = new JFormattedTextField(maskPhone);
-		} catch (ParseException e1) {
-			phone = new JFormattedTextField();
-			e1.printStackTrace();
-		}
-		phone.setFont(new Font("Arial", Font.PLAIN, 15));
-
-		final TableCellEditor phoneEditor = new DefaultCellEditor(phone);
-		membros.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
-
-		InputMap iMap1 = phone.getInputMap(JComponent.WHEN_FOCUSED);
-		iMap1.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
-		ActionMap aMap1 = phone.getActionMap();
-		aMap1.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				phoneEditor.stopCellEditing();
-			}
-		});
-
-		JComboBox<Tipo_Membro> tipo_membro = new JComboBox<Tipo_Membro>();
-		tipo_membro.setBounds(370, 255, 191, 25);
-		tipo_membro.setModel(new DefaultComboBoxModel<Tipo_Membro>(Tipo_Membro.values()));
-
-		membros.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_membro));
-
-		JScrollPane jsMembros = new JScrollPane(membros);
-		add(jsMembros, BorderLayout.CENTER);
-
-		membros.addComponentListener(new ComponentAdapter() {
+		entradas.addComponentListener(new ComponentAdapter() {
 
 			@Override
 			public void componentResized(ComponentEvent e) {
-				membros.scrollRectToVisible(membros.getCellRect(membros.getRowCount() - 1, 0, true));
+				entradas.scrollRectToVisible(entradas.getCellRect(entradas.getRowCount() - 1, 0, true));
 			}
 
 		});
 
-		pInferior = new JPanel(new BorderLayout());
-		add(pInferior, BorderLayout.SOUTH);
-		panel2 = new JPanel(new GridLayout(2, 1));
+		entradas.getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "deleteRow");
+		entradas.getActionMap().put("deleteRow", new DeleteAction());
 
-		inicializarBotoes();
-
-		inicializarPanelAdd();
-
-		inicializarMenus();
-
-		membros.getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "deleteRow");
-		membros.getActionMap().put("deleteRow", new DeleteAction());
-
-		membros.addMouseListener(new MouseAdapter() {
+		entradas.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent mouseEvent) {
 				JTable table = (JTable) mouseEvent.getSource();
 				Point point = mouseEvent.getPoint();
@@ -343,22 +323,16 @@ public class FinancasPanel extends JPanel {
 			}
 		});
 
-		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-		membros.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "solve");
-		membros.getActionMap().put("solve", new AbstractAction() {
+		pInferior = new JPanel(new BorderLayout());
+		add(pInferior, BorderLayout.SOUTH);
+		panel2 = new JPanel(new GridLayout(2, 1));
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -833616209546223519L;
+		inicializarBotoes();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (membros.getSelectedRows().length == 1)
-					abrir(modelMembro.getMembro(membros.convertRowIndexToModel(membros.getSelectedRow())));
+		inicializarPanelAdd();
 
-			}
-		});
+		inicializarMenus();
+
 		modelMembro.atualizarTextFieldsNumeros();
 
 	}
@@ -378,7 +352,7 @@ public class FinancasPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				abrir(modelMembro.getMembro(membros.convertRowIndexToModel(membros.getSelectedRow())));
+				abrir(modelMembro.getMembro(entradas.convertRowIndexToModel(entradas.getSelectedRow())));
 
 			}
 		});
@@ -400,15 +374,15 @@ public class FinancasPanel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						int rowAtPointOriginal = membros
-								.rowAtPoint(SwingUtilities.convertPoint(popupMenu, new Point(0, 0), membros));
+						int rowAtPointOriginal = entradas
+								.rowAtPoint(SwingUtilities.convertPoint(popupMenu, new Point(0, 0), entradas));
 						if (rowAtPointOriginal > -1) {
-							int rowAtPoint = membros.convertRowIndexToModel(rowAtPointOriginal);
+							int rowAtPoint = entradas.convertRowIndexToModel(rowAtPointOriginal);
 							if (rowAtPoint > -1) {
 								int[] rows = convertRowsIndextoModel();
 								if (rows.length <= 1) {
 									info.setVisible(true);
-									membros.setRowSelectionInterval(rowAtPointOriginal, rowAtPointOriginal);
+									entradas.setRowSelectionInterval(rowAtPointOriginal, rowAtPointOriginal);
 									delete.setVisible(true);
 								}
 							} else {
@@ -441,7 +415,7 @@ public class FinancasPanel extends JPanel {
 
 		popupMenu.setPopupSize(350, 150);
 
-		membros.setComponentPopupMenu(popupMenu);
+		entradas.setComponentPopupMenu(popupMenu);
 
 	}
 
@@ -473,7 +447,7 @@ public class FinancasPanel extends JPanel {
 
 	private void inicializarPanelAdd() {
 
-		JPanel both = new JPanel(new GridLayout(0, 6));
+		JPanel both = new JPanel(new GridLayout(0, 5));
 
 		pInferior.add(both, BorderLayout.CENTER);
 
@@ -488,115 +462,43 @@ public class FinancasPanel extends JPanel {
 		panel = new JPanel();
 		both.add(panel);
 
-		lblNmeroDeMembros = new JLabel("Membros ativos: ");
-		panel.add(lblNmeroDeMembros);
+		lTotalEnt = new JLabel("Total de Entradas: ");
+		panel.add(lTotalEnt);
 
-		jft_membros_ativos = new JTextField("0");
-		jft_membros_ativos.setEditable(false);
-		panel.add(jft_membros_ativos);
+		jft_totalsaidas = new JTextField("0");
+		jft_totalsaidas.setEditable(false);
+		panel.add(jft_totalsaidas);
 
 		panel_1 = new JPanel();
 		both.add(panel_1);
 
-		lblMembrosNominais = new JLabel("Membros nominais: ");
-		panel_1.add(lblMembrosNominais);
+		lTotalsaidas = new JLabel("Total de Sa\u00EDdas: ");
+		panel_1.add(lTotalsaidas);
 
-		jft_membros_nominais = new JTextField("0");
-		jft_membros_nominais.setEditable(false);
-		panel_1.add(jft_membros_nominais);
+		jft_totalSaidas = new JTextField("0");
+		jft_totalSaidas.setEditable(false);
+		panel_1.add(jft_totalSaidas);
 
 		panel_2 = new JPanel();
 		both.add(panel_2);
 
-		lblCongregados = new JLabel("Congregados: ");
-		panel_2.add(lblCongregados);
+		lTotalDizimos = new JLabel("Total de D\u00EDzimos: ");
+		panel_2.add(lTotalDizimos);
 
-		jft_congregados = new JTextField("0");
-		jft_congregados.setEditable(false);
-		panel_2.add(jft_congregados);
+		jft_totalDizimos = new JTextField("0");
+		jft_totalDizimos.setEditable(false);
+		panel_2.add(jft_totalDizimos);
 
 		panel_3 = new JPanel();
 		both.add(panel_3);
 
-		lblLiderana = new JLabel("Lideran\u00E7a: ");
-		panel_3.add(lblLiderana);
+		lTotalOfertas = new JLabel("Total Ofertas: ");
+		panel_3.add(lTotalOfertas);
 
-		jft_lideranca = new JTextField("0");
-		jft_lideranca.setEditable(false);
-		panel_3.add(jft_lideranca);
-
-		panel_4 = new JPanel();
-		both.add(panel_4);
-
-		lblExmembros = new JLabel("Ex-membros: ");
-		panel_4.add(lblExmembros);
-
-		jft_ex_membros = new JTextField("0");
-		jft_ex_membros.setEditable(false);
-		panel_4.add(jft_ex_membros);
-
-		panel_5 = new JPanel();
-		both.add(panel_5);
-
-		lblHomens = new JLabel("Homens: ");
-		panel_5.add(lblHomens);
-
-		jft_Homens = new JTextField("0");
-		jft_Homens.setEditable(false);
-		panel_5.add(jft_Homens);
-
-		panel_6 = new JPanel();
-		both.add(panel_6);
-
-		lblMulheres = new JLabel("Mulheres: ");
-		panel_6.add(lblMulheres);
-
-		jft_Mulheres = new JTextField("0");
-		jft_Mulheres.setEditable(false);
-		panel_6.add(jft_Mulheres);
-
-		panel_7 = new JPanel();
-		both.add(panel_7);
-
-		Casados = new JLabel("Casados: ");
-		panel_7.add(Casados);
-
-		jftCasados = new JTextField("0");
-		jftCasados.setEditable(false);
-		panel_7.add(jftCasados);
-
-		panel_8 = new JPanel();
-		both.add(panel_8);
-
-		lblAdultos = new JLabel("Adultos (+18): ");
-		panel_8.add(lblAdultos);
-
-		jft_adultos = new JTextField("0");
-		jft_adultos.setEditable(false);
-		panel_8.add(jft_adultos);
-
-		panel_9 = new JPanel();
-		both.add(panel_9);
-
-		lblAdolescentes = new JLabel("Adolescentes (13-17): ");
-		panel_9.add(lblAdolescentes);
-
-		jft_adolescentes = new JTextField("0");
-		jft_adolescentes.setEditable(false);
-		panel_9.add(jft_adolescentes);
-
-		panel_10 = new JPanel();
-		both.add(panel_10);
-
-		lblCrianas = new JLabel("Crian\u00E7as (12-)");
-		panel_10.add(lblCrianas);
-
-		jft_criancas = new JTextField("0");
-		jft_criancas.setEditable(false);
-		panel_10.add(jft_criancas);
+		jft_TotalOfertas = new JTextField("0");
+		jft_TotalOfertas.setEditable(false);
+		panel_3.add(jft_TotalOfertas);
 	}
-
-
 
 	public void personalizarBotao(JButton jb) {
 		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
@@ -604,9 +506,9 @@ public class FinancasPanel extends JPanel {
 	}
 
 	public int[] convertRowsIndextoModel() {
-		int[] rows = membros.getSelectedRows();
+		int[] rows = entradas.getSelectedRows();
 		for (int i = 0; i < rows.length; i++) {
-			rows[i] = membros.convertRowIndexToModel(rows[i]);
+			rows[i] = entradas.convertRowIndexToModel(rows[i]);
 		}
 		return rows;
 	}
@@ -624,7 +526,7 @@ public class FinancasPanel extends JPanel {
 	}
 
 	public JTable getMembros() {
-		return membros;
+		return entradas;
 	}
 
 	public void abrir(Membro membro) {
@@ -636,47 +538,19 @@ public class FinancasPanel extends JPanel {
 	}
 
 	public JTextField getJft_congregados() {
-		return jft_congregados;
-	}
-
-	public JTextField getJft_ex_membros() {
-		return jft_ex_membros;
+		return jft_totalDizimos;
 	}
 
 	public JTextField getJft_lideranca() {
-		return jft_lideranca;
+		return jft_TotalOfertas;
 	}
 
 	public JTextField getJft_membros_ativos() {
-		return jft_membros_ativos;
+		return jft_totalsaidas;
 	}
 
 	public JTextField getJft_membros_nominais() {
-		return jft_membros_nominais;
-	}
-
-	public JTextField getJft_Homens() {
-		return jft_Homens;
-	}
-
-	public JTextField getJft_Mulheres() {
-		return jft_Mulheres;
-	}
-
-	public JTextField getJftCasados() {
-		return jftCasados;
-	}
-
-	public JTextField getJft_adolescentes() {
-		return jft_adolescentes;
-	}
-
-	public JTextField getJft_adultos() {
-		return jft_adultos;
-	}
-
-	public JTextField getJft_criancas() {
-		return jft_criancas;
+		return jft_totalSaidas;
 	}
 
 	private class DeleteAction extends AbstractAction {

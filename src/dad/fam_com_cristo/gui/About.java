@@ -38,6 +38,7 @@ public class About extends JDialog {
 	 * Create the dialog.
 	 */
 	public About() {
+		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 350, 300);
 		setTitle("Sobre");
