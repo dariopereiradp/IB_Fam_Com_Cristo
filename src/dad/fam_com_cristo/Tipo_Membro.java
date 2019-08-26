@@ -1,5 +1,10 @@
 package dad.fam_com_cristo;
 
+/**
+ * Enumerado que representa o tipo de membro que uma pessoa pode ser.
+ * @author Dário Pereira
+ *
+ */
 public enum Tipo_Membro {
 	
 

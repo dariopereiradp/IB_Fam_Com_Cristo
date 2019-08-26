@@ -56,13 +56,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 
+/**
+ * Classe que torna visível a 'data' das várias bases de dados.
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class DataGui extends JFrame {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5748160687318648477L;
-	private static final int DELAY = 2200;
+	/**
+	 * Tempo de espera para a janela de informações fechar.
+	 */
+	private static final int DELAY = 2000;
 	private static DataGui INSTANCE;
 	private JTabbedPane tabbedPane;
 	private JMenu mnArquivo, mnAjuda, mnEditar;
@@ -84,7 +93,7 @@ public class DataGui extends JFrame {
 
 	private DataGui() {
 		INSTANCE = this;
-		setTitle(Main.TITLE);
+		setTitle(Main.TITLE_SMALL);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
 		setMinimumSize(new Dimension(1350, 600));
@@ -139,7 +148,7 @@ public class DataGui extends JFrame {
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		tabbedPane.addTab("Pessoas associadas", MembroPanel.getInstance());
-		
+
 		tabbedPane.addTab("Finanças", FinancasPanel.getInstance());
 
 		tabbedPane.setToolTipTextAt(0,
@@ -202,11 +211,11 @@ public class DataGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int ok = JOptionPane.showConfirmDialog(null,
+				int ok = JOptionPane.showOptionDialog(null,
 						"Os arquivos de logs antigos serão apagados. Isso não influencia o funcionamento do programa.\n"
 								+ "Tem a certeza que quer limpar?",
 						"Limpar espaço", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
 				if (ok == JOptionPane.YES_OPTION)
 					limpar();
 			}
@@ -228,7 +237,7 @@ public class DataGui extends JFrame {
 		menuRefazer.setEnabled(false);
 		mnEditar.add(menuRefazer);
 
-		menuOrdenar = new JMenuItem("Ordenar livros (A-Z)");
+		menuOrdenar = new JMenuItem("Ordenar membros (A-Z)");
 		mnEditar.add(menuOrdenar);
 
 		mnExportar = new JMenu("Exportar");
@@ -303,7 +312,7 @@ public class DataGui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String path = System.getenv("ProgramFiles(X86)") + System.getProperty("file.separator")
-						+ "Biblioteca Dádiva de Deus/" + "Manual_Instrucoes_Biblioteca_DAD_v" + Main.VERSION + ".pdf";
+						+ "Igreja Batista Famílias com Cristo/" + "Manual_Instrucoes_IBFC_v" + Main.VERSION + ".pdf";
 				try {
 					Desktop.getDesktop().open(new File(path));
 				} catch (Exception e1) {
@@ -318,6 +327,9 @@ public class DataGui extends JFrame {
 
 			}
 		});
+		menuManual.setEnabled(false);
+		menuManual.setToolTipText("Manual ainda não disponível!");
+
 		mnAjuda.add(menuManual);
 		mnAjuda.add(mntmRelatarErro);
 
@@ -426,9 +438,31 @@ public class DataGui extends JFrame {
 				updateItems();
 			}
 		});
-
 	}
 
+	/**
+	 * Abre a DataGui e um diálogo de boas vindas
+	 */
+	public void open() {
+		setVisible(true);
+		JOptionPane pane = new JOptionPane("Bem vindo " + Login.NOME + "!", JOptionPane.INFORMATION_MESSAGE,
+				JOptionPane.DEFAULT_OPTION, new ImageIcon(getClass().getResource("/FC_SS.jpg")), new Object[] {}, null);
+		final JDialog dialog = pane.createDialog("Boas vindas");
+		dialog.setModal(true);
+		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
+		Timer timer = new Timer(DELAY, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialog.dispose();
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+		dialog.setVisible(true);
+	}
+
+	/**
+	 * Apaga os logs dos meses anteriores, para limpar espaço no sistema.
+	 */
 	public void limpar() {
 		String logPath = Main.DATA_DIR + "Logs/";
 		String month_year = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMyyyy")).toUpperCase();
@@ -444,18 +478,21 @@ public class DataGui extends JFrame {
 				FileUtils.copyDirectory(logMonthTmp, logMonth);
 				FileUtils.deleteDirectory(logMonthTmp);
 				JOptionPane.showMessageDialog(null, "Limpeza feita!", "Limpar espaço - Sucesso", JOptionPane.OK_OPTION,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			} catch (IOException e1) {
 				Log.getInstance().printLog("Erro ao limpar o espaço! - " + e.getMessage());
 				JOptionPane.showMessageDialog(null, "Erro ao fazer a limpeza! - " + e.getMessage(),
 						"Limpar espaço - Erro", JOptionPane.OK_OPTION,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 				e1.printStackTrace();
 			}
 		}
 
 	}
 
+	/**
+	 * Cria um backup das bases de dados e imagens.
+	 */
 	public void backup() {
 		String message = "Deseja criar uma cópia de segurança de todas as bases de dados do programa?"
 				+ "\nObs: A cópia irá incluir as configurações, membros, finanças e imagens, que serão salvos em um único ficheiro.\n"
@@ -466,9 +503,7 @@ public class DataGui extends JFrame {
 				JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS,
 				Main.OPTIONS[0]);
 		if (ok == JOptionPane.OK_OPTION) {
-			String name = "IB_Fam_com_Cristo-Backup-" + new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date())
-					+ ".fccb";
-			ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
+			backupDirect();
 			JOptionPane.showMessageDialog(null, "Cópia de segurança salva com sucesso na pasta:\n" + Main.BACKUP_DIR,
 					"Cópia de Segurança - Sucesso", JOptionPane.OK_OPTION,
 					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
@@ -480,10 +515,37 @@ public class DataGui extends JFrame {
 		}
 	}
 
-	public void updateItems() {
-		TableModelMembro.getInstance().updateItems();
+	/**
+	 * Cria um backup da base de dados diretamente.
+	 * 
+	 * @return o nome do ficheiro de backup criado.
+	 */
+	public String backupDirect() {
+		String name = "IB_Fam_com_Cristo-Backup-" + new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date())
+				+ ".fccb";
+		ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
+		return Main.BACKUP_DIR + name;
 	}
 
+	/**
+	 * Atualiza os menus anular e refazer, de acordo com a tabela que estiver
+	 * ativa no momento.
+	 */
+	public void updateItems() {
+		if (tabbedPane.getSelectedIndex() == 0)
+			TableModelMembro.getInstance().updateItems();
+		else if (tabbedPane.getSelectedIndex() == 1)
+			// TODO
+			return;
+	}
+
+	/**
+	 * Responsável por captar as teclas CTRL+Z e CTRL+Y, para anular e refazer,
+	 * respetivamente.
+	 * 
+	 * @author Dário Pereira
+	 *
+	 */
 	private class MyDispatcher implements KeyEventDispatcher {
 		@Override
 		public boolean dispatchKeyEvent(KeyEvent e) {
@@ -499,105 +561,40 @@ public class DataGui extends JFrame {
 		}
 	}
 
-	public JMenuItem getMenuAnular() {
-		return menuAnular;
-	}
-
-	public JMenuItem getMenuRefazer() {
-		return menuRefazer;
-	}
-
+	/**
+	 * Chama o método undo da tabela que estiver ativa.
+	 */
 	public void anular() {
-
-		TableModelMembro.getInstance().getUndoManager().undo();
+		if (tabbedPane.getSelectedIndex() == 0)
+			TableModelMembro.getInstance().getUndoManager().undo();
+		else if (tabbedPane.getSelectedIndex() == 1)
+			// TODO
+			return;
 	}
 
+	/**
+	 * Chama o método redo da tabela que estiver ativa.
+	 */
 	public void refazer() {
-
-		TableModelMembro.getInstance().getUndoManager().redo();
+		if (tabbedPane.getSelectedIndex() == 0)
+			TableModelMembro.getInstance().getUndoManager().redo();
+		else if (tabbedPane.getSelectedIndex() == 1)
+			// TODO
+			return;
 	}
 
-	public void open() {
-		setVisible(true);
-		JOptionPane pane = new JOptionPane("Bem vindo " + Login.NOME + "!", JOptionPane.INFORMATION_MESSAGE,
-				JOptionPane.DEFAULT_OPTION, new ImageIcon(getClass().getResource("/DAD_SS.jpg")), new Object[] {},
-				null);
-		final JDialog dialog = pane.createDialog("Boas vindas");
-		dialog.setModal(true);
-		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/DAD.jpg"))));
-		Timer timer = new Timer(DELAY, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dialog.dispose();
-			}
-		});
-		timer.setRepeats(false);
-		timer.start();
-		dialog.setVisible(true);
-	}
-
+	/**
+	 * Ordena a tabela que estiver ativa, caso esteja disponível essa função.
+	 */
 	public void ordenar() {
-		// if (tabbedPane.getSelectedIndex() == 0)
-		// TableModelUser.getInstance().ordenar();
+		if (tabbedPane.getSelectedIndex() == 0)
+			TableModelMembro.getInstance().ordenar();
 	}
 
-	// private int num_checkboxEnabled() {
-	// int count = 0;
-	// if (tabbedPane.getSelectedIndex() == 0) {
-	// if (checkMembroAtivo.isSelected())
-	// count++;
-	// if (checkMembroNominal.isSelected())
-	// count++;
-	// if (checkCongregados.isSelected())
-	// count++;
-	// if (checkLideranca.isSelected())
-	// count++;
-	// if (check_ex_membros.isSelected())
-	// count++;
-	// }
-	// return count;
-	// }
-	//
-	// public int[] checkBoxEnabled() {
-	// int count = 0;
-	// int[] check = new int[num_checkboxEnabled()];
-	// if (checkMembroAtivo.isSelected())
-	// check[count++] = 0;
-	// if (checkMembroNominal.isSelected())
-	// check[count++] = 1;
-	// if (checkCongregados.isSelected())
-	// check[count++] = 2;
-	// if (checkLideranca.isSelected())
-	// check[count++] = 3;
-	// if (check_ex_membros.isSelected())
-	// check[count++] = 4;
-	// return check;
-	// }
-
-	public static DataGui getInstance() {
-		if (INSTANCE == null)
-			INSTANCE = new DataGui();
-		return INSTANCE;
-	}
-
-	// public void filter(String filtro) {
-	// if (tabbedPane.getSelectedIndex() == 0) {
-	// TableRowSorter<TableModelMembro> sorter = new
-	// TableRowSorter<TableModelMembro>(
-	// TableModelMembro.getInstance());
-	// MembroPanel.getInstance().getMembros().setRowSorter(sorter);
-	// RowFilter<TableModelMembro, Object> filter;
-	// if (filtro.trim().equals("")) {
-	// sorter.setRowFilter(null);
-	// } else {
-	// filter = RowFilter.regexFilter((Pattern.compile("(?i)" + filtro,
-	// Pattern.CASE_INSENSITIVE).toString()));
-	// MembroPanel.getInstance().getMembros().setDefaultRenderer(Object.class,
-	// new CellRenderer());
-	// sorter.setRowFilter(filter);
-	// }
-	// }
-	// }
-
+	/**
+	 * Realiza o filtro de pesquisa na tabela que estiver ativa e de acordo com as check box marcadas.
+	 * @param filtro - expressão que se pretende pesquisar
+	 */
 	public void newFilter(String filtro) {
 		RowFilter<TableModelMembro, Object> rf = null;
 		RowFilter<TableModelMembro, Object> rowFilter = null;
@@ -631,7 +628,21 @@ public class DataGui extends JFrame {
 		}
 		sorter.setRowFilter(rowFilter);
 	}
+	
+	public static DataGui getInstance() {
+		if (INSTANCE == null)
+			INSTANCE = new DataGui();
+		return INSTANCE;
+	}
+	
+	public JMenuItem getMenuAnular() {
+		return menuAnular;
+	}
 
+	public JMenuItem getMenuRefazer() {
+		return menuRefazer;
+	}
+	
 	public JTextField getPesquisa() {
 		return pesquisa;
 	}

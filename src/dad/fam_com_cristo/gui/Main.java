@@ -16,7 +16,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.InputMismatchException;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -36,13 +35,19 @@ import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 import mdlaf.MaterialLookAndFeel;
 
+/**
+ * Classe responsável por inicializar todo o programa e bases de dados.
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class Main {
 
 	public static final String TITLE = "IGREJA BATISTA FAMÍLIAS COM CRISTO";
 	public static final String TITLE_SMALL = "Igreja Batista Famílias com Cristo";
-	public static final String PASTOR = "Nazaré Miguel Pereira";
+	public static String PASTOR = "Nazaré Miguel Pereira";
 	public static final String VERSION = "1.0";
-	public static final String DATA_PUBLICACAO = "20 de Agosto de 2019";
+	public static final String DATA_PUBLICACAO = "26 de Agosto de 2019";
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String USER = "admin";
 	public static final String PASS = "dad";
@@ -58,6 +63,9 @@ public class Main {
 	public static long inicialTime;
 	private Connection con;
 
+	/**
+	 * Inicializa o LookAndFeel, as bases de dados e a splash screen.
+	 */
 	public Main() {
 		try {
 			UIManager.setLookAndFeel(new MaterialLookAndFeel());
@@ -119,6 +127,13 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Classe que representa uma thread que incrementa o valor da porcentagem na
+	 * splash screen.
+	 * 
+	 * @author Dário Pereira
+	 *
+	 */
 	private class Incrementar implements Runnable {
 		private int i;
 		private Splash screen;
@@ -133,6 +148,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Cria as pastas e tabelas das bases de dados, caso não existam.
+	 */
 	private void createTables() {
 		File dir = new File(DATABASE_DIR);
 		if (!dir.exists())
@@ -162,7 +180,7 @@ public class Main {
 			conf = new File(DATABASE_DIR + "conf.dad");
 			conf.createNewFile();
 			scan = new Scanner(conf);
-			scan.useLocale(Locale.US);
+			PASTOR = scan.nextLine();			
 			scan.close();
 		} catch (IOException | InputMismatchException e1) {
 			Log.getInstance().printLog("Erro ao carregar configurações! - " + e1.getMessage());
@@ -172,6 +190,7 @@ public class Main {
 			PrintWriter pw;
 			try {
 				pw = new PrintWriter(conf);
+				pw.println(PASTOR);
 				pw.close();
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
@@ -259,6 +278,11 @@ public class Main {
 
 	}
 
+	/**
+	 * Caso o programa esteja a iniciar após o restauro de uma cópia de
+	 * segurança, esse método trata de substituir as bases de dados e apagar as
+	 * temporárias.
+	 */
 	public void restaurar() {
 		String path = DATA_DIR + "temp/";
 		File tmp = new File(path);

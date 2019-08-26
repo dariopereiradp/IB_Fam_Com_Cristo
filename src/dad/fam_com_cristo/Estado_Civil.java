@@ -1,5 +1,10 @@
 package dad.fam_com_cristo;
 
+/**
+ * Enumerado que representa os tipos de estado civil existentes.
+ * @author Dário Pereira
+ *
+ */
 public enum Estado_Civil {
 	
 

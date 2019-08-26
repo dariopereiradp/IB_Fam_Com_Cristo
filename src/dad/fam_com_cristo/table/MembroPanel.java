@@ -60,6 +60,12 @@ import dad.recursos.SairAction;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.utils.MaterialColors;
 
+/**
+ * Classe que representa a tabela de Membros na DataGui.
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class MembroPanel extends JPanel {
 
 	/**
@@ -596,13 +602,10 @@ public class MembroPanel extends JPanel {
 		panel_10.add(jft_criancas);
 	}
 
-
-
-	public void personalizarBotao(JButton jb) {
-		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
-		MaterialUIMovement.add(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
-	}
-
+	/**
+	 * Converte as posições selecionadas para indices do modelo
+	 * @return um array contendo as posições selecionadas em indices do modelo
+	 */
 	public int[] convertRowsIndextoModel() {
 		int[] rows = membros.getSelectedRows();
 		for (int i = 0; i < rows.length; i++) {
@@ -611,12 +614,15 @@ public class MembroPanel extends JPanel {
 		return rows;
 	}
 
+	/**
+	 * Apaga um membro, caso se confirme
+	 */
 	public void removerMembros() {
 		int[] rows = convertRowsIndextoModel();
 		if (rows.length > 0) {
 			int ok = JOptionPane.showConfirmDialog(this, "Tem certeza que quer apagar o(s) membro(s) selecionado(s)?",
 					"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			if (ok == JOptionPane.OK_OPTION) {
 				modelMembro.removerMembro(rows);
 			}
@@ -678,7 +684,16 @@ public class MembroPanel extends JPanel {
 	public JTextField getJft_criancas() {
 		return jft_criancas;
 	}
+	
+	public JButton getbAdd() {
+		return bAdd;
+	}
 
+	/**
+	 * ActionListener para apagar um membro
+	 * @author Dário Pereira
+	 *
+	 */
 	private class DeleteAction extends AbstractAction {
 
 		/**
@@ -692,16 +707,11 @@ public class MembroPanel extends JPanel {
 		}
 	}
 
-	public static MembroPanel getInstance() {
-		if (INSTANCE == null)
-			INSTANCE = new MembroPanel();
-		return INSTANCE;
-	}
-
-	public JButton getbAdd() {
-		return bAdd;
-	}
-
+	/** Devole uma tabela filtrada com aquilo que se pretende imprimir
+	 * 
+	 * @param descricao tipo de tabela que se pretende imprimir
+	 * @return a tabela pronta para imprimir
+	 */
 	public JTable newTable(String descricao) {
 		JTable table = new JTable(TableModelMembro.getInstance()) {
 			/**
@@ -752,6 +762,21 @@ public class MembroPanel extends JPanel {
 		sorter.setRowFilter(rf);
 
 		return table;
+	}
+	
+	/**
+	 * Personaliza o botão passado como parametro, mudando a fonte e adicionando movimento.
+	 * @param jb botao a ser personalizado
+	 */
+	public void personalizarBotao(JButton jb) {
+		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
+		MaterialUIMovement.add(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
+	}
+	
+	public static MembroPanel getInstance() {
+		if (INSTANCE == null)
+			INSTANCE = new MembroPanel();
+		return INSTANCE;
 	}
 
 }

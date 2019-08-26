@@ -40,9 +40,9 @@ import com.toedter.calendar.JDateChooser;
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.table.AtualizaMembro;
 import dad.fam_com_cristo.table.CompositeCommand;
+import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.ImageViewer;
-import mdlaf.animation.MaterialUIMovement;
 import mdlaf.utils.MaterialColors;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextArea;
@@ -55,6 +55,12 @@ import dad.fam_com_cristo.Sim_Nao;
 
 import javax.swing.border.MatteBorder;
 
+/**
+ * Classe que permite visualizar e editar os detalhes de um membro existentes ou criar um membro novo
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class MembroDetail extends JDialog {
 
 	/**
@@ -101,6 +107,9 @@ public class MembroDetail extends JDialog {
 		editState();
 	}
 
+	/**
+	 * Inicializa os diversos paineis e elementos da GUI.
+	 */
 	private void inicializar() {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setSize(new Dimension(1000, 520));
@@ -147,16 +156,16 @@ public class MembroDetail extends JDialog {
 		});
 		botoesPrincipais.add(apagar, "cell 0 0,alignx left,aligny center");
 		apagar.setBackground(MaterialColors.RED_400);
-		personalizarBotao(apagar);
+		MembroPanel.getInstance().personalizarBotao(apagar);
 
 		ok = new JButton("Ok");
 		ok.setBackground(MaterialColors.LIGHT_BLUE_200);
-		personalizarBotao(ok);
+		MembroPanel.getInstance().personalizarBotao(ok);
 		botoesPrincipais.add(ok, "cell 17 0,alignx right,aligny center");
 
 		editar = new JButton("Editar");
 		editar.setBackground(MaterialColors.YELLOW_300);
-		personalizarBotao(editar);
+		MembroPanel.getInstance().personalizarBotao(editar);
 		botoesSecund.add(editar, "cell 0 0");
 
 		b_exportar = new JButton("Exportar");
@@ -168,11 +177,11 @@ public class MembroDetail extends JDialog {
 		});
 		b_exportar.setBackground(new Color(50, 205, 50));
 		botoesSecund.add(b_exportar, "flowy,cell 3 0");
-		personalizarBotao(b_exportar);
+		MembroPanel.getInstance().personalizarBotao(b_exportar);
 
 		salvar = new JButton("Salvar");
 		salvar.setBackground(MaterialColors.LIGHT_GREEN_300);
-		personalizarBotao(salvar);
+		MembroPanel.getInstance().personalizarBotao(salvar);
 		botoesSecund.add(salvar, "cell 17 0");
 		salvar.setEnabled(false);
 
@@ -413,7 +422,12 @@ public class MembroDetail extends JDialog {
 			image.setText("         Sem Imagem         ");
 		image.setBorder(new LineBorder(Color.BLACK, 3));
 
-		final class Add implements ActionListener {
+		/**
+		 * ActionListener para adicionar uma imagem de perfil ao membro.
+		 * @author Dário Pereira
+		 *
+		 */
+		final class Add_Image implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -429,7 +443,12 @@ public class MembroDetail extends JDialog {
 			}
 		}
 
-		final class Apagar implements ActionListener {
+		/**ActionListener para apagar a imagem de perfil do membro
+		 * 
+		 * @author Dário Pereira
+		 *
+		 */
+		final class Apagar_Imagem implements ActionListener {
 
 			public void apagar() {
 				int ok = JOptionPane.showOptionDialog(DataGui.getInstance(),
@@ -456,11 +475,11 @@ public class MembroDetail extends JDialog {
 			mAdd.setText("Adicionar Imagem");
 		} else
 			mAdd.setText("Alterar Imagem");
-		mAdd.addActionListener(new Add());
+		mAdd.addActionListener(new Add_Image());
 		menuApagar.add(mAdd);
 		JMenuItem mApagar = new JMenuItem("Apagar");
 		menuApagar.add(mApagar);
-		mApagar.addActionListener(new Apagar());
+		mApagar.addActionListener(new Apagar_Imagem());
 
 		menuApagar.addPopupMenuListener(new PopupMenuListener() {
 
@@ -509,7 +528,7 @@ public class MembroDetail extends JDialog {
 		else
 			addImage.setText("Alterar imagem");
 		addImage.setBackground(MaterialColors.BLUE_GRAY_500);
-		personalizarBotao(addImage);
+		MembroPanel.getInstance().personalizarBotao(addImage);
 		imagePanel.add(image);
 		imagePanel.add(addImage, "center");
 
@@ -548,6 +567,11 @@ public class MembroDetail extends JDialog {
 			}
 		});
 
+		/**
+		 * ActionListener para salvar as edições dos detalhes do membro
+		 * @author Dário Pereira
+		 *
+		 */
 		final class Salvar implements ActionListener {
 
 			private boolean close;
@@ -590,10 +614,13 @@ public class MembroDetail extends JDialog {
 
 		});
 
-		addImage.addActionListener(new Add());
+		addImage.addActionListener(new Add_Image());
 
 	}
 
+	/**
+	 * Torna os text_fields editáveis 
+	 */
 	protected void editState() {
 		nome.setEditable(true);
 		profissao.setEditable(true);
@@ -621,6 +648,9 @@ public class MembroDetail extends JDialog {
 		salvar.setEnabled(true);
 	}
 
+	/**
+	 * Torna os text_field não editáveis
+	 */
 	protected void savedState() {
 		nome.setEditable(false);
 		profissao.setEditable(false);
@@ -640,6 +670,9 @@ public class MembroDetail extends JDialog {
 		salvar.setEnabled(false);
 	}
 
+	/**
+	 * Preenche os text_field com os detalhes do membro
+	 */
 	private void preencher() {
 		if (membro != null) {
 			nome.setText(membro.getNome());
@@ -660,6 +693,11 @@ public class MembroDetail extends JDialog {
 		}
 	}
 
+	/**
+	 * Cria um novo membro ou salva as novas informações do membro atual.
+	 * @param close indica se deve fechar o diálogo após salvar ou não
+	 * @return true se teve sucesso <br> false caso contrário
+	 */
 	public boolean save(boolean close) {
 		if (nome.getText().trim().equals("")) {
 			JOptionPane.showMessageDialog(null, "Nome em branco! Introduza um pelo menos o nome do membro para salvar!",
@@ -718,11 +756,9 @@ public class MembroDetail extends JDialog {
 
 	}
 
-	public void personalizarBotao(JButton jb) {
-		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
-		MaterialUIMovement.add(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
-	}
-
+	/**
+	 * Torna o diálogo visível
+	 */
 	public void open() {
 		setVisible(true);
 

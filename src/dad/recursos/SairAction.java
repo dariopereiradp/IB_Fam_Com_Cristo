@@ -8,6 +8,11 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.Login;
 
+/**
+ * Classe que representa um ActionListener para fazer Logout do funcionário.
+ * @author Dário Pereira
+ *
+ */
 public class SairAction implements ActionListener {
 
 	@Override

@@ -1,5 +1,10 @@
 package dad.fam_com_cristo;
 
+/**
+ * Enumenrado que representa os tipos de sexo existentes (masculino ou feminino)
+ * @author Dário Pereira
+ *
+ */
 public enum Sexo {
 
 	MASCULINO ("Masculino"),

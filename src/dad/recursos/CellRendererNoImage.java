@@ -8,6 +8,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import dad.fam_com_cristo.gui.DataGui;
 import mdlaf.utils.MaterialColors;
 
+/** Classe para renderer das células de uma JTable que não são editáveis.
+ * Também está adaptada para pesquisa e filtragem, desenhando um retângulo amarelo em volta do filtro.
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class CellRendererNoImage extends DefaultTableCellRenderer {
 
 	/**

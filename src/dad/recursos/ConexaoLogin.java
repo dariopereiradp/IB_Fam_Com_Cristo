@@ -6,6 +6,11 @@ import java.sql.DriverManager;
 
 import dad.fam_com_cristo.gui.Main;
 
+/**
+ * Classe para fazer a conexão com a tabela Logins.
+ * @author Dário Pereira
+ *
+ */
 public class ConexaoLogin {
 
 	public static Connection con;

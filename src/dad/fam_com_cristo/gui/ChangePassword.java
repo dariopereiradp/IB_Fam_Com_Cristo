@@ -32,6 +32,11 @@ import dad.recursos.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 
+/**
+ * Classe que representa um diálogo para alterar a senha de um funcionário.
+ * @author Dário Pereira
+ *
+ */
 public class ChangePassword extends JDialog {
 
 	/**
@@ -169,13 +174,16 @@ public class ChangePassword extends JDialog {
 		}
 	}
 
+	/**
+	 * Verifica se a 'oldPass' corresponde à senha antiga.
+	 */
 	public void verify() {
 		String oldPass = String.valueOf(passAtual.getPassword());
 		String pass = String.valueOf(newPass.getPassword());
 		String conf = String.valueOf(confPass.getPassword());
 		if (oldPass.trim().equals("") || pass.trim().equals("") || conf.trim().equals("")) {
 			JOptionPane.showMessageDialog(DataGui.getInstance(), "Preencha todos os campos!", "ALTERAR SENHA",
-					JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 		} else {
 			try {
 				CriptografiaAES.setKey(oldPass);
@@ -188,7 +196,7 @@ public class ChangePassword extends JDialog {
 					if (!rs.getString(1).equals(CriptografiaAES.getEncryptedString())) {
 						JOptionPane.showMessageDialog(DataGui.getInstance(),
 								"A senha atual está incorreta. Tente novamente!", "ALTERAR SENHA",
-								JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+								JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 					} else {
 						change();
 					}
@@ -202,13 +210,16 @@ public class ChangePassword extends JDialog {
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(DataGui.getInstance(), "Ocorreu um erro ao alterar a senha...",
 						"ALTERAR SENHA", JOptionPane.ERROR_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 				Log.getInstance().printLog("Erro ao mudar senha! - " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
 	}
 
+	/**
+	 * Verifica se as senhas introduzidas coincidem entre si. Se sim, altera a senha atual.
+	 */
 	public void change() {
 		String pass = String.valueOf(newPass.getPassword());
 		String conf = String.valueOf(confPass.getPassword());
@@ -217,7 +228,7 @@ public class ChangePassword extends JDialog {
 				JOptionPane.showMessageDialog(DataGui.getInstance(),
 						"A senha de confirmação está diferente da nova senha! Devem ser iguais! (pode clicar em 'mostrar senha' para confirmar)",
 						"ALTERAR SENHA", JOptionPane.ERROR_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			} else {
 				Connection con = ConexaoLogin.getConnection();
 				PreparedStatement pst;
@@ -229,17 +240,20 @@ public class ChangePassword extends JDialog {
 				pst.execute();
 				dispose();
 				JOptionPane.showMessageDialog(DataGui.getInstance(), "Senha alterada com sucesso!", "ALTERAR SENHA",
-						JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(DataGui.getInstance(), "Ocorreu um erro ao alterar a senha...",
-					"ALTERAR SENHA", JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					"ALTERAR SENHA", JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			Log.getInstance().printLog("Erro ao mudar senha! - " + e.getMessage());
 			e.printStackTrace();
 		}
 
 	}
 
+	/**
+	 * Torna o diálogo visível.
+	 */
 	public void open() {
 		setVisible(true);
 	}

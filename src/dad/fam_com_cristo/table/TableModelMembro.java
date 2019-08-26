@@ -22,6 +22,12 @@ import dad.recursos.ConexaoMembro;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
 
+/**
+ * Classe que representa o TableModel para os membros.
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class TableModelMembro extends AbstractTableModel {
 
 	/**
@@ -41,6 +47,10 @@ public class TableModelMembro extends AbstractTableModel {
 		undoManager = new UndoManager();
 	}
 
+	/**
+	 * Faz upload da base de dados e cria o ArrayList com os clientes que
+	 * existirem na base de dados Users.
+	 */
 	public void uploadDataBase() {
 		membros = new ArrayList<>();
 		int maior = 0;
@@ -87,22 +97,21 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 	}
 
-	public static TableModelMembro getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new TableModelMembro();
-		}
-		return INSTANCE;
-	}
-
 	public UndoManager getUndoManager() {
 		return undoManager;
 	}
 
+	/**
+	 * Configura os listeners para mudar o estado dos menus undo e redo.
+	 */
 	public void addListeners() {
 		undoManager.addPropertyChangeListener(e -> updateItems());
 		updateItems();
 	}
 
+	/**
+	 * Atualiza a disponibilidade e o texto dos menus Undo e Redo
+	 */
 	public void updateItems() {
 		DataGui.getInstance().getMenuAnular().setEnabled(undoManager.isUndoAvailable());
 		DataGui.getInstance().getMenuAnular().setText("Anular (Ctrl+Z) - (" + undoManager.getUndoName() + ")");
@@ -129,8 +138,12 @@ public class TableModelMembro extends AbstractTableModel {
 		return membros;
 	}
 
-	public void addMembro(Membro user) {
-		undoManager.execute(new AddMembro(user));
+	/**
+	 * Adiciona um membro à base de dados.
+	 * @param membro - membro que se pretende adicionar.
+	 */
+	public void addMembro(Membro membro) {
+		undoManager.execute(new AddMembro(membro));
 		fireTableDataChanged();
 	}
 
@@ -138,6 +151,12 @@ public class TableModelMembro extends AbstractTableModel {
 		return membros.get(rowIndex);
 	}
 
+	/**
+	 * 
+	 * @param membro membro que se pretende descobrir em que linha está
+	 * @return a linha em que o membro está, se ele existir na tabela. <br>
+	 * -1 se o membro não existir na tabela.
+	 */
 	public int getRow(Membro membro) {
 		for (int i = 0; i < membros.size(); i++) {
 			if (membros.get(i).getId() == membro.getId())
@@ -146,6 +165,12 @@ public class TableModelMembro extends AbstractTableModel {
 		return -1;
 	}
 
+	/**
+	 * Remove os membros que têm os indexes passados no array rows.
+	 * 
+	 * @param rows
+	 *            - array que contém os indexes dos membros para apagar.
+	 */
 	public void removerMembro(int[] rows) {
 		undoManager.execute(new RemoverMembro(rows));
 	}
@@ -227,12 +252,24 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 	}
 
-	public void insertUser(Membro user, int pos) {
-		user.adicionarNaBaseDeDados();
-		membros.add(pos, user);
+	/**
+	 * Método para inserir um membro na base de dados, na posição pretendida. <br>
+	 * Útil para o redo
+	 * @param membro - membro que se pretende inserir.
+	 * @param row - linha em que se pretende inserir o membro.
+	 */
+	public void insertMembro(Membro membro, int row) {
+		membro.adicionarNaBaseDeDados();
+		membros.add(row, membro);
 
 	}
 
+	/**
+	 * Classe que representa um comando para remover um ou vários membros.
+	 * 
+	 * @author Dário Pereira
+	 *
+	 */
 	private class RemoverMembro implements Command {
 
 		private int[] rows;
@@ -262,7 +299,7 @@ public class TableModelMembro extends AbstractTableModel {
 		@Override
 		public void undo() {
 			for (int i = 0; i < rows.length; i++) {
-				insertUser(remover.get(i), rows[i]);
+				insertMembro(remover.get(i), rows[i]);
 			}
 			atualizarTextFieldsNumeros();
 			fireTableDataChanged();
@@ -279,6 +316,12 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * Classe que representa um comando para adicionar um membro.
+	 * 
+	 * @author Dário Pereira
+	 *
+	 */
 	private class AddMembro implements Command {
 
 		private Membro membro;
@@ -319,6 +362,9 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * Atualiza as estatísticas dos membros
+	 */
 	public void atualizarTextFieldsNumeros() {
 		MembroPanel.getInstance().getJtfTotal().setText(String.valueOf(getTotal()));
 		MembroPanel.getInstance().getJft_congregados().setText(String.valueOf(getN_Congregados()));
@@ -332,10 +378,13 @@ public class TableModelMembro extends AbstractTableModel {
 		MembroPanel.getInstance().getJftCasados().setText(String.valueOf(getN_Casados()));
 		MembroPanel.getInstance().getJft_Homens().setText(String.valueOf(getN_Homens()));
 		MembroPanel.getInstance().getJft_Mulheres().setText(String.valueOf(getN_Mulheres()));
-		
 
 	}
 
+	/**
+	 * 
+	 * @return o número total de pessoas (todos exceto ex-membros)
+	 */
 	public int getTotal() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -371,26 +420,27 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Membros_Ativos_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
-			if ((m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO || m.getTipo_membro() == Tipo_Membro.LIDERANCA) && m.getSexo()==Sexo.MASCULINO)
+			if ((m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO || m.getTipo_membro() == Tipo_Membro.LIDERANCA)
+					&& m.getSexo() == Sexo.MASCULINO)
 				n++;
 		}
 		return n;
 	}
-	
-	
+
 	public int getN_Membros_Ativos_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if ((m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO || m.getTipo_membro() == Tipo_Membro.LIDERANCA) && m.getSexo()==Sexo.FEMININO)
+			if ((m.getTipo_membro() == Tipo_Membro.MEMBRO_ATIVO || m.getTipo_membro() == Tipo_Membro.LIDERANCA)
+					&& m.getSexo() == Sexo.FEMININO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Membros_Ativos_Sem_Lideranca() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -408,7 +458,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Lideres_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -417,7 +467,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Lideres_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -462,7 +512,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Solteiros() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -471,7 +521,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Divorciados() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -480,7 +530,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Viuvos() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -489,7 +539,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Uniao() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -498,92 +548,102 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Casados_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.CASADO && m.getSexo() == Sexo.MASCULINO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.CASADO
+					&& m.getSexo() == Sexo.MASCULINO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Solteiros_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.SOLTEIRO && m.getSexo() == Sexo.MASCULINO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.SOLTEIRO
+					&& m.getSexo() == Sexo.MASCULINO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Divorciados_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.DIVORCIADO && m.getSexo() == Sexo.MASCULINO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.DIVORCIADO
+					&& m.getSexo() == Sexo.MASCULINO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Viuvos_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.VIUVO && m.getSexo() == Sexo.MASCULINO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.VIUVO
+					&& m.getSexo() == Sexo.MASCULINO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Uniao_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.UNIAO && m.getSexo() == Sexo.MASCULINO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.UNIAO
+					&& m.getSexo() == Sexo.MASCULINO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Casados_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.CASADO && m.getSexo() == Sexo.FEMININO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.CASADO
+					&& m.getSexo() == Sexo.FEMININO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Solteiros_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.SOLTEIRO && m.getSexo() == Sexo.FEMININO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.SOLTEIRO
+					&& m.getSexo() == Sexo.FEMININO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Divorciados_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.DIVORCIADO && m.getSexo() == Sexo.FEMININO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.DIVORCIADO
+					&& m.getSexo() == Sexo.FEMININO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Viuvos_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.VIUVO && m.getSexo() == Sexo.FEMININO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.VIUVO
+					&& m.getSexo() == Sexo.FEMININO)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Uniao_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.UNIAO && m.getSexo() == Sexo.FEMININO)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getEstado_civil() == Estado_Civil.UNIAO
+					&& m.getSexo() == Sexo.FEMININO)
 				n++;
 		}
 		return n;
@@ -615,11 +675,12 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Adolescentes_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.MASCULINO && m.getIdade() >= 13 && m.getIdade() <= 17)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.MASCULINO && m.getIdade() >= 13
+					&& m.getIdade() <= 17)
 				n++;
 		}
 		return n;
@@ -642,11 +703,12 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Adolescentes_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo()==Sexo.FEMININO && m.getIdade() >= 13 && m.getIdade() <= 17)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.FEMININO && m.getIdade() >= 13
+					&& m.getIdade() <= 17)
 				n++;
 		}
 		return n;
@@ -655,7 +717,7 @@ public class TableModelMembro extends AbstractTableModel {
 	public int getN_Adultos_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo()==Sexo.FEMININO && m.getIdade() >= 18)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.FEMININO && m.getIdade() >= 18)
 				n++;
 		}
 		return n;
@@ -664,12 +726,12 @@ public class TableModelMembro extends AbstractTableModel {
 	public int getN_Criancas_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
-			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo()==Sexo.FEMININO && m.getIdade() <= 12)
+			if (m.getTipo_membro() != Tipo_Membro.EX_MEMBRO && m.getSexo() == Sexo.FEMININO && m.getIdade() <= 12)
 				n++;
 		}
 		return n;
 	}
-	
+
 	public int getN_Batizados() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -678,7 +740,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Nao_Batizados() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -687,7 +749,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Batizados_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -696,7 +758,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Nao_Batizados_Homens() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -705,7 +767,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Batizados_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -714,7 +776,7 @@ public class TableModelMembro extends AbstractTableModel {
 		}
 		return n;
 	}
-	
+
 	public int getN_Nao_Batizados_Mulheres() {
 		int n = 0;
 		for (Membro m : membros) {
@@ -724,4 +786,20 @@ public class TableModelMembro extends AbstractTableModel {
 		return n;
 	}
 
+	/**
+	 * Ordena a tabela de membros por ordem alfabética
+	 */
+	public void ordenar() {
+		membros.sort(null);
+		fireTableDataChanged();
+		Log.getInstance().printLog("Membros ordenados com sucesso!");
+
+	}
+
+	public static TableModelMembro getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new TableModelMembro();
+		}
+		return INSTANCE;
+	}
 }

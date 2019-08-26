@@ -1,13 +1,18 @@
 package dad.fam_com_cristo;
 
-public enum Financas_Tipo {
+/**
+ * Enumerado que representa os tipos de transação existentes: entrada ou saída.
+ * @author Dário Pereira
+ *
+ */
+public enum Tipo_Transacao {
 
 	ENTRADA ("Entrada"),
 	SAIDA ("Saída");
 	
 	private String descricao;
 	
-	Financas_Tipo(String descricao) {
+	Tipo_Transacao(String descricao) {
 		this.descricao = descricao;
 	}
 	
@@ -20,8 +25,8 @@ public enum Financas_Tipo {
 		return descricao;
 	}
 	
-	public static Financas_Tipo getEnum(String descricao){
-		for(Financas_Tipo sexo : values())
+	public static Tipo_Transacao getEnum(String descricao){
+		for(Tipo_Transacao sexo : values())
             if(sexo.getDescricao().equals(descricao)) return sexo;
         throw new IllegalArgumentException("A descrição dada não corresponde a nenhum enumerado!");
 	}

@@ -38,6 +38,11 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+/**
+ * Classe que permite que um funcionário possa fazer o login e entrar no programa.
+ * @author Dário Pereira
+ *
+ */
 public class Login {
 
 	private JFrame frame;
@@ -105,7 +110,7 @@ public class Login {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				login();
+				verify();
 
 			}
 		});
@@ -130,7 +135,7 @@ public class Login {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER)
-					login();
+					verify();
 			}
 
 		});
@@ -140,7 +145,7 @@ public class Login {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER)
-					login();
+					verify();
 			}
 
 		});
@@ -150,7 +155,7 @@ public class Login {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER)
-					login();
+					verify();
 			}
 
 		});
@@ -163,12 +168,15 @@ public class Login {
 		return INSTANCE;
 	}
 
-	public void login() {
+	/**
+	 * Verifica se os campos estão preenchidos e se o funcionário existe na base de dados.
+	 */
+	public void verify() {
 		String username = user.getText();
 		String password = String.valueOf(pass.getPassword());
 		if (username.trim().equals("") || password.trim().equals("")) {
 			JOptionPane.showMessageDialog(frame, "Preencha os campos de login!", "ERRO", JOptionPane.ERROR_MESSAGE,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 		} else {
 			con = ConexaoLogin.getConnection();
 			try {
@@ -177,9 +185,9 @@ public class Login {
 				rs = pst.executeQuery();
 				if (!rs.next()) {
 					JOptionPane.showMessageDialog(frame, "O usuário não existe!", "ERRO", JOptionPane.ERROR_MESSAGE,
-							new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+							new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 				} else
-					checkPassword(username, password);
+					login(username, password);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				Log.getInstance().printLog("Login - " + e.getMessage());
@@ -197,7 +205,12 @@ public class Login {
 
 	}
 
-	private void checkPassword(String username, String password) {
+	/**
+	 * Verifica se a password está correta e faz o login do funcionário no sistema.
+	 * @param username
+	 * @param password
+	 */
+	private void login(String username, String password) {
 		try {
 			CriptografiaAES.setKey(password);
 			CriptografiaAES.encrypt(password);
@@ -210,7 +223,7 @@ public class Login {
 			rs = pst.executeQuery();
 			if (!rs.next()) {
 				JOptionPane.showMessageDialog(frame, "Senha errada!", "ERRO", JOptionPane.ERROR_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			} else {
 				Log.getInstance().printLog("Usuário: " + username + " - Conectado com sucesso!");
 				pst = con.prepareStatement(
@@ -240,6 +253,11 @@ public class Login {
 
 	}
 
+	/**
+	 * verifica se é preciso fazer o registo.
+	 * @return true - se apenas existe 1 funcionário registrado, que é o admin
+	 * 		   <br>false - caso contrário
+	 */
 	public boolean registo() {
 		con = ConexaoLogin.getConnection();
 		try {
@@ -266,6 +284,9 @@ public class Login {
 		}
 	}
 
+	/**
+	 * Torna o diálogo visível, verificando antes se é preciso fazer registro antes ou não (caso não exista funcionário registrado)
+	 */
 	public void open() {
 		if (registo())
 			RegistoLogin.getInstance().open(true);
@@ -276,6 +297,9 @@ public class Login {
 		}
 	}
 
+	/**
+	 * Torna o diálogo visível.
+	 */
 	public void openDirect() {
 		frame.setVisible(true);
 		user.setText("");

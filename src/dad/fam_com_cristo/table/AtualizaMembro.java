@@ -16,6 +16,13 @@ import dad.recursos.Command;
 import dad.recursos.ConexaoMembro;
 import dad.recursos.Log;
 
+/**
+ * Classe que representa um comando para atualizar as informações de um membro,
+ * implementando as funções de undo e redo e guardando na base de dados.
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class AtualizaMembro implements Command {
 
 	private Connection con;

@@ -60,6 +60,12 @@ import dad.recursos.SairAction;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.utils.MaterialColors;
 
+/**
+ * Classe que representa as tabelas de Entradas e Saidas no DataGui
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class FinancasPanel extends JPanel {
 
 	/**
@@ -72,9 +78,9 @@ public class FinancasPanel extends JPanel {
 	private JPanel pInferior, panel2;
 	private JTextField jtfTotal;
 	private JButton bAdd;
-	private String[] columnToolTips = { "Nome do membro", "Data de nascimento do membro",
-			"Telefone de contato do membro",
-			"Tipo de membro (Congregado, Membro Ativo, Membro Nominal, Liderança ou Ex-membro)" };
+	private String[] columnToolTips = { "Código de identificação da transação (por ordem sequencial)",
+			"Valor numérico da transação", "Data em que ocorreu a transação",
+			"Descrção da transação (dízimo, oferta, etc...)" };
 	private JPanel panel_total;
 	private JPanel panel;
 	private JLabel lTotalEnt;
@@ -90,6 +96,10 @@ public class FinancasPanel extends JPanel {
 	private JTextField jft_TotalOfertas;
 	private JPanel panel_11;
 	private JScrollPane jsSaidas;
+	private JPanel panel_4;
+	private JPanel panel_5;
+	private JLabel lblEntradas;
+	private JLabel lblSadas;
 
 	public FinancasPanel() {
 		super();
@@ -165,7 +175,9 @@ public class FinancasPanel extends JPanel {
 		add(panel_11, BorderLayout.CENTER);
 		panel_11.setLayout(new GridLayout(0, 2, 0, 0));
 
-		saidas = new JTable();
+		panel_4 = new JPanel();
+		panel_11.add(panel_4);
+		panel_4.setLayout(new BorderLayout(0, 0));
 
 		entradas = new JTable(modelMembro) {
 			/**
@@ -290,10 +302,12 @@ public class FinancasPanel extends JPanel {
 		entradas.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_membro));
 
 		JScrollPane jsEntradas = new JScrollPane(entradas);
-		panel_11.add(jsEntradas);
+		panel_4.add(jsEntradas, BorderLayout.CENTER);
 
-		jsSaidas = new JScrollPane(saidas);
-		panel_11.add(jsSaidas);
+		lblEntradas = new JLabel("ENTRADAS");
+		lblEntradas.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblEntradas.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_4.add(lblEntradas, BorderLayout.NORTH);
 
 		entradas.addComponentListener(new ComponentAdapter() {
 
@@ -322,6 +336,20 @@ public class FinancasPanel extends JPanel {
 				}
 			}
 		});
+
+		panel_5 = new JPanel();
+		panel_11.add(panel_5);
+		panel_5.setLayout(new BorderLayout(0, 0));
+
+		saidas = new JTable();
+
+		jsSaidas = new JScrollPane(saidas);
+		panel_5.add(jsSaidas, BorderLayout.CENTER);
+
+		lblSadas = new JLabel("SA\u00CDDAS");
+		lblSadas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSadas.setFont(new Font("Dialog", Font.BOLD, 15));
+		panel_5.add(lblSadas, BorderLayout.NORTH);
 
 		pInferior = new JPanel(new BorderLayout());
 		add(pInferior, BorderLayout.SOUTH);

@@ -45,6 +45,11 @@ import java.awt.Color;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 
+/**
+ * Classe para fazer um registo de funcionário no programa.
+ * @author Dário Pereira
+ *
+ */
 public class RegistoLogin {
 
 	private JDialog dialog;
@@ -192,14 +197,10 @@ public class RegistoLogin {
 
 		});
 	}
-
-	public static RegistoLogin getInstance() {
-		if (INSTANCE == null) {
-			new RegistoLogin();
-		}
-		return INSTANCE;
-	}
-
+	
+	/**
+	 * Verifica se os campos foram preenchidos corretamente e se o usuário ainda não existe e depois faz o registo
+	 */
 	public void registo() {
 		String username = user.getText();
 		String password = String.valueOf(pass.getPassword());
@@ -234,6 +235,11 @@ public class RegistoLogin {
 
 	}
 
+	/**
+	 * Insere o funcionário na base de dados.
+	 * @param username
+	 * @param password
+	 */
 	private void inserir(String username, String password) {
 		try {
 			CriptografiaAES.setKey(password);
@@ -263,10 +269,21 @@ public class RegistoLogin {
 
 	}
 
+	/**
+	 * Torna o diálogo visível.
+	 * @param login
+	 */
 	public void open(boolean login) {
 		this.login = login;
 		dialog.setVisible(true);
 		user.setText("");
 		pass.setText("");
+	}
+	
+	public static RegistoLogin getInstance() {
+		if (INSTANCE == null) {
+			new RegistoLogin();
+		}
+		return INSTANCE;
 	}
 }

@@ -9,23 +9,28 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.MaskFormatter;
-
 import dad.fam_com_cristo.gui.DataGui;
+import dad.recursos.Log;
 import dad.recursos.RegistoLogin;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.awt.Color;
-import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 
+/**
+ * Classe que representa o diálogo de configurações.
+ * @author Dário Pereira
+ *
+ */
 public class Config extends JDialog {
 
 	/**
@@ -108,11 +113,12 @@ public class Config extends JDialog {
 			bAlterarPass.setToolTipText("Não é possível alterar a senha do utilizador 'admin'!");
 		}
 		contentPanel.add(bAlterarPass);
-		
+
 		pastor = new JTextField();
 		pastor.setBounds(183, 77, 240, 25);
 		contentPanel.add(pastor);
 		pastor.setColumns(10);
+		pastor.setText(Main.PASTOR);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -120,10 +126,55 @@ public class Config extends JDialog {
 			{
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
-
+					
+					/**
+					 * Se o funcionário alterou o nome do pastor, esse método salva um novo ficheiro 'conf.dad' com o novo nome do pastor.
+					 */
 					@Override
 					public void actionPerformed(ActionEvent e) {
-
+						String pastorName = pastor.getText();
+						if (!pastorName.equals(Main.PASTOR)) {
+							int ok = JOptionPane.showOptionDialog(Config.this,
+									"Tem certeza que quer alterar o nome do pastor titular?", "ALTERAR NOME DO PASTOR",
+									JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+									new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
+							if (ok == JOptionPane.OK_OPTION) {
+								JPasswordField pass = new JPasswordField();
+								int ok1 = JOptionPane.showConfirmDialog(null, pass,
+										"Introduza a senha do administrador", JOptionPane.OK_CANCEL_OPTION,
+										JOptionPane.QUESTION_MESSAGE,
+										new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+								if (ok1 == JOptionPane.OK_OPTION) {
+									if (String.valueOf(pass.getPassword()).equals(Main.PASS)) {
+										Main.PASTOR = pastorName;
+										File conf = new File(Main.DATABASE_DIR + "conf.dad");
+										conf.delete();
+										try {
+											conf.createNewFile();
+											PrintWriter pw = new PrintWriter(conf);
+											pw.println(pastorName);
+											pw.close();
+											Log.getInstance().printLog("Nome do pastor titular alterado com sucesso!");
+										} catch (FileNotFoundException e1) {
+											Log.getInstance().printLog(
+													"Erro ao alterar o nome do pastor: Ficheiro de configuração não encontrado! - "
+															+ e1.getMessage());
+											e1.printStackTrace();
+										} catch (IOException e1) {
+											Log.getInstance()
+													.printLog("Erro ao alterar o nome do pastor! - " + e1.getMessage());
+											e1.printStackTrace();
+										}
+										dispose();
+									} else
+										JOptionPane.showMessageDialog(null, "Senha errada!", "SENHA ERRADA",
+												JOptionPane.OK_OPTION,
+												new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+								}
+							}
+						} else {
+							dispose();
+						}
 					}
 				});
 				buttonPane.add(okButton);
@@ -142,8 +193,12 @@ public class Config extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+
 	}
 
+	/**
+	 * Torna o diálogo visível.
+	 */
 	public void open() {
 		this.setVisible(true);
 	}

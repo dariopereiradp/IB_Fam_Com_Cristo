@@ -1,5 +1,10 @@
 package dad.fam_com_cristo;
 
+/**
+ * Enumerado que representa os tipos de entradas que podem haver nas finanças.
+ * @author Dário Pereira
+ *
+ */
 public enum Entradas_Tipo {
 
 	DIZIMO ("Dízimo"),

@@ -10,6 +10,11 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+/**
+ * Classe para criar um ficheiro zip e comprimir os ficheiros de um diretório.
+ * @author Dário Pereira
+ *
+ */
 public class ZipCompress {
 	public static void compress(String dirPath, String name, String destinyPath) {
 		final Path sourceDir = Paths.get(dirPath);
@@ -29,7 +34,7 @@ public class ZipCompress {
 						Log.getInstance().printLog("Erro ao criar o zip! - " + e.getMessage());
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro ao salvar o arquivo zip",
 								"ZipCompress - Erro", JOptionPane.OK_OPTION,
-								new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+								new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 						e.printStackTrace();
 					}
 					return FileVisitResult.CONTINUE;
@@ -40,7 +45,7 @@ public class ZipCompress {
 			Log.getInstance().printLog("Erro ao criar o zip do backup! - " + e.getMessage());
 			JOptionPane.showMessageDialog(null, "Ocorreu um erro ao salvar a cópia de segurança!",
 					"Cópia de Segurança - Erro", JOptionPane.OK_OPTION,
-					new ImageIcon(ZipCompress.class.getResource("/DAD_SS.jpg")));
+					new ImageIcon(ZipCompress.class.getResource("/FC_SS.jpg")));
 			e.printStackTrace();
 		}
 	}

@@ -1,5 +1,10 @@
 package dad.fam_com_cristo;
 
+/**
+ * Enumerado que representa as opções mutuamente exclusivas, Sim ou Não
+ * @author Dário Pereira
+ *
+ */
 public enum Sim_Nao {
 
 	NAO ("Não"),

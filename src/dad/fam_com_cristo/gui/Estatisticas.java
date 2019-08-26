@@ -14,7 +14,7 @@ import org.knowm.xchart.style.Styler.ChartTheme;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.Entradas_Tipo;
 import dad.fam_com_cristo.Estado_Civil;
-import dad.fam_com_cristo.Financas_Tipo;
+import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.Sexo;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.table.TableModelMembro;
@@ -29,6 +29,13 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JTabbedPane;
 
+/**
+ * Classe que representa e mostra as estatísticas e gráficos das bases de dados da
+ * igreja.
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class Estatisticas extends JDialog {
 
 	/**
@@ -458,6 +465,10 @@ public class Estatisticas extends JDialog {
 
 	}
 
+	/**
+	 * 
+	 * @return o gráfico dos tipos de membro
+	 */
 	private PieChart getTipo_Membro_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Tipo de Membro")
 				.theme(ChartTheme.GGPlot2).build();
@@ -497,6 +508,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 	
+	/**
+	 * 
+	 * @return o gráfico dos membros ativos por sexo
+	 */
 	private PieChart getMembro_Ativo_Sexo_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Membros Ativos (por sexo)")
 				.theme(ChartTheme.GGPlot2).build();
@@ -518,6 +533,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 	
+	/**
+	 * 
+	 * @return o gráfico dos membros batizados por sexo
+	 */
 	private PieChart getMembro_Batizado_Sexo_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Membros Batizados (por sexo)")
 				.theme(ChartTheme.GGPlot2).build();
@@ -539,6 +558,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * 
+	 * @return o gráfico dos membros, batizados e não batizados
+	 */
 	private PieChart getTipo_Membro_Batizado_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Membros Batizados")
 				.theme(ChartTheme.GGPlot2).build();
@@ -560,6 +583,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 	
+	/**
+	 * 
+	 * @return o gráfico dos homens, indicando se são batizados ou não batizados
+	 */
 	private PieChart getHomens_Batizados_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Homens Batizados")
 				.theme(ChartTheme.GGPlot2).build();
@@ -581,6 +608,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 	
+	/**
+	 * 
+	 * @return o gráfico das mulheres, indicando se são batizadas ou não batizadas
+	 */
 	private PieChart getMulheres_Batizadas_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Mulheres Batizadas")
 				.theme(ChartTheme.GGPlot2).build();
@@ -602,6 +633,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * 
+	 * @return o gráfico dos membros de acordo com o estado civil
+	 */
 	private PieChart getEstado_CivilChart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Estado Civil")
 				.theme(ChartTheme.GGPlot2).build();
@@ -637,6 +672,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * 
+	 * @return o gráfico dos homens, indicando o estado civil
+	 */
 	private PieChart getEstado_Civil_Homens_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500)
 				.title(Main.TITLE_SMALL + " - Homens (Estado Civil)").theme(ChartTheme.GGPlot2).build();
@@ -668,6 +707,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * 
+	 * @return o gráfico das mulheres, indicando o estado civil
+	 */
 	private PieChart getEstado_Civil_Mulheres_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500)
 				.title(Main.TITLE_SMALL + " - Mulheres (Estado Civil)").theme(ChartTheme.GGPlot2).build();
@@ -699,6 +742,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 	
+	/**
+	 * 
+	 * @return o gráfico da liderança, dividido pelo sexo
+	 */
 	private PieChart getSexo_Lideranca_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500)
 				.title(Main.TITLE_SMALL + " - Liderança (por sexo)").theme(ChartTheme.GGPlot2).build();
@@ -722,6 +769,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * 
+	 * @return o gráfico dos membros, divididos por faixa etária.
+	 */
 	private PieChart getIdades_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Idades")
 				.theme(ChartTheme.GGPlot2).build();
@@ -745,6 +796,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * 
+	 * @return o gráfico dos membros, divididos por sexo
+	 */
 	private PieChart getSexo_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Sexo")
 				.theme(ChartTheme.GGPlot2).build();
@@ -766,6 +821,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * 
+	 * @return o gráfico dos homens, divididos por faixa etária
+	 */
 	private PieChart getHomens_Idades_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Homens (Idades)")
 				.theme(ChartTheme.GGPlot2).build();
@@ -790,6 +849,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * 
+	 * @return o gráfico das mulheres, divididas por faixa etária
+	 */
 	private PieChart getMulheres_Idades_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Mulheres (Idades)")
 				.theme(ChartTheme.GGPlot2).build();
@@ -814,7 +877,10 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 	
-	
+	/**
+	 * 
+	 * @return o gráfico das finanças (entradas/saídas)
+	 */
 	private PieChart getEntrada_Saida_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Entradas / Saídas")
 				.theme(ChartTheme.GGPlot2).build();
@@ -829,11 +895,15 @@ public class Estatisticas extends JDialog {
 		chart.getStyler().setDrawAllAnnotations(true);
 
 		// Series
-		chart.addSeries(Financas_Tipo.ENTRADA.getDescricao(), TableModelMembro.getInstance().getN_Batizados());
-		chart.addSeries(Financas_Tipo.SAIDA.getDescricao(), TableModelMembro.getInstance().getN_Nao_Batizados());
+		chart.addSeries(Tipo_Transacao.ENTRADA.getDescricao(), TableModelMembro.getInstance().getN_Batizados());
+		chart.addSeries(Tipo_Transacao.SAIDA.getDescricao(), TableModelMembro.getInstance().getN_Nao_Batizados());
 		return chart;
 	}
 	
+	/**
+	 * 
+	 * @return o gráfico do tipo de entradas (dízimos/ofertas/outros)
+	 */
 	private PieChart getDizimo_Oferta_Chart() {
 		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Dízimos / Ofertas")
 				.theme(ChartTheme.GGPlot2).build();
@@ -854,6 +924,9 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
+	/**
+	 * Torna o diálogo visível.
+	 */
 	public void open() {
 		setVisible(true);
 	}

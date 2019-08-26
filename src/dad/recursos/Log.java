@@ -11,6 +11,11 @@ import java.util.logging.SimpleFormatter;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+/**
+ * Classe para criar ficheiros de log do programa.
+ * @author Dário Pereira
+ *
+ */
 public class Log {
 
 	private static Log INSTANCE;
