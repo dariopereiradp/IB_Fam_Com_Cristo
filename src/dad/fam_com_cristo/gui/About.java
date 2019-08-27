@@ -5,9 +5,12 @@ import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -15,6 +18,9 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+
+import dad.recursos.ImageViewer;
+
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -54,7 +60,7 @@ public class About extends JDialog {
 			+ "<a href=\"https://mvnrepository.com/artifact/commons-io/commons-io/2.6\">Apache Commons IO 2.6</a><br>"
 			+ "<a href=\"https://mvnrepository.com/artifact/commons-lang/commons-lang/2.6\">Commons Lang 2.6</a><br>"
 			+ "<a href=\"https://mvnrepository.com/artifact/commons-logging/commons-logging/1.1.3\">Apache Commons Logging 1.1.3</a><br>"
-			+ "<br><br>Soli Deo Gloria - A Deus toda a glória!<br>";
+			+ "<br><br><center>Soli Deo Gloria - A Deus toda a glória!<center><br>";
 
 	/**
 	 * Create the dialog.
@@ -62,7 +68,7 @@ public class About extends JDialog {
 	public About() {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 350, 300);
+		setBounds(350, 100, 480, 400);
 		setTitle("Sobre");
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -97,7 +103,17 @@ public class About extends JDialog {
 		{
 			JLabel lTitle = new JLabel(Main.TITLE);
 			lTitle.setHorizontalAlignment(SwingConstants.CENTER);
-			lTitle.setFont(new Font("Dialog", Font.PLAIN, 17));
+			lTitle.setFont(new Font("Dialog", Font.PLAIN, 15));
+			lTitle.setIcon(new ImageIcon(getClass().getResource("/FC_S.jpg")));
+			lTitle.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent evt) {
+					int count = evt.getClickCount();
+					if (count == 2) {
+						ImageViewer.show(new ImageIcon(getClass().getResource("/FC.jpg")));
+					}
+				}
+
+			});
 			contentPanel.add(lTitle, BorderLayout.NORTH);
 		}
 		{

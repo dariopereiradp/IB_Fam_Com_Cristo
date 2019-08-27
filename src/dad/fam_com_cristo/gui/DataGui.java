@@ -40,10 +40,13 @@ import javax.swing.table.TableRowSorter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
+import com.qoppa.pdfWriter.PDFDocument;
+
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
+import dad.recursos.FichaMembro_Vazia;
 import dad.recursos.Log;
 import dad.recursos.SairAction;
 import dad.recursos.TableToPDF;
@@ -90,6 +93,7 @@ public class DataGui extends JFrame {
 	private JMenuItem mListaNom;
 	private JMenuItem mListaCong;
 	private JMenuItem mntmListaDeLderes;
+	private JMenuItem mntmFichaDeMembro;
 
 	private DataGui() {
 		INSTANCE = this;
@@ -150,10 +154,13 @@ public class DataGui extends JFrame {
 		tabbedPane.addTab("Pessoas associadas", MembroPanel.getInstance());
 
 		tabbedPane.addTab("Finanças", FinancasPanel.getInstance());
-
 		tabbedPane.setToolTipTextAt(0,
 				"Pessoas que vão à IBFC com alguma regularidade: liderança, membros ativos, membros nominais e congregados ou alguém que já foi membro");
-		tabbedPane.setToolTipTextAt(1, "Registrar entradas e saídas financeiras da igreja");
+		
+		//Atualizcao TODO
+//		tabbedPane.setToolTipTextAt(1, "Registrar entradas e saídas financeiras da igreja");
+		tabbedPane.setToolTipTextAt(1, "Recurso em desenvolvimento... Brevemente disponível numa atualização futura!");
+		tabbedPane.setEnabledAt(1, false);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -249,6 +256,36 @@ public class DataGui extends JFrame {
 				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Batizados"), "Batizados");
 			}
 		});
+
+		mntmFichaDeMembro = new JMenuItem("Ficha de Membro (para preencher)");
+		mntmFichaDeMembro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				PDFDocument pdf = new FichaMembro_Vazia().generatePDF();
+				try {
+					pdf.saveDocument(Main.MEMBROS_PDF_PATH + "Ficha de Membro" + ".pdf");
+					String message = "A ficha de membro"
+							+ " foi criada com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"
+							+ Main.MEMBROS_PDF_PATH + "\nVocê quer abrir o documento agora?";
+					int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso",
+							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+							new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
+					Log.getInstance().printLog(message);
+					if (ok == JOptionPane.YES_OPTION) {
+						Desktop.getDesktop().open(new File(Main.MEMBROS_PDF_PATH));
+						Desktop.getDesktop().open(new File(Main.MEMBROS_PDF_PATH + "Ficha de Membro" + ".pdf"));
+					}
+				} catch (IOException e) {
+					Log.getInstance().printLog("Erro ao salvar PDF de ficha de membro - " + e.getMessage());
+					JOptionPane.showMessageDialog(null,
+							"Não foi possível criar o PDF da Ficha de Membro!\n"
+									+ "Se tiver uma ficha de membro aberta, por favor feche e tente novamente!",
+							"Criar ficha de membro - Erro", JOptionPane.OK_OPTION,
+							new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+					e.printStackTrace();
+				}
+			}
+		});
+		mnExportar.add(mntmFichaDeMembro);
 		mnExportar.add(mListaBatizados);
 
 		mListaAtivos = new JMenuItem("Lista de Membros Ativos");
@@ -592,8 +629,11 @@ public class DataGui extends JFrame {
 	}
 
 	/**
-	 * Realiza o filtro de pesquisa na tabela que estiver ativa e de acordo com as check box marcadas.
-	 * @param filtro - expressão que se pretende pesquisar
+	 * Realiza o filtro de pesquisa na tabela que estiver ativa e de acordo com
+	 * as check box marcadas.
+	 * 
+	 * @param filtro
+	 *            - expressão que se pretende pesquisar
 	 */
 	public void newFilter(String filtro) {
 		RowFilter<TableModelMembro, Object> rf = null;
@@ -628,13 +668,13 @@ public class DataGui extends JFrame {
 		}
 		sorter.setRowFilter(rowFilter);
 	}
-	
+
 	public static DataGui getInstance() {
 		if (INSTANCE == null)
 			INSTANCE = new DataGui();
 		return INSTANCE;
 	}
-	
+
 	public JMenuItem getMenuAnular() {
 		return menuAnular;
 	}
@@ -642,7 +682,7 @@ public class DataGui extends JFrame {
 	public JMenuItem getMenuRefazer() {
 		return menuRefazer;
 	}
-	
+
 	public JTextField getPesquisa() {
 		return pesquisa;
 	}

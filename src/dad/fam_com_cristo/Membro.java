@@ -26,10 +26,22 @@ import dad.recursos.ImageCompression;
 import dad.recursos.Log;
 import dad.recursos.MembroToPDF;
 
-public class Membro {
+/**
+ * Classe que representa uma pessoa.
+ * 
+ * @author Dário Pereira
+ *
+ */
+public class Membro implements Comparable<Membro> {
 
-	public static final String imgPath = System.getenv("APPDATA") + "/IB_Fam_Com_Cristo/Databases/Imagens/";
-	public static final String key = "dad";
+	/**
+	 * Caminho para a pasta das imagens dos livros.
+	 */
+	public static final String imgPath = Main.DATABASE_DIR + "Imagens/";
+	/**
+	 * Variável usada para controle do próximo id a ser atribuído a um novo
+	 * membro.
+	 */
 	public static int countID = 0;
 	private int id;
 	private static Connection con;
@@ -64,6 +76,9 @@ public class Membro {
 		this.batizado = batizado;
 	}
 
+	/**
+	 * Adiciona o membro na base de dados.
+	 */
 	public void adicionarNaBaseDeDados() {
 		try {
 			pst = con.prepareStatement(
@@ -94,6 +109,9 @@ public class Membro {
 		}
 	}
 
+	/**
+	 * Remove o membro da base de dados.
+	 */
 	public void removerBaseDeDados() {
 		try {
 			pst = con.prepareStatement("delete from membros where ID=?");
@@ -121,19 +139,14 @@ public class Membro {
 		this.data_nascimento = data_nascimento;
 	}
 
+	/**
+	 * Calcula a idade do membro com base na data de nascimento e na data de hoje.
+	 * @return a idade calculada do membro.
+	 */
 	public int getIdade() {
 		LocalDate birth = new Date(data_nascimento.getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		return Math.toIntExact(ChronoUnit.YEARS.between(birth, LocalDate.now()));
-	}
-
-	@Override
-	public String toString() {
-		return id + "." + nome;
-	}
-
-	public String toText() {
-		return nome + " | " + new SimpleDateFormat("dd/MM/yyyy").format(data_nascimento);
-	}
+	}	
 
 	public String getTelefone() {
 		return telefone;
@@ -159,6 +172,9 @@ public class Membro {
 		this.img = img;
 	}
 
+	/**
+	 * Abre um FileDialog para escolher uma imagem para o membro
+	 */
 	public void addImg() {
 		FileDialog fd = new FileDialog(DataGui.getInstance(), "Escolher uma imagem", FileDialog.LOAD);
 		fd.setDirectory(System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures");
@@ -250,6 +266,10 @@ public class Membro {
 		return estado_civil;
 	}
 
+	/**
+	 * Devolve a descrição do estado civil, dependendo se o membro é homem ou mulher (ex Solteiro, se for homem, mas Solteira se for mulher)
+	 * @return a descrição correta do estado civil
+	 */
 	public String getEstado_Civil_String() {
 		if (sexo == Sexo.MASCULINO) {
 			switch (estado_civil) {
@@ -298,6 +318,11 @@ public class Membro {
 		return batizado;
 	}
 
+	/**
+	 * Altera o estado da variavel batizado automaticamente, dependendo do tipo de membro.
+	 * Se for Congregado, não é batizado. Caso contrário (exceto ex-membro) é batizado.
+	 * Se for ex-membro não faz nada.
+	 */
 	public void setBatizado() {
 		if (tipo_membro == Tipo_Membro.CONGREGADO) {
 			batizado = Sim_Nao.NAO;
@@ -306,6 +331,13 @@ public class Membro {
 			batizado = Sim_Nao.SIM;
 	}
 
+	/**
+	 * Diz se o membro é batizado ou não, dependendo do tipo de membro.<br>
+	 * Se for Congregado, não é batizado. Caso contrário (exceto ex-membro) é batizado.
+	 * Se for ex-membro retorna o estado atual da variavel batizado.
+	 * 
+	 * @return um enumerado do tipo Sim_Nao, indicando se o membro é ou não batizado.
+	 */
 	public Sim_Nao newBatizadoState() {
 		if (tipo_membro == Tipo_Membro.CONGREGADO) {
 			return Sim_Nao.NAO;
@@ -321,7 +353,7 @@ public class Membro {
 	}
 
 	/**
-	 * Cria um recibo PDF do empréstimo.
+	 * Cria uma ficha PDF do membro.
 	 * 
 	 * @return
 	 */
@@ -329,6 +361,9 @@ public class Membro {
 		return new MembroToPDF(this).generatePDF();
 	}
 
+	/**
+	 * Salva a ficha PDF do membro e pergunta se quer abrir.
+	 */
 	public void savePdf() {
 		PDFDocument pdf = toPdf();
 		try {
@@ -355,7 +390,9 @@ public class Membro {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -366,7 +403,9 @@ public class Membro {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -382,7 +421,14 @@ public class Membro {
 			return false;
 		return true;
 	}
-	
-	
 
+	@Override
+	public String toString() {
+		return id + "." + nome;
+	}
+
+	@Override
+	public int compareTo(Membro o) {
+		return this.getNome().compareToIgnoreCase(o.getNome());
+	}
 }

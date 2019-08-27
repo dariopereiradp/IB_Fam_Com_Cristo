@@ -31,14 +31,34 @@ import com.itextpdf.text.pdf.PdfWriter;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.Main;
 
+/**
+ * Classe que gera um PDF da tabela de membros, com os filtros indicados.
+ * 
+ * @author Dário Pereira
+ *
+ */
 public class TableToPDF {
 
 	private static String descricaoS;
 
+	/**
+	 * Gera um PDF da tabela, de acordo com o filtro pretendido
+	 * 
+	 * @param table
+	 *            tabela que se pretende converter em PDF
+	 * @param descricao
+	 *            são válidos como descrição: <br>
+	 *            Batizados<br>
+	 *            Ativos<br>
+	 *            Nominais<br>
+	 *            Congregados<br>
+	 *            Líderes<Todos>
+	 * @return o nome do ficheiro PDF criado
+	 */
 	public static String toPDF(JTable table, String descricao) {
 		descricaoS = descricao;
-		String title = "IBFC_Lista de Membros_" + descricao + "_"
-				+ new SimpleDateFormat("ddMMMyyyy").format(new Date()) + ".pdf";
+		String title = "IBFC_Lista de Membros_" + descricao + "_" + new SimpleDateFormat("ddMMMyyyy").format(new Date())
+				+ ".pdf";
 		try {
 			Document doc = new Document(PageSize.A4, 10, 10, 50, 50);
 
@@ -122,26 +142,27 @@ public class TableToPDF {
 
 			doc.close();
 			System.out.println("done");
-			
-				String message = "A Lista de Membros " + descricao
-						+ " foi criada com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"
-						+ Main.LISTAS_DIR + "\nVocê quer abrir o documento agora?";
-				int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso",
-						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-						new ImageIcon(DataGui.getInstance().getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
-				Log.getInstance().printLog(message);
-				if (ok == JOptionPane.YES_OPTION) {
-					Desktop.getDesktop().open(new File(Main.LISTAS_DIR));
-					Desktop.getDesktop().open(new File(Main.LISTAS_DIR + title));
-				}
-			
-			
+
+			String message = "A Lista de Membros " + descricao
+					+ " foi criada com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"
+					+ Main.LISTAS_DIR + "\nVocê quer abrir o documento agora?";
+			int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso",
+					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+					new ImageIcon(DataGui.getInstance().getClass().getResource("/FC_SS.jpg")), Main.OPTIONS,
+					Main.OPTIONS[1]);
+			Log.getInstance().printLog(message);
+			if (ok == JOptionPane.YES_OPTION) {
+				Desktop.getDesktop().open(new File(Main.LISTAS_DIR));
+				Desktop.getDesktop().open(new File(Main.LISTAS_DIR + title));
+			}
+
 		} catch (DocumentException ex) {
 			ex.printStackTrace();
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
 		} catch (IOException e) {
-			Log.getInstance().printLog("Erro ao salvar PDF da lista de membros - " + descricao + " - " + e.getMessage());
+			Log.getInstance()
+					.printLog("Erro ao salvar PDF da lista de membros - " + descricao + " - " + e.getMessage());
 			JOptionPane.showMessageDialog(null,
 					"Não foi possível criar o PDF da Lista de Membros!\n"
 							+ "Se tiver uma Lista de Membros aberta, por favor feche e tente novamente!",
@@ -149,9 +170,7 @@ public class TableToPDF {
 					new ImageIcon(DataGui.getInstance().getClass().getResource("/DAD_SS.jpg")));
 			e.printStackTrace();
 		}
-		
-		
-		
+
 		return title;
 	}
 
