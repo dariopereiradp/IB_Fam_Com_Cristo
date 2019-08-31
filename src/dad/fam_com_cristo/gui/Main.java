@@ -47,7 +47,7 @@ public class Main {
 	public static final String TITLE_SMALL = "Igreja Batista Famílias com Cristo";
 	public static String PASTOR = "Nazaré Miguel Pereira";
 	public static final String VERSION = "1.0";
-	public static final String DATA_PUBLICACAO = "26 de Agosto de 2019";
+	public static final String DATA_PUBLICACAO = "31 de Agosto de 2019";
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String USER = "admin";
 	public static final String PASS = "dad";
@@ -58,7 +58,7 @@ public class Main {
 	public static final String BUG_REPORTS_DIR = DOCUMENTS_DIR + "BugReports/";
 	public static final String DATA_DIR = System.getenv("APPDATA") + "/IB_Fam_Com_Cristo/";
 	public static final String DATABASE_DIR = DATA_DIR + "Databases/";
-	public static final String MEMBROS_PDF_PATH = DOCUMENTS_DIR + "Comprovantes/";
+	public static final String MEMBROS_PDF_PATH = DOCUMENTS_DIR + "Fichas de Membros/";
 	public static final String[] OPTIONS = { "Sim", "Não" };
 	public static long inicialTime;
 	private Connection con;
