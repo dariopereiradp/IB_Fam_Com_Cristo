@@ -67,36 +67,36 @@ public class RegistoLogin {
 		dialog.setTitle("Igreja Batista Famílias com Cristo - Registro");
 		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
-		dialog.setBounds(100, 100, 500, 350);
+		dialog.setBounds(100, 100, 500, 400);
 		dialog.setLocationRelativeTo(null);
 		dialog.setResizable(false);
 		dialog.getContentPane().setLayout(null);
 
 		JLabel txUser = new JLabel("USU\u00C1RIO:");
 		txUser.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txUser.setBounds(10, 207, 70, 15);
+		txUser.setBounds(10, 261, 70, 15);
 		dialog.getContentPane().add(txUser);
 
 		JLabel txSenha = new JLabel("SENHA:");
 		txSenha.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txSenha.setBounds(10, 233, 70, 15);
+		txSenha.setBounds(10, 287, 70, 15);
 		dialog.getContentPane().add(txSenha);
 
 		JLabel titulo = new JLabel(Main.TITLE);
 		titulo.setFont(new Font("Roboto Black", Font.PLAIN, 20));
 		titulo.setHorizontalAlignment(SwingConstants.CENTER);
-		titulo.setBounds(10, 134, 480, 39);
+		titulo.setBounds(5, 193, 490, 39);
 		dialog.getContentPane().add(titulo);
 
 		JLabel image = new JLabel("");
 		image.setHorizontalAlignment(SwingConstants.CENTER);
 		image.setIcon(new ImageIcon(RegistoLogin.class.getResource("/FC_T.png")));
-		image.setBounds(150, 11, 200, 124);
+		image.setBounds(150, 61, 200, 124);
 		dialog.getContentPane().add(image);
 
 		user = new JTextField();
 		user.setFont(new Font("Roboto", Font.PLAIN, 15));
-		user.setBounds(85, 202, 399, 20);
+		user.setBounds(85, 256, 399, 20);
 		user.setBorder(new LineBorder(Color.WHITE, 1));
 		user.setMargin(new Insets(0, 0, 20, 0));
 		dialog.getContentPane().add(user);
@@ -104,14 +104,14 @@ public class RegistoLogin {
 
 		pass = new JPasswordField();
 		pass.setFont(new Font("Roboto", Font.PLAIN, 14));
-		pass.setBounds(85, 231, 399, 20);
+		pass.setBounds(85, 285, 399, 20);
 		pass.setBorder(new LineBorder(Color.WHITE, 1));
 		pass.setMargin(new Insets(0, 0, 20, 0));
 		dialog.getContentPane().add(pass);
 
 		JButton registar = new JButton("REGISTRAR");
 		registar.setFont(new Font("Roboto", Font.BOLD, 12));
-		registar.setBounds(190, 287, 120, 23);
+		registar.setBounds(190, 341, 120, 23);
 		registar.setBackground(MaterialColors.LIGHT_BLUE_600);
 		MaterialUIMovement.add(registar, MaterialColors.GRAY_300, 5, 1000 / 30);
 		dialog.getContentPane().add(registar);
@@ -128,7 +128,7 @@ public class RegistoLogin {
 				"Escreva o nome de utilizador e a senha que vai ficar associada e clique no bot\u00E3o abaixo para fazer o registro");
 		texto.setHorizontalAlignment(SwingConstants.CENTER);
 		texto.setFont(new Font("Dialog", Font.PLAIN, 9));
-		texto.setBounds(0, 171, 490, 20);
+		texto.setBounds(0, 230, 490, 20);
 		dialog.getContentPane().add(texto);
 
 		JLabel warning = new JLabel(
@@ -136,14 +136,20 @@ public class RegistoLogin {
 		warning.setFont(new Font("Roboto", Font.PLAIN, 12));
 		warning.setForeground(Color.RED);
 		warning.setHorizontalAlignment(SwingConstants.CENTER);
-		warning.setBounds(10, 262, 474, 14);
+		warning.setBounds(10, 316, 474, 14);
 		dialog.getContentPane().add(warning);
 
 		JCheckBox showPass = new JCheckBox("Mostrar senha");
 		pass.setEchoChar('*');
 		showPass.setFont(new Font("Roboto", Font.PLAIN, 10));
-		showPass.setBounds(10, 287, 110, 23);
+		showPass.setBounds(10, 341, 110, 23);
 		dialog.getContentPane().add(showPass);
+		
+		JLabel lblRegistro = new JLabel("REGISTRO");
+		lblRegistro.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRegistro.setFont(new Font("Roboto Black", Font.PLAIN, 20));
+		lblRegistro.setBounds(5, 11, 490, 39);
+		dialog.getContentPane().add(lblRegistro);
 		showPass.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {

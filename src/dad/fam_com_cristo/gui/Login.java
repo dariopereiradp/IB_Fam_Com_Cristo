@@ -60,36 +60,36 @@ public class Login {
 		frame = new JFrame("Igreja Batista Famílias com Cristo - Login");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
-		frame.setBounds(100, 100, 400, 350);
+		frame.setBounds(100, 100, 400, 450);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 
 		JLabel txUser = new JLabel("USUÁRIO:");
 		txUser.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txUser.setBounds(10, 229, 70, 15);
+		txUser.setBounds(5, 320, 70, 15);
 		frame.getContentPane().add(txUser);
 
 		JLabel txSenha = new JLabel("SENHA:");
 		txSenha.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txSenha.setBounds(10, 264, 70, 15);
+		txSenha.setBounds(5, 351, 70, 15);
 		frame.getContentPane().add(txSenha);
 
 		JLabel titulo = new JLabel(Main.TITLE);
 		titulo.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		titulo.setHorizontalAlignment(SwingConstants.CENTER);
-		titulo.setBounds(10, 148, 380, 39);
+		titulo.setBounds(5, 229, 380, 39);
 		frame.getContentPane().add(titulo);
 
 		JLabel image = new JLabel("");
 		image.setHorizontalAlignment(SwingConstants.CENTER);
 		image.setIcon(new ImageIcon(Login.class.getResource("/FC_T.png")));
-		image.setBounds(100, 11, 200, 137);
+		image.setBounds(95, 81, 200, 137);
 		frame.getContentPane().add(image);
 
 		user = new JTextField();
 		user.setFont(new Font("Roboto", Font.PLAIN, 15));
-		user.setBounds(80, 224, 304, 20);
+		user.setBounds(75, 315, 304, 20);
 		user.setBorder(new LineBorder(Color.WHITE, 1));
 		user.setMargin(new Insets(0, 0, 20, 0));
 		frame.getContentPane().add(user);
@@ -97,12 +97,12 @@ public class Login {
 
 		pass = new JPasswordField();
 		pass.setFont(new Font("Roboto", Font.PLAIN, 14));
-		pass.setBounds(80, 259, 304, 20);
+		pass.setBounds(75, 346, 304, 20);
 		frame.getContentPane().add(pass);
 
 		JButton entrar = new JButton("ENTRAR");
 		entrar.setFont(new Font("Roboto", Font.BOLD, 12));
-		entrar.setBounds(155, 287, 90, 23);
+		entrar.setBounds(150, 387, 90, 23);
 		entrar.setBackground(MaterialColors.LIGHT_BLUE_600);
 		MaterialUIMovement.add(entrar, MaterialColors.GRAY_300, 5, 1000 / 30);
 		frame.getContentPane().add(entrar);
@@ -119,8 +119,14 @@ public class Login {
 				"Escreva o seu nome de utilizador e senha e clique no bot\u00E3o abaixo para entrar no programa");
 		texto.setHorizontalAlignment(SwingConstants.CENTER);
 		texto.setFont(new Font("Roboto", Font.PLAIN, 9));
-		texto.setBounds(5, 198, 390, 20);
+		texto.setBounds(5, 270, 390, 20);
 		frame.getContentPane().add(texto);
+		
+		JLabel lblLogin = new JLabel("LOGIN");
+		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLogin.setFont(new Font("Roboto Black", Font.PLAIN, 18));
+		lblLogin.setBounds(5, 31, 380, 39);
+		frame.getContentPane().add(lblLogin);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				long time = System.currentTimeMillis() - Main.inicialTime;

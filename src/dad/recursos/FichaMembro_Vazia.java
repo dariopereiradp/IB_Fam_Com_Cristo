@@ -225,27 +225,27 @@ public class FichaMembro_Vazia {
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
+		text = "Nazária, " + "_______ de " + "______________________ de" + "___________";
+		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
+		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 2.5 / 15));
+		
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 		text = "_____________________________________________";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 3 / 15));
+		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 1.5 / 15) - 5);
 
 		text = Main.PASTOR;
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 16) + 3, (int) (height - height * 3 / 15) + 15);
+		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 16) + 3, (int) (height - height * 1.5 / 15) + 15 - 5);
 
 		text = "(Pastor Titular)";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width * 3.4 / 14) + 3, (int) (height - height * 3 / 15) + 15 + 15);
-
-		text = "Nazária, " + "_______ de " + "______________________ de" + "___________";
-		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 1.5 / 15));
+		g2d.drawString(text, (int) (width - sWidth - width * 3.4 / 14) + 3, (int) (height - height * 1.5 / 15) + 15 + 15 - 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(6f).deriveFont(Font.PLAIN));
 		text = "Gerado automaticamente em " + new SimpleDateFormat("dd/MMM/yyyy 'às' HH:mm:ss").format(new Date());
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(6f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height / 15));
+		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height / 15) + 10);
 
 		return pdfDoc;
 	}
