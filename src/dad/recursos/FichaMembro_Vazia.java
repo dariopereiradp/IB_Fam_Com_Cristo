@@ -139,11 +139,11 @@ public class FichaMembro_Vazia {
 
 		text = "Email: ";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD)).stringWidth(text);
-		g2d.drawString(text, (int) (width / 8) + 5, 220 + 145 + 15 + 5 + 5 + 10);
+		g2d.drawString(text, (int) (width / 8) + 5, 220 + 145 + 15 + 5 + 5 + 10 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
 		text = "_____________________________________________________________";
-		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 145 + 15 + 5 + 5 + 5);
+		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 145 + 15 + 5 + 5 + 5 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 
 		text = "--------------------------------------------------------------------------";
