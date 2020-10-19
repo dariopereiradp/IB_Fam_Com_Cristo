@@ -1,5 +1,7 @@
 package dad.fam_com_cristo.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -15,24 +17,25 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import javax.swing.Timer;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
-import java.awt.BorderLayout;
-import java.awt.Desktop;
-
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableRowSorter;
@@ -42,22 +45,18 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 
 import com.qoppa.pdfWriter.PDFDocument;
 
-import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.Tipo_Membro;
+import dad.fam_com_cristo.gui.themes.DarkTheme;
+import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
+import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.FichaMembro_Vazia;
 import dad.recursos.Log;
 import dad.recursos.SairAction;
 import dad.recursos.TableToPDF;
+import dad.recursos.Utils;
 import dad.recursos.ZipCompress;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 
 /**
  * Classe que torna visível a 'data' das várias bases de dados.
@@ -94,7 +93,11 @@ public class DataGui extends JFrame {
 	private JMenuItem mListaCong;
 	private JMenuItem mntmListaDeLderes;
 	private JMenuItem mntmFichaDeMembro;
-
+	private JMenu mnConf;
+	private JMenuItem mnLight;
+	private JMenuItem mnDark;
+	private JMenu mnTema;
+	
 	private DataGui() {
 		INSTANCE = this;
 		setTitle(Main.TITLE_SMALL);
@@ -198,16 +201,45 @@ public class DataGui extends JFrame {
 
 			}
 		});
+		
+		mnConf = new JMenu("Configura\u00E7\u00F5es");
+		mnArquivo.add(mnConf);
+				
+				mnTema = new JMenu("Tema");
+				mnConf.add(mnTema);
+				
+				mnLight = new JMenuItem("Claro");
+				mnTema.add(mnLight);
+				
+				mnLight.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Utils.getInstance().changeTheme(new LiteTheme());
+						
+					}
+				});
+				
+				mnDark = new JMenuItem("Escuro");
+				mnTema.add(mnDark);
 
-		menuConfig = new JMenuItem("Configura\u00E7\u00F5es");
-		menuConfig.addActionListener(new ActionListener() {
+				mnDark.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Utils.getInstance().changeTheme(DarkTheme.getInstance());
+					}
+				});
+		
+				menuConfig = new JMenuItem("Outra configura\u00E7\u00F5es");
+				mnConf.add(menuConfig);
+				menuConfig.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new Config().open();
-			}
-		});
-		mnArquivo.add(menuConfig);
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						new Config().open();
+					}
+				});
 
 		menuAtualizar = new JMenuItem("Atualizar Tabelas");
 		mnArquivo.add(menuAtualizar);

@@ -9,9 +9,9 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
-import dad.fam_com_cristo.gui.DataGui;
 import dad.recursos.Log;
 import dad.recursos.RegistoLogin;
+import dad.recursos.Utils;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,9 +20,11 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Properties;
 import java.awt.Color;
 import javax.swing.JTextField;
 
@@ -39,6 +41,8 @@ public class Config extends JDialog {
 	private static final long serialVersionUID = -1792634540833333974L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField pastor;
+	private File conf = Utils.getInstance().getPropertiesFile();
+	private String pastorName = "";
 
 	public Config() {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
@@ -113,12 +117,28 @@ public class Config extends JDialog {
 			bAlterarPass.setToolTipText("Não é possível alterar a senha do utilizador 'admin'!");
 		}
 		contentPanel.add(bAlterarPass);
+		
+		FileInputStream input;
+		try {
+			input = new FileInputStream(conf);
+			Properties prop = new Properties();
+			prop.load(input);
+			pastorName = prop.getProperty(Main.PASTOR, "");
+			input.close();
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 
 		pastor = new JTextField();
 		pastor.setBounds(183, 77, 240, 25);
 		contentPanel.add(pastor);
 		pastor.setColumns(10);
-		pastor.setText(Main.PASTOR);
+		pastor.setText(pastorName);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -132,8 +152,8 @@ public class Config extends JDialog {
 					 */
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						String pastorName = pastor.getText();
-						if (!pastorName.equals(Main.PASTOR)) {
+						String nomePastor = pastor.getText();
+						if (!nomePastor.equals(pastorName)) {
 							int ok = JOptionPane.showOptionDialog(Config.this,
 									"Tem certeza que quer alterar o nome do pastor titular?", "ALTERAR NOME DO PASTOR",
 									JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
@@ -146,14 +166,16 @@ public class Config extends JDialog {
 										new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 								if (ok1 == JOptionPane.OK_OPTION) {
 									if (String.valueOf(pass.getPassword()).equals(Main.PASS)) {
-										Main.PASTOR = pastorName;
-										File conf = new File(Main.DATABASE_DIR + "conf.dad");
-										conf.delete();
 										try {
-											conf.createNewFile();
-											PrintWriter pw = new PrintWriter(conf);
-											pw.println(pastorName);
-											pw.close();
+											FileInputStream input = new FileInputStream(conf);
+											Properties prop = new Properties();
+											prop.load(input);
+											input.close();
+											FileOutputStream output = new FileOutputStream(conf);
+											prop.setProperty(Main.PASTOR, nomePastor);
+											prop.store(output, Main.AVISO_INI);
+											output.close();
+											pastorName = nomePastor;
 											Log.getInstance().printLog("Nome do pastor titular alterado com sucesso!");
 										} catch (FileNotFoundException e1) {
 											Log.getInstance().printLog(

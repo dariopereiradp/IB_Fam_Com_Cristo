@@ -16,8 +16,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Locale;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -40,15 +38,18 @@ import com.toedter.calendar.JDateChooser;
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.table.AtualizaMembro;
 import dad.fam_com_cristo.table.CompositeCommand;
-import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.ImageViewer;
+import dad.recursos.Utils;
 import mdlaf.utils.MaterialColors;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextArea;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import dad.fam_com_cristo.Tipo_Membro;
+import dad.fam_com_cristo.gui.themes.DateChooser;
 import dad.fam_com_cristo.Estado_Civil;
 import dad.fam_com_cristo.Sexo;
 import dad.fam_com_cristo.Sim_Nao;
@@ -156,16 +157,16 @@ public class MembroDetail extends JDialog {
 		});
 		botoesPrincipais.add(apagar, "cell 0 0,alignx left,aligny center");
 		apagar.setBackground(MaterialColors.RED_400);
-		MembroPanel.getInstance().personalizarBotao(apagar);
+		Utils.personalizarBotao(apagar);
 
 		ok = new JButton("Ok");
 		ok.setBackground(MaterialColors.LIGHT_BLUE_200);
-		MembroPanel.getInstance().personalizarBotao(ok);
+		Utils.personalizarBotao(ok);
 		botoesPrincipais.add(ok, "cell 17 0,alignx right,aligny center");
 
 		editar = new JButton("Editar");
 		editar.setBackground(MaterialColors.YELLOW_300);
-		MembroPanel.getInstance().personalizarBotao(editar);
+		Utils.personalizarBotao(editar);
 		botoesSecund.add(editar, "cell 0 0");
 
 		b_exportar = new JButton("Exportar");
@@ -177,11 +178,11 @@ public class MembroDetail extends JDialog {
 		});
 		b_exportar.setBackground(new Color(50, 205, 50));
 		botoesSecund.add(b_exportar, "flowy,cell 3 0");
-		MembroPanel.getInstance().personalizarBotao(b_exportar);
+		Utils.personalizarBotao(b_exportar);
 
 		salvar = new JButton("Salvar");
 		salvar.setBackground(MaterialColors.LIGHT_GREEN_300);
-		MembroPanel.getInstance().personalizarBotao(salvar);
+		Utils.personalizarBotao(salvar);
 		botoesSecund.add(salvar, "cell 17 0");
 		salvar.setEnabled(false);
 
@@ -194,13 +195,9 @@ public class MembroDetail extends JDialog {
 		idade.setBounds(70, 186, 44, 25);
 		infoPanel.add(idade);
 
-		data_nascimento = new JDateChooser();
+		data_nascimento = new DateChooser();
 		data_nascimento.setBounds(164, 80, 166, 25);
-		data_nascimento.setLocale(new Locale("pt", "BR"));
-		data_nascimento.setDateFormatString("dd/MM/yyyy");
-		data_nascimento.setMaxSelectableDate(new Date());
-		data_nascimento.setDate(new Date());
-
+		
 		profissao = new JTextField("");
 		profissao.setBounds(603, 45, 191, 25);
 		profissao.setEditable(false);
@@ -317,12 +314,9 @@ public class MembroDetail extends JDialog {
 		estado_civil.setSelectedIndex(0);
 		infoPanel.add(estado_civil);
 
-		data_batismo = new JDateChooser();
+		data_batismo = new DateChooser();
 		data_batismo.setBounds(601, 295, 191, 25);
-		data_batismo.setLocale(new Locale("pt", "BR"));
-		data_batismo.setDateFormatString("dd/MM/yyyy");
 		data_batismo.setEnabled(false);
-		data_batismo.setDate(new Date());
 		infoPanel.add(data_batismo);
 
 		lblDataDeBatismo = new JLabel("Data de Batismo: ");
@@ -333,13 +327,10 @@ public class MembroDetail extends JDialog {
 		lblMembroDesde.setBounds(5, 295, 130, 25);
 		infoPanel.add(lblMembroDesde);
 
-		membro_desde = new JDateChooser();
-		membro_desde.setLocale(new Locale("pt", "BR"));
-		membro_desde.setDateFormatString("dd/MM/yyyy");
+		membro_desde = new DateChooser();
 		membro_desde.setBounds(135, 295, 178, 25);
-		infoPanel.add(membro_desde);
-		membro_desde.setDate(new Date());
 		membro_desde.setEnabled(false);
+		infoPanel.add(membro_desde);
 
 		JLabel lblEmail = new JLabel("Email:");
 		lblEmail.setBounds(317, 150, 86, 25);
@@ -528,7 +519,10 @@ public class MembroDetail extends JDialog {
 		else
 			addImage.setText("Alterar imagem");
 		addImage.setBackground(MaterialColors.BLUE_GRAY_500);
-		MembroPanel.getInstance().personalizarBotao(addImage);
+		Utils.personalizarBotao(addImage);
+		addImage.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.ADD_A_PHOTO,
+                MaterialColors.COSMO_BLACK));
 		imagePanel.add(image);
 		imagePanel.add(addImage, "center");
 

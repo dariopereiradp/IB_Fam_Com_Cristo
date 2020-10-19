@@ -2,9 +2,8 @@ package dad.fam_com_cristo.gui;
 
 import java.awt.EventQueue;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
@@ -16,9 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-
+import java.util.Properties;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -33,7 +30,9 @@ import dad.recursos.ConexaoLogin;
 import dad.recursos.ConexaoMembro;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
+import dad.recursos.Utils;
 import mdlaf.MaterialLookAndFeel;
+import mdlaf.themes.MaterialTheme;
 
 /**
  * Classe responsável por inicializar todo o programa e bases de dados.
@@ -45,8 +44,8 @@ public class Main {
 
 	public static final String TITLE = "IGREJA BATISTA FAMÍLIAS COM CRISTO";
 	public static final String TITLE_SMALL = "Igreja Batista Famílias com Cristo";
-	public static String PASTOR = "Nazaré Miguel Pereira";
-	public static final String VERSION = "1.0";
+	public static final String PASTOR = "PASTOR";
+	public static final String VERSION = "2.0";
 	public static final String DATA_PUBLICACAO = "31 de Agosto de 2019";
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String USER = "admin";
@@ -60,6 +59,7 @@ public class Main {
 	public static final String DATABASE_DIR = DATA_DIR + "Databases/";
 	public static final String MEMBROS_PDF_PATH = DOCUMENTS_DIR + "Fichas de Membros/";
 	public static final String[] OPTIONS = { "Sim", "Não" };
+	public static final String AVISO_INI = "SE ALTERAR ESSE FICHEIRO O PROGRAMA PODE NÃO FUNCIONAR CORRETAMENTE";
 	public static long inicialTime;
 	private Connection con;
 
@@ -68,7 +68,11 @@ public class Main {
 	 */
 	public Main() {
 		try {
-			UIManager.setLookAndFeel(new MaterialLookAndFeel());
+			createConfFile();
+			MaterialLookAndFeel materialTheme = new MaterialLookAndFeel(
+					(MaterialTheme) Utils.getInstance().getCurrentTheme());
+
+			UIManager.setLookAndFeel(materialTheme);
 			Splash screen = new Splash();
 			EventQueue.invokeLater(new Runnable() {
 
@@ -127,6 +131,40 @@ public class Main {
 		}
 	}
 
+	public File createConfFile() {
+		File conf = null;
+		try {
+			conf = Utils.getInstance().getPropertiesFile();
+			if (conf.createNewFile()) {
+				FileOutputStream output = new FileOutputStream(conf);
+				Properties prop = new Properties();
+				prop.setProperty(Utils.APP_THEME, Utils.THEME_DARK);
+				prop.setProperty(PASTOR, "");
+				prop.store(output, AVISO_INI);
+			}
+			return conf;
+//			scan = new Scanner(conf);
+//			pastor_name = scan.nextLine();			
+//			scan.close();
+		} catch (IOException | InputMismatchException e1) {
+			Log.getInstance().printLog("Erro ao carregar configurações! - " + e1.getMessage());
+			e1.printStackTrace();
+			return null;
+		}
+//		catch (NoSuchElementException e) {
+//			scan.close();
+//			PrintWriter pw;
+//			try {
+//				pw = new PrintWriter(conf);
+//				pw.println(PASTOR);
+//				pw.close();
+//			} catch (FileNotFoundException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//		}
+	}
+
 	/**
 	 * Classe que representa uma thread que incrementa o valor da porcentagem na
 	 * splash screen.
@@ -174,29 +212,6 @@ public class Main {
 
 		restaurar();
 
-		File conf = null;
-		Scanner scan = null;
-		try {
-			conf = new File(DATABASE_DIR + "conf.dad");
-			conf.createNewFile();
-			scan = new Scanner(conf);
-			PASTOR = scan.nextLine();			
-			scan.close();
-		} catch (IOException | InputMismatchException e1) {
-			Log.getInstance().printLog("Erro ao carregar configurações! - " + e1.getMessage());
-			e1.printStackTrace();
-		} catch (NoSuchElementException e) {
-			scan.close();
-			PrintWriter pw;
-			try {
-				pw = new PrintWriter(conf);
-				pw.println(PASTOR);
-				pw.close();
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
 		try {
 			File logins = new File(ConexaoLogin.dbFile);
 			if (!logins.exists()) {
@@ -279,9 +294,8 @@ public class Main {
 	}
 
 	/**
-	 * Caso o programa esteja a iniciar após o restauro de uma cópia de
-	 * segurança, esse método trata de substituir as bases de dados e apagar as
-	 * temporárias.
+	 * Caso o programa esteja a iniciar após o restauro de uma cópia de segurança,
+	 * esse método trata de substituir as bases de dados e apagar as temporárias.
 	 */
 	public void restaurar() {
 		String path = DATA_DIR + "temp/";

@@ -11,7 +11,6 @@ import org.knowm.xchart.PieChartBuilder;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.style.Styler.ChartTheme;
 
-import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.Entradas_Tipo;
 import dad.fam_com_cristo.Estado_Civil;
 import dad.fam_com_cristo.Tipo_Transacao;

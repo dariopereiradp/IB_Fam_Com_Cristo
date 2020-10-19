@@ -20,7 +20,7 @@
 	</organization>
 
 	<dependencies>
-
+	
 		<dependency>
 			<groupId>io.github.vincenzopalazzo</groupId>
 			<artifactId>material-ui-swing</artifactId>
@@ -33,7 +33,7 @@
 			<artifactId>jcalendar</artifactId>
 			<version>1.4</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/com.miglayout/miglayout-swing -->
 		<dependency>
 			<groupId>com.miglayout</groupId>
@@ -82,13 +82,13 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.15</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.qoppa.pdfwriter</groupId>
 			<artifactId>jpdfwriter</artifactId>
 			<version>v2016R1.04</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
 		<dependency>
 			<groupId>com.itextpdf</groupId>
@@ -102,7 +102,7 @@
 			<artifactId>xchart</artifactId>
 			<version>3.6.5</version>
 		</dependency>
-		
+
 
 
 	</dependencies>

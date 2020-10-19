@@ -234,10 +234,20 @@ public class TableModelMembro extends AbstractTableModel {
 							undoManager.execute(new AtualizaMembro(this, "Telefone", membro, valor));
 					break;
 				case 3:
-					if (membro.getTipo_membro() != (Tipo_Membro) valor)
+					if (membro.getTipo_membro() != (Tipo_Membro) valor) {
+						Sim_Nao valor_batismo;
+						if((Tipo_Membro) valor == Tipo_Membro.CONGREGADO)
+							valor_batismo = Sim_Nao.NAO;
+						else if ((Tipo_Membro) valor == Tipo_Membro.EX_MEMBRO)
+							valor_batismo = membro.eBatizado();
+						else
+							valor_batismo = Sim_Nao.SIM;
+						
+							
 						undoManager.execute(new CompositeCommand("Tipo de Membro",
 								new AtualizaMembro(this, "Tipo_Membro", membro, valor),
-								new AtualizaMembro(this, "Batizado", membro, valor)));
+								new AtualizaMembro(this, "Batizado", membro, valor_batismo)));
+					}
 
 					break;
 				default:

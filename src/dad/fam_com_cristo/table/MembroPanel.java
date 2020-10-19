@@ -2,8 +2,6 @@ package dad.fam_com_cristo.table;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -19,10 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -39,25 +35,20 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.RowFilter;
-import javax.swing.RowSorter.SortKey;
-import javax.swing.SortOrder;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.MembroDetail;
+import dad.fam_com_cristo.gui.Table;
 import dad.recursos.CellRenderer;
 import dad.recursos.SairAction;
-import mdlaf.animation.MaterialUIMovement;
+import dad.recursos.Utils;
 import mdlaf.utils.MaterialColors;
 
 /**
@@ -122,117 +113,8 @@ public class MembroPanel extends JPanel {
 		setLayout(new BorderLayout());
 		modelMembro = TableModelMembro.getInstance();
 
-		membros = new JTable(modelMembro) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 776311897765510270L;
-			
-			@Override
-			public boolean isCellEditable(int data, int columns) {
-				return true;
-			}
+		membros = new Table(modelMembro, columnToolTips);
 
-			@Override
-			public Component prepareRenderer(TableCellRenderer r, int data, int columns) {
-				// int row = convertRowIndexToModel(data);
-				Component c = super.prepareRenderer(r, data, columns);
-				if (data % 2 == 0)
-					c.setBackground(Color.WHITE);
-				else
-					c.setBackground(MaterialColors.GRAY_100);
-				if (isCellSelected(data, columns)) {
-					c.setBackground(MaterialColors.GREEN_A100);
-				}
-				return c;
-			}
-
-			// Implement table cell tool tips.
-			public String getToolTipText(MouseEvent e) {
-				String tip = null;
-				Point p = e.getPoint();
-				int rowIndex = rowAtPoint(p);
-				int colIndex = columnAtPoint(p);
-				int realColumnIndex = convertColumnIndexToModel(colIndex);
-				if (rowIndex != -1) {
-					int realRowIndex = convertRowIndexToModel(rowIndex);
-					tip = String.valueOf(modelMembro.getValueAt(realRowIndex, realColumnIndex));
-				} else
-					tip = null;
-				return tip;
-			}
-
-			// Implement table header tool tips.
-			protected JTableHeader createDefaultTableHeader() {
-				return new JTableHeader(columnModel) {
-					/**
-					 * 
-					 */
-					private static final long serialVersionUID = -6962458419476848334L;
-
-					public String getToolTipText(MouseEvent e) {
-						@SuppressWarnings("unused")
-						String tip = null;
-						Point p = e.getPoint();
-						int index = columnModel.getColumnIndexAtX(p.x);
-						int realIndex = columnModel.getColumn(index).getModelIndex();
-						return columnToolTips[realIndex];
-					}
-				};
-			}
-		};
-		TableCellRenderer tcr = membros.getTableHeader().getDefaultRenderer();
-		membros.getTableHeader().setDefaultRenderer(new TableCellRenderer() {
-
-			private Icon ascendingIcon = UIManager.getIcon("Table.ascendingSortIcon");
-			private Icon descendingIcon = UIManager.getIcon("Table.descendingSortIcon");
-
-			@Override
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-					boolean hasFocused, int row, int column) {
-
-				Component comp = tcr.getTableCellRendererComponent(table, value, isSelected, hasFocused, row, column);
-				if (comp instanceof JLabel) {
-					JLabel label = (JLabel) comp;
-					label.setPreferredSize(new Dimension(100, 30));
-					label.setIcon(getSortIcon(table, column));
-					label.setHorizontalAlignment(SwingConstants.CENTER);
-					label.setBackground(MaterialColors.YELLOW_300);
-					label.setFont(new Font("Roboto", Font.BOLD, 15));
-					label.setBorder(BorderFactory.createMatteBorder(0, 1, 3, 1, MaterialColors.GREEN_300));
-					return label;
-				}
-				return comp;
-			}
-
-			private Icon getSortIcon(JTable table, int column) {
-				SortOrder sortOrder = getColumnSortOrder(table, column);
-				if (SortOrder.UNSORTED == sortOrder) {
-					return new ImageIcon(getClass().getResource("/sort.png"));
-				}
-				return SortOrder.ASCENDING == sortOrder ? ascendingIcon : descendingIcon;
-			}
-
-			private SortOrder getColumnSortOrder(JTable table, int column) {
-				if (table == null || table.getRowSorter() == null) {
-					return SortOrder.UNSORTED;
-				}
-				List<? extends SortKey> keys = table.getRowSorter().getSortKeys();
-				if (keys.size() > 0) {
-					SortKey key = keys.get(0);
-					if (key.getColumn() == table.convertColumnIndexToModel(column)) {
-						return key.getSortOrder();
-					}
-				}
-				return SortOrder.UNSORTED;
-			}
-		});
-
-		membros.setPreferredScrollableViewportSize(new Dimension(800, 600));
-		membros.setFillsViewportHeight(true);
-		membros.setAutoCreateRowSorter(true);
-		membros.getTableHeader().setReorderingAllowed(false);
-		membros.setRowHeight(30);
 
 		membros.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
 		membros.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
@@ -456,7 +338,7 @@ public class MembroPanel extends JPanel {
 		JButton bSair = new JButton("SAIR");
 		bSair.setBackground(new Color(247, 247, 255));
 		bSair.setForeground(MaterialColors.LIGHT_BLUE_400);
-		personalizarBotao(bSair);
+		Utils.personalizarBotao(bSair);
 		bSair.addActionListener(new SairAction());
 		panel2.add(bSair);
 
@@ -464,9 +346,9 @@ public class MembroPanel extends JPanel {
 		pInferior.add(panel4, BorderLayout.EAST);
 
 		bAdd = new JButton("ADICIONAR");
-		bAdd.setForeground(MaterialColors.WHITE);
-		bAdd.setBackground(MaterialColors.LIGHT_GREEN_500);
-		personalizarBotao(bAdd);
+		bAdd.setForeground(MaterialColors.WHITE);//
+		bAdd.setBackground(MaterialColors.LIGHT_GREEN_500);//
+		Utils.personalizarBotao(bAdd);
 		bAdd.addActionListener(new ActionListener() {
 
 			@Override
@@ -764,14 +646,6 @@ public class MembroPanel extends JPanel {
 		return table;
 	}
 	
-	/**
-	 * Personaliza o botão passado como parametro, mudando a fonte e adicionando movimento.
-	 * @param jb botao a ser personalizado
-	 */
-	public void personalizarBotao(JButton jb) {
-		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
-		MaterialUIMovement.add(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
-	}
 	
 	public static MembroPanel getInstance() {
 		if (INSTANCE == null)

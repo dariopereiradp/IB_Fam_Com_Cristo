@@ -21,7 +21,7 @@ import dad.recursos.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 import dad.recursos.RegistoLogin;
-import mdlaf.animation.MaterialUIMovement;
+import dad.recursos.Utils;
 import mdlaf.utils.MaterialColors;
 
 import javax.swing.JLabel;
@@ -101,10 +101,9 @@ public class Login {
 		frame.getContentPane().add(pass);
 
 		JButton entrar = new JButton("ENTRAR");
-		entrar.setFont(new Font("Roboto", Font.BOLD, 12));
 		entrar.setBounds(150, 387, 90, 23);
 		entrar.setBackground(MaterialColors.LIGHT_BLUE_600);
-		MaterialUIMovement.add(entrar, MaterialColors.GRAY_300, 5, 1000 / 30);
+		Utils.personalizarBotao(entrar);
 		frame.getContentPane().add(entrar);
 		entrar.addActionListener(new ActionListener() {
 

@@ -146,7 +146,7 @@ public class AtualizaMembro implements Command {
 				membro.setEndereco((String) valor);
 				break;
 			case "Telefone":
-				String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ","");
+				String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ", "");
 				if (telefone.length() != 11)
 					telefone = "00000000000";
 				pst.setString(1, telefone);
