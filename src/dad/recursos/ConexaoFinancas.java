@@ -2,7 +2,11 @@ package dad.recursos;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import dad.fam_com_cristo.gui.Main;
 
@@ -30,6 +34,24 @@ public class ConexaoFinancas {
 		}
 
 		return con;
+	}
+	
+	public static void createTable() throws SQLException {
+		File financas = new File(ConexaoFinancas.dbFile);
+		if (!financas.exists()) {
+			con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoFinancas.dbFile
+					+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
+			DatabaseMetaData dmd = con.getMetaData();
+			try (ResultSet rs = dmd.getTables(null, null, "Financas", new String[] { "TABLE" })) {
+				try (Statement s = con.createStatement()) {
+					s.executeUpdate("CREATE TABLE Financas (ID int NOT NULL, Data date, Valor double NOT NULL, Tipo varchar(255) NOT NULL,"
+							+ "Descricao memo, Total double,"
+							+ "CONSTRAINT PK_Financas PRIMARY KEY (ID));");
+					Log.getInstance().printLog("Base de dados financas.mbd criada com sucesso");
+				}
+			}
+			con.close();
+		}
 	}
 
 }

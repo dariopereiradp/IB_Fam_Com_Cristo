@@ -161,9 +161,7 @@ public class DataGui extends JFrame {
 				"Pessoas que vão à IBFC com alguma regularidade: liderança, membros ativos, membros nominais e congregados ou alguém que já foi membro");
 		
 		//Atualizcao TODO
-//		tabbedPane.setToolTipTextAt(1, "Registrar entradas e saídas financeiras da igreja");
-		tabbedPane.setToolTipTextAt(1, "Recurso em desenvolvimento... Brevemente disponível numa atualização futura!");
-		tabbedPane.setEnabledAt(1, false);
+		tabbedPane.setToolTipTextAt(1, "Registrar entradas e saídas financeiras da igreja");
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

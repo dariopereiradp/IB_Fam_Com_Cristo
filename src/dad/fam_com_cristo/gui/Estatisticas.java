@@ -11,7 +11,6 @@ import org.knowm.xchart.PieChartBuilder;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.style.Styler.ChartTheme;
 
-import dad.fam_com_cristo.Entradas_Tipo;
 import dad.fam_com_cristo.Estado_Civil;
 import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.Sexo;
@@ -458,13 +457,8 @@ public class Estatisticas extends JDialog {
 		JTabbedPane financasPane = new JTabbedPane(JTabbedPane.LEFT);
 		tabbedPane.addTab("Finanças", financasPane);
 
-		// Atualizacao TODO
-		tabbedPane.setToolTipTextAt(2, "Recurso em desenvolvimento... Brevemente disponível numa atualização futura!");
-		tabbedPane.setEnabledAt(2, false);
-
 		financasPane.addTab("Detalhes", new JPanel());
 		financasPane.addTab("Entradas / Saídas", new XChartPanel<PieChart>(getEntrada_Saida_Chart()));
-		financasPane.addTab("Dízimos / Ofertas", new XChartPanel<PieChart>(getDizimo_Oferta_Chart()));
 
 	}
 
@@ -908,29 +902,6 @@ public class Estatisticas extends JDialog {
 		return chart;
 	}
 
-	/**
-	 * 
-	 * @return o gráfico do tipo de entradas (dízimos/ofertas/outros)
-	 */
-	private PieChart getDizimo_Oferta_Chart() {
-		PieChart chart = new PieChartBuilder().width(700).height(500).title(Main.TITLE_SMALL + " - Dízimos / Ofertas")
-				.theme(ChartTheme.GGPlot2).build();
-
-		// Customize Chart
-		chart.getStyler().setLegendVisible(true);
-		chart.getStyler().setToolTipsEnabled(true);
-		chart.getStyler().setToolTipHighlightColor(new Color(175, 25, 125, 50));
-		chart.getStyler().setAnnotationDistance(1.15);
-		chart.getStyler().setPlotContentSize(0.7);
-		chart.getStyler().setStartAngleInDegrees(90);
-		chart.getStyler().setDrawAllAnnotations(true);
-
-		// Series
-		chart.addSeries(Entradas_Tipo.DIZIMO.getDescricao(), TableModelMembro.getInstance().getN_Batizados());
-		chart.addSeries(Entradas_Tipo.OFERTA.getDescricao(), TableModelMembro.getInstance().getN_Nao_Batizados());
-		chart.addSeries(Entradas_Tipo.OUTROS.getDescricao(), TableModelMembro.getInstance().getN_Nao_Batizados());
-		return chart;
-	}
 
 	/**
 	 * Torna o diálogo visível.

@@ -9,6 +9,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
+
+import dad.fam_com_cristo.table.GerirFuncionarios;
 import dad.recursos.Log;
 import dad.recursos.RegistoLogin;
 import dad.recursos.Utils;

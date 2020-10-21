@@ -2,6 +2,7 @@ package dad.fam_com_cristo.table;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -45,7 +46,6 @@ import javax.swing.text.MaskFormatter;
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.MembroDetail;
-import dad.fam_com_cristo.gui.Table;
 import dad.recursos.CellRenderer;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
@@ -113,7 +113,9 @@ public class MembroPanel extends JPanel {
 		setLayout(new BorderLayout());
 		modelMembro = TableModelMembro.getInstance();
 
-		membros = new Table(modelMembro, columnToolTips);
+		membros = new Table(modelMembro, columnToolTips, true);
+		
+		membros.setPreferredScrollableViewportSize(new Dimension(800, 600));
 
 
 		membros.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());

@@ -1,9 +1,7 @@
 package dad.fam_com_cristo.table;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,34 +16,22 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.SortOrder;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.RowSorter.SortKey;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-
 import dad.fam_com_cristo.Funcionario;
 import dad.fam_com_cristo.gui.ChangePassword;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.Log;
-import mdlaf.utils.MaterialColors;
 
 /**
  * Classe que representa o TableModel para os funcionários.
@@ -213,98 +199,10 @@ public class TableModelFuncionario extends AbstractTableModel {
 	 * @return - a nova tabela
 	 */
 	public JTable getSmallTable() {
-		JTable small = new JTable(TableModelFuncionario.getInstance()) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -7294828362296077489L;
-
-			@Override
-			public Component prepareRenderer(TableCellRenderer r, int data, int columns) {
-				Component c = super.prepareRenderer(r, data, columns);
-				if (data % 2 == 0)
-					c.setBackground(Color.WHITE);
-				else
-					c.setBackground(MaterialColors.GRAY_100);
-				if (isCellSelected(data, columns)) {
-					c.setBackground(MaterialColors.GREEN_A100);
-				}
-
-				return c;
-			}
-
-			protected JTableHeader createDefaultTableHeader() {
-				return new JTableHeader(columnModel) {
-					/**
-					 * 
-					 */
-					private static final long serialVersionUID = -8247305580277890952L;
-
-					public String getToolTipText(MouseEvent e) {
-						@SuppressWarnings("unused")
-						String tip = null;
-						Point p = e.getPoint();
-						int index = columnModel.getColumnIndexAtX(p.x);
-						int realIndex = columnModel.getColumn(index).getModelIndex();
-						return colunas[realIndex];
-					}
-				};
-			}
-
-		};
-
-		TableCellRenderer tcr = small.getTableHeader().getDefaultRenderer();
-		small.getTableHeader().setDefaultRenderer(new TableCellRenderer() {
-
-			private Icon ascendingIcon = UIManager.getIcon("Table.ascendingSortIcon");
-			private Icon descendingIcon = UIManager.getIcon("Table.descendingSortIcon");
-
-			@Override
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-					boolean hasFocused, int row, int column) {
-
-				Component comp = tcr.getTableCellRendererComponent(table, value, isSelected, hasFocused, row, column);
-				if (comp instanceof JLabel) {
-					JLabel label = (JLabel) comp;
-					label.setPreferredSize(new Dimension(100, 30));
-					label.setIcon(getSortIcon(table, column));
-					label.setHorizontalAlignment(SwingConstants.CENTER);
-					label.setBackground(MaterialColors.YELLOW_300);
-					label.setFont(new Font("Roboto", Font.BOLD, 15));
-					label.setBorder(BorderFactory.createMatteBorder(0, 1, 3, 1, MaterialColors.GREEN_300));
-					return label;
-				}
-				return comp;
-			}
-
-			private Icon getSortIcon(JTable table, int column) {
-				SortOrder sortOrder = getColumnSortOrder(table, column);
-				if (SortOrder.UNSORTED == sortOrder) {
-					return new ImageIcon(getClass().getResource("/sort.png"));
-				}
-				return SortOrder.ASCENDING == sortOrder ? ascendingIcon : descendingIcon;
-			}
-
-			private SortOrder getColumnSortOrder(JTable table, int column) {
-				if (table == null || table.getRowSorter() == null) {
-					return SortOrder.UNSORTED;
-				}
-				List<? extends SortKey> keys = table.getRowSorter().getSortKeys();
-				if (keys.size() > 0) {
-					SortKey key = keys.get(0);
-					if (key.getColumn() == table.convertColumnIndexToModel(column)) {
-						return key.getSortOrder();
-					}
-				}
-				return SortOrder.UNSORTED;
-			}
-		});
+		JTable small = new Table(this, colunas, false);
 
 		small.setPreferredScrollableViewportSize(new Dimension(1100, 350));
-		small.setFillsViewportHeight(true);
-		small.setAutoCreateRowSorter(true);
-		small.getTableHeader().setReorderingAllowed(false);
-		small.setRowHeight(30);
+
 		small.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
 			/**
 			 * 
@@ -315,7 +213,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean selected,
 					boolean hasFocus, int row, int column) {
 				super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
-				if (row != 0)
+				if (!getFuncionario(small.convertRowIndexToModel(row)).getNome().equals("admin"))
 					this.setIcon(new ImageIcon(getClass().getResource("/edit.png")));
 				else
 					this.setIcon(null);
@@ -341,8 +239,8 @@ public class TableModelFuncionario extends AbstractTableModel {
 				if (rowAtPoint != -1) {
 					int row = table.convertRowIndexToModel(rowAtPoint);
 					if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
-						if (rowAtPoint != 0 && column == 1)
-							new ChangePassword(TableModelFuncionario.getInstance().getFuncionario(row).getNome(), true)
+						if (!getFuncionario(row).getNome().equals("admin") && column == 1)
+							new ChangePassword(getFuncionario(row).getNome(), true)
 									.open();
 						;
 

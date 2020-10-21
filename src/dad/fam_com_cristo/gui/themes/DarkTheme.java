@@ -27,7 +27,7 @@ public class DarkTheme extends JMarsDarkTheme implements Theme {
 	protected void installColor() {
 		super.installColor();
 		this.backgroundPrimary = MaterialColors.GRAY_900;
-		
+
 		this.buttonDefaultTextColor = MaterialColors.WHITE;
 		this.buttonTextColor = MaterialColors.WHITE;
 
@@ -38,18 +38,18 @@ public class DarkTheme extends JMarsDarkTheme implements Theme {
 		super.disabledBackgroudnTextField = new ColorUIResource(41, 41, 41);
 		super.disabledForegroundTextField = MaterialColors.WHITE;
 
+		this.backgroundTable = getColorLinhasPares();
 		this.backgroundTableHeader = MaterialColors.AMBER_900;
-		super.backgroundTable = getColorLinhasPares();
 		super.alternateRowBackgroundTable = getColorLinhasImpares();
 		super.selectionBackgroundTable = MaterialColors.bleach(this.highlightBackgroundPrimary, 0.2f);
-		
-		 this.trackColorScrollBar = MaterialColors.GRAY_900;
+
+		this.trackColorScrollBar = MaterialColors.GRAY_900;
 
 	}
 
 	@Override
 	public ColorUIResource getColorLinhasPares() {
-		return MaterialColors.GRAY_800;
+		return MaterialColors.BLUE_GRAY_900;
 	}
 
 	@Override

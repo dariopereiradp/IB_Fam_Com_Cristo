@@ -26,8 +26,8 @@ public enum Tipo_Transacao {
 	}
 	
 	public static Tipo_Transacao getEnum(String descricao){
-		for(Tipo_Transacao sexo : values())
-            if(sexo.getDescricao().equals(descricao)) return sexo;
+		for(Tipo_Transacao tipo : values())
+            if(tipo.getDescricao().equals(descricao)) return tipo;
         throw new IllegalArgumentException("A descrição dada não corresponde a nenhum enumerado!");
 	}
 	

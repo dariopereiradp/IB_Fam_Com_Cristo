@@ -1,15 +1,16 @@
 /**
  * 
  */
-package dad.fam_com_cristo.gui;
+package dad.fam_com_cristo.table;
 
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+
+import dad.fam_com_cristo.gui.TableHeaderWithSortIcons;
 
 /**
  * @author dariopereiradp
@@ -23,13 +24,14 @@ public class Table extends JTable {
 	private static final long serialVersionUID = 4473733357164145475L;
 	private AbstractTableModel model;
 	private String[] columnToolTips;
+	private boolean cellEditable;
 
-	public Table(AbstractTableModel model, String[] columnToolTips) {
+	public Table(AbstractTableModel model, String[] columnToolTips, boolean cellEditable) {
 		super(model);
 		this.model = model;
 		this.columnToolTips = columnToolTips;
+		this.cellEditable = cellEditable;
 		personalizarHeader();
-		setPreferredScrollableViewportSize(new Dimension(800, 600));
 		setFillsViewportHeight(true);
 		setAutoCreateRowSorter(true);
 		getTableHeader().setReorderingAllowed(false);
@@ -38,7 +40,7 @@ public class Table extends JTable {
 
 	@Override
 	public boolean isCellEditable(int data, int columns) {
-		return true;
+		return cellEditable;
 	}
 
 	// Implement table cell tool tips.

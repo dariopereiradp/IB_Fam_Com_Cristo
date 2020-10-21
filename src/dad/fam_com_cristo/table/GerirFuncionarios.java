@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.gui;
+package dad.fam_com_cristo.table;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
-import dad.fam_com_cristo.table.TableModelFuncionario;
+import dad.fam_com_cristo.gui.DataGui;
 
 import javax.swing.JTable;
 

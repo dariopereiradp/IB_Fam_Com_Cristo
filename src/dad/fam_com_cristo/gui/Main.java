@@ -6,14 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Properties;
 import javax.swing.ImageIcon;
@@ -23,12 +16,12 @@ import javax.swing.UIManager;
 import org.apache.commons.io.FileUtils;
 
 import dad.fam_com_cristo.Membro;
+import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelFuncionario;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.ConexaoFinancas;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.ConexaoMembro;
-import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 import dad.recursos.Utils;
 import mdlaf.MaterialLookAndFeel;
@@ -61,8 +54,6 @@ public class Main {
 	public static final String[] OPTIONS = { "Sim", "Não" };
 	public static final String AVISO_INI = "SE ALTERAR ESSE FICHEIRO O PROGRAMA PODE NÃO FUNCIONAR CORRETAMENTE";
 	public static long inicialTime;
-	private Connection con;
-
 	/**
 	 * Inicializa o LookAndFeel, as bases de dados e a splash screen.
 	 */
@@ -89,6 +80,7 @@ public class Main {
 					createTables();
 					TableModelMembro.getInstance().uploadDataBase();
 					TableModelFuncionario.getInstance().uploadDataBase();
+					TableModelFinancas.getInstance().uploadDataBase();
 				}
 			});
 			t1.start();
@@ -143,26 +135,13 @@ public class Main {
 				prop.store(output, AVISO_INI);
 			}
 			return conf;
-//			scan = new Scanner(conf);
-//			pastor_name = scan.nextLine();			
-//			scan.close();
+
 		} catch (IOException | InputMismatchException e1) {
 			Log.getInstance().printLog("Erro ao carregar configurações! - " + e1.getMessage());
 			e1.printStackTrace();
 			return null;
 		}
-//		catch (NoSuchElementException e) {
-//			scan.close();
-//			PrintWriter pw;
-//			try {
-//				pw = new PrintWriter(conf);
-//				pw.println(PASTOR);
-//				pw.close();
-//			} catch (FileNotFoundException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//		}
+
 	}
 
 	/**
@@ -213,68 +192,11 @@ public class Main {
 		restaurar();
 
 		try {
-			File logins = new File(ConexaoLogin.dbFile);
-			if (!logins.exists()) {
-				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoLogin.dbFile
-						+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
-				DatabaseMetaData dmd = con.getMetaData();
-				try (ResultSet rs = dmd.getTables(null, null, "Logins", new String[] { "TABLE" })) {
-					try (Statement s = con.createStatement()) {
-						s.executeUpdate("CREATE TABLE Logins (Nome varchar(255) NOT NULL,"
-								+ "Pass varchar(50) NOT NULL, Num_acessos int, Ultimo_Acesso date,Data_Criacao date, CONSTRAINT PK_Logins PRIMARY KEY (Nome));");
-						Log.getInstance().printLog("Base de dados logins.mbd criada com sucesso");
-					}
-					CriptografiaAES.setKey(PASS);
-					CriptografiaAES.encrypt(PASS);
-					PreparedStatement pst = con.prepareStatement(
-							"insert into logins(Nome,Pass,Num_acessos,Ultimo_Acesso,Data_Criacao) values (?,?,?,?,?)");
-					pst.setString(1, USER);
-					pst.setString(2, CriptografiaAES.getEncryptedString());
-					pst.setInt(3, 0);
-					pst.setDate(4, new Date(System.currentTimeMillis()));
-					pst.setDate(5, new Date(System.currentTimeMillis()));
-					pst.execute();
-					Log.getInstance().printLog("Utilizador admin criado com sucesso!");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				con.close();
-			}
+			ConexaoLogin.createTable();
 
-			File membros = new File(ConexaoMembro.dbFile);
-			if (!membros.exists()) {
-				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoMembro.dbFile
-						+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
-				DatabaseMetaData dmd = con.getMetaData();
-				try (ResultSet rs = dmd.getTables(null, null, "Membros", new String[] { "TABLE" })) {
-					try (Statement s = con.createStatement()) {
-						s.executeUpdate("CREATE TABLE Membros (ID int NOT NULL, Nome varchar(255) NOT NULL,"
-								+ "Data_Nascimento date, Sexo varchar(10), Estado_Civil varchar(25), Profissao varchar(50),"
-								+ "Endereco memo, Telefone varchar(15), Email varchar(255), Igreja_Origem varchar(255),"
-								+ "Tipo_Membro varchar(127), Batizado varchar(5), Membro_Desde date, Data_Batismo date, Observacoes memo,"
-								+ "CONSTRAINT PK_Membros PRIMARY KEY (ID));");
-						Log.getInstance().printLog("Base de dados membros.mbd criada com sucesso");
-					}
-				}
-				con.close();
-			}
+			ConexaoMembro.createTable();
 
-			File financas = new File(ConexaoFinancas.dbFile);
-			if (!financas.exists()) {
-				con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoFinancas.dbFile
-						+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
-				DatabaseMetaData dmd = con.getMetaData();
-				try (ResultSet rs = dmd.getTables(null, null, "Financas", new String[] { "TABLE" })) {
-					try (Statement s = con.createStatement()) {
-						s.executeUpdate("CREATE TABLE Financas (ID int NOT NULL, Valor double NOT NULL,"
-								+ "Data date, Descricao memo, Tipo varchar(255),"
-								+ "CONSTRAINT PK_Financas PRIMARY KEY (ID));");
-						Log.getInstance().printLog("Base de dados financas.mbd criada com sucesso");
-					}
-				}
-				con.close();
-			}
+			ConexaoFinancas.createTable();
 
 			File imgs = new File(Membro.imgPath);
 			if (!imgs.exists())
