@@ -33,8 +33,6 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.MaskFormatter;
 
-import com.toedter.calendar.JDateChooser;
-
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.table.AtualizaMembro;
 import dad.fam_com_cristo.table.CompositeCommand;
@@ -72,7 +70,7 @@ public class MembroDetail extends JDialog {
 	private JTextField nome, profissao, endereco;
 	private JTextArea observacoes;
 	private JFormattedTextField telefone;
-	private JDateChooser data_nascimento, data_batismo, membro_desde;
+	private DateChooser data_nascimento, data_batismo, membro_desde;
 	private JTextField email;
 	private JComboBox<Sexo> sexo;
 	private JComboBox<String> igreja_origem;
@@ -134,7 +132,14 @@ public class MembroDetail extends JDialog {
 
 		apagar = new JButton("Apagar");
 		if (membro == null) {
+			apagar.setIcon(MaterialImageFactory.getInstance().getImage(
+	                MaterialIconFont.CANCEL,
+	                MaterialColors.COSMO_BLACK));
 			apagar.setText("Cancelar");
+		} else {
+			apagar.setIcon(MaterialImageFactory.getInstance().getImage(
+	                MaterialIconFont.DELETE,
+	                MaterialColors.COSMO_BLACK));
 		}
 		apagar.addActionListener(new ActionListener() {
 
@@ -156,32 +161,39 @@ public class MembroDetail extends JDialog {
 			}
 		});
 		botoesPrincipais.add(apagar, "cell 0 0,alignx left,aligny center");
-		apagar.setBackground(MaterialColors.RED_400);
 		Utils.personalizarBotao(apagar);
 
 		ok = new JButton("Ok");
-		ok.setBackground(MaterialColors.LIGHT_BLUE_200);
+		ok.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.CHECK,
+                MaterialColors.COSMO_BLACK));
 		Utils.personalizarBotao(ok);
 		botoesPrincipais.add(ok, "cell 17 0,alignx right,aligny center");
 
 		editar = new JButton("Editar");
-		editar.setBackground(MaterialColors.YELLOW_300);
+		editar.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.MODE_EDIT,
+                MaterialColors.COSMO_BLACK));
 		Utils.personalizarBotao(editar);
 		botoesSecund.add(editar, "cell 0 0");
 
 		b_exportar = new JButton("Exportar");
+		b_exportar.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                MaterialColors.COSMO_BLACK));
 		b_exportar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				save(false);
 				membro.savePdf();
 			}
 		});
-		b_exportar.setBackground(new Color(50, 205, 50));
 		botoesSecund.add(b_exportar, "flowy,cell 3 0");
 		Utils.personalizarBotao(b_exportar);
 
 		salvar = new JButton("Salvar");
-		salvar.setBackground(MaterialColors.LIGHT_GREEN_300);
+		salvar.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.SAVE,
+                MaterialColors.COSMO_BLACK));
 		Utils.personalizarBotao(salvar);
 		botoesSecund.add(salvar, "cell 17 0");
 		salvar.setEnabled(false);
@@ -720,6 +732,9 @@ public class MembroDetail extends JDialog {
 						igreja_origem, tipo_membro, batizado, membro_desde, data_batismo, observacoes, img);
 				TableModelMembro.getInstance().addMembro(membro);
 				apagar.setText("Apagar");
+				apagar.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.DELETE,
+		                MaterialColors.COSMO_BLACK));
 			} else {
 				System.out.println("Aqui");
 				TableModelMembro.getInstance().getUndoManager().execute(new CompositeCommand(

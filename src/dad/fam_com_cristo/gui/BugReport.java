@@ -20,7 +20,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import dad.recursos.Log;
+import dad.recursos.Utils;
 import dad.recursos.ZipCompress;
+import mdlaf.utils.MaterialColors;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 import net.lingala.zip4j.ZipFile;
 
 import javax.swing.JLabel;
@@ -84,6 +88,9 @@ public class BugReport extends JDialog{
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.CHECK,
+		                MaterialColors.COSMO_BLACK));
 				okButton.addActionListener(new ActionListener() {
 					
 					@Override
@@ -95,7 +102,10 @@ public class BugReport extends JDialog{
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.CANCEL,
+		                MaterialColors.COSMO_BLACK));
 				cancelButton.addActionListener(new ActionListener() {
 					
 					@Override
@@ -139,7 +149,7 @@ public class BugReport extends JDialog{
 		ZipFile zip = new ZipFile(Main.BUG_REPORTS_DIR + name);
 		zip.addFile(file_text);
 		
-		String bName = DataGui.getInstance().backupDirect();
+		String bName = Utils.getInstance().backupDirect();
 		
 		zip.addFile(new File(bName));
 		

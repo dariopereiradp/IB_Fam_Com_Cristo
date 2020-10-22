@@ -23,6 +23,8 @@ import dad.recursos.Log;
 import dad.recursos.RegistoLogin;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialColors;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -66,11 +68,17 @@ public class Login {
 		frame.getContentPane().setLayout(null);
 
 		JLabel txUser = new JLabel("USUÁRIO:");
+		txUser.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.ACCOUNT_CIRCLE,
+                MaterialColors.COSMO_BLACK));
 		txUser.setFont(new Font("Roboto", Font.PLAIN, 13));
 		txUser.setBounds(5, 320, 70, 15);
 		frame.getContentPane().add(txUser);
 
 		JLabel txSenha = new JLabel("SENHA:");
+		txSenha.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.LOCK,
+                MaterialColors.COSMO_BLACK));
 		txSenha.setFont(new Font("Roboto", Font.PLAIN, 13));
 		txSenha.setBounds(5, 351, 70, 15);
 		frame.getContentPane().add(txSenha);
@@ -102,7 +110,9 @@ public class Login {
 
 		JButton entrar = new JButton("ENTRAR");
 		entrar.setBounds(150, 387, 90, 23);
-		entrar.setBackground(MaterialColors.LIGHT_BLUE_600);
+		entrar.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.CHECK_CIRCLE,
+                MaterialColors.COSMO_BLACK));
 		Utils.personalizarBotao(entrar);
 		frame.getContentPane().add(entrar);
 		entrar.addActionListener(new ActionListener() {

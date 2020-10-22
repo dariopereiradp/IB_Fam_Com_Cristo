@@ -20,6 +20,9 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import dad.recursos.ImageViewer;
+import mdlaf.utils.MaterialColors;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
@@ -79,7 +82,6 @@ public class About extends JDialog {
 			sobre.setEditable(false);
 			sobre.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			sobre.setContentType("text/html");
-			// JTextArea sobre = new JTextArea();
 			sobre.setText(info);
 
 			sobre.addHyperlinkListener(new HyperlinkListener() {
@@ -128,6 +130,9 @@ public class About extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.CHECK,
+		                MaterialColors.COSMO_BLACK));
 				okButton.addActionListener(new ActionListener() {
 
 					@Override

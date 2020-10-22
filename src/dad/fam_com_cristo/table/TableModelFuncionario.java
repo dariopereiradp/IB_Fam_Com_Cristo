@@ -30,6 +30,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import dad.fam_com_cristo.Funcionario;
 import dad.fam_com_cristo.gui.ChangePassword;
+import dad.fam_com_cristo.gui.themes.Table;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.Log;
 

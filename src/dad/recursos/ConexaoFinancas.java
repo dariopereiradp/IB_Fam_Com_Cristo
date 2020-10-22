@@ -44,8 +44,8 @@ public class ConexaoFinancas {
 			DatabaseMetaData dmd = con.getMetaData();
 			try (ResultSet rs = dmd.getTables(null, null, "Financas", new String[] { "TABLE" })) {
 				try (Statement s = con.createStatement()) {
-					s.executeUpdate("CREATE TABLE Financas (ID int NOT NULL, Data date, Valor double NOT NULL, Tipo varchar(255) NOT NULL,"
-							+ "Descricao memo, Total double,"
+					s.executeUpdate("CREATE TABLE Financas (ID int NOT NULL, Data date, Valor currency NOT NULL, Tipo varchar(255) NOT NULL,"
+							+ "Descricao memo, Total currency,"
 							+ "CONSTRAINT PK_Financas PRIMARY KEY (ID));");
 					Log.getInstance().printLog("Base de dados financas.mbd criada com sucesso");
 				}

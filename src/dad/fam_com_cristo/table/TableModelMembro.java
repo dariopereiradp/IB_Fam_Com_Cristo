@@ -255,6 +255,7 @@ public class TableModelMembro extends AbstractTableModel {
 					break;
 				}
 				fireTableDataChanged();
+				atualizarTextFieldsNumeros();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -388,7 +389,6 @@ public class TableModelMembro extends AbstractTableModel {
 		MembroPanel.getInstance().getJftCasados().setText(String.valueOf(getN_Casados()));
 		MembroPanel.getInstance().getJft_Homens().setText(String.valueOf(getN_Homens()));
 		MembroPanel.getInstance().getJft_Mulheres().setText(String.valueOf(getN_Mulheres()));
-
 	}
 
 	/**

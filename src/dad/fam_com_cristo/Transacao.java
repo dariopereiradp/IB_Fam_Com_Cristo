@@ -1,5 +1,6 @@
 package dad.fam_com_cristo;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
@@ -16,15 +17,15 @@ public class Transacao {
 	 */
 	public static int countID = 0;
 	private int id;
-	private double value;
+	private BigDecimal value;
 	private Tipo_Transacao tipo;
 	private String descricao;
 	private Date data;
-	private double total;
+	private BigDecimal total;
 	private static Connection con;
 	private static PreparedStatement pst;
 	
-	public Transacao(double value, Tipo_Transacao tipo, String descricao, Date data, double total) {
+	public Transacao(BigDecimal value, Tipo_Transacao tipo, String descricao, Date data, BigDecimal total) {
 		con = ConexaoFinancas.getConnection();
 		id = ++countID;
 		this.value = value;
@@ -42,11 +43,11 @@ public class Transacao {
 		this.id = id;
 	}
 
-	public double getValue() {
+	public BigDecimal getValue() {
 		return value;
 	}
 
-	public void setValue(double value) {
+	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
 
@@ -74,11 +75,11 @@ public class Transacao {
 		this.data = data;
 	}
 
-	public double getTotal() {
+	public BigDecimal getTotal() {
 		return total;
 	}
 
-	public void setTotal(double total) {
+	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
 	
@@ -92,10 +93,10 @@ public class Transacao {
 			pst.setInt(1, getId());
 			String data = new SimpleDateFormat("yyyy-M-d").format(getData());
 			pst.setDate(2, java.sql.Date.valueOf(data));
-			pst.setDouble(3, getValue());
+			pst.setBigDecimal(3, getValue());
 			pst.setString(4, getTipo().getDescricao());
 			pst.setString(5, getDescricao());
-			pst.setDouble(6, getTotal());
+			pst.setBigDecimal(6, getTotal());
 			pst.execute();
 		} catch (Exception e) {
 			Log.getInstance().printLog("Erro ao adicionar transação na base de dados! - " + e.getMessage());

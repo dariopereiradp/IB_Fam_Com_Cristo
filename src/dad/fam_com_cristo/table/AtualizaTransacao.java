@@ -1,5 +1,6 @@
 package dad.fam_com_cristo.table;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
@@ -79,9 +80,10 @@ public class AtualizaTransacao implements Command {
 		try {
 			pst = con.prepareStatement("update financas set " + coluna + "=? where ID=" + transacao.getId());
 			switch (coluna) {
-			case "Value":
-				pst.setDouble(1, (double) valor);
-				transacao.setValue((double) valor);
+			case "Valor":
+//				BigDecimal value = new BigDecimal(Utils.getInstance().getNumberFormatCurrency().parse((String) valor).toString());
+				pst.setBigDecimal(1, (BigDecimal) valor);
+				transacao.setValue((BigDecimal) valor);
 				break;
 			case "Data":
 				if (data_string) {
@@ -107,8 +109,9 @@ public class AtualizaTransacao implements Command {
 				transacao.setDescricao((String) valor);
 				break;
 			case "Total":
-				pst.setDouble(1, (double) valor);
-				transacao.setTotal((double) valor);
+//				BigDecimal valueTotal = new BigDecimal(Utils.getInstance().getNumberFormatCurrency().parse((String) valor).toString());
+				pst.setBigDecimal(1, (BigDecimal) valor);
+				transacao.setTotal((BigDecimal) valor);
 				break;
 			
 			default:
@@ -130,8 +133,8 @@ public class AtualizaTransacao implements Command {
 			pst = con.prepareStatement("update financas set " + coluna + "=? where ID=?");
 			switch (coluna) {
 			case "Valor":
-				pst.setDouble(1, (double) old);
-				transacao.setValue((double) old);
+				pst.setBigDecimal(1, (BigDecimal) old);
+				transacao.setValue((BigDecimal) old);
 				break;
 			case "Data":
 				String data = new SimpleDateFormat("yyyy-M-d").format((Date) old);
@@ -148,8 +151,8 @@ public class AtualizaTransacao implements Command {
 				transacao.setDescricao((String) old);
 				break;
 			case "Total":
-				pst.setDouble(1, (double) old);
-				transacao.setTotal((double) old);
+				pst.setBigDecimal(1, (BigDecimal) old);
+				transacao.setTotal((BigDecimal) old);
 				break;
 			default:
 				break;

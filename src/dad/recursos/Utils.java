@@ -1,13 +1,26 @@
 package dad.recursos;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.NumberFormatter;
+
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.Main;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
@@ -78,6 +91,43 @@ public class Utils {
 	}
 	
 	/**
+	 * Cria um backup das bases de dados e imagens.
+	 */
+	public void backup() {
+		String message = "Deseja criar uma cópia de segurança de todas as bases de dados do programa?"
+				+ "\nObs: A cópia irá incluir as configurações, membros, finanças e imagens, que serão salvos em um único ficheiro.\n"
+				+ "Não modifique esse ficheiro!\n"
+				+ "Você deve copiá-lo para um lugar seguro (por exemplo, uma pen-drive) para mais tarde ser possível restaurar,\n"
+				+ "caso o computador seja formatado ou você pretenda usar o programa em outro computador.";
+		int ok = JOptionPane.showOptionDialog(null, message, "Cópia de Segurança", JOptionPane.YES_NO_OPTION,
+				JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS,
+				Main.OPTIONS[0]);
+		if (ok == JOptionPane.OK_OPTION) {
+			backupDirect();
+			JOptionPane.showMessageDialog(null, "Cópia de segurança salva com sucesso na pasta:\n" + Main.BACKUP_DIR,
+					"Cópia de Segurança - Sucesso", JOptionPane.OK_OPTION,
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+			try {
+				Desktop.getDesktop().open(new File(Main.BACKUP_DIR));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Cria um backup da base de dados diretamente.
+	 * 
+	 * @return o nome do ficheiro de backup criado.
+	 */
+	public String backupDirect() {
+		String name = "IB_Fam_com_Cristo-Backup-" + new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date())
+				+ ".fccb";
+		ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
+		return Main.BACKUP_DIR + name;
+	}
+	
+	/**
 	 * Personaliza o aspecto dos botões.
 	 * 
 	 * @param jb - botão a ser personalizado.
@@ -86,6 +136,32 @@ public class Utils {
 		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
 		MaterialUIMovement.getMovement(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
 	}
+	
+	public NumberFormat getNumberFormatCurrency() {
+		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "br"));
+		format.setMinimumFractionDigits(2);
+		format.setMaximumFractionDigits(4);
+		format.setRoundingMode(RoundingMode.HALF_UP);
+		return format;
+	}
+	
+	public JFormattedTextField getNewCurrencyTextField() {
+		NumberFormatter formatter = new NumberFormatter(getNumberFormatCurrency());
+		formatter.setAllowsInvalid(false);
+		formatter.setMinimum(0.0);
+		return new JFormattedTextField(formatter);
+	}
+	
+	  public BigDecimal getNumberFromFormat(Object valor) {
+      	BigDecimal value = new BigDecimal("0.0");
+      	try {
+				value = new BigDecimal(getNumberFormatCurrency().parse((String) valor).toString());
+			} catch (ParseException e) {
+				Log.getInstance().printLog(e.getMessage());
+				e.printStackTrace();
+			}
+          return value;
+      }
 	
 	public static Utils getInstance() {
 		if(INSTANCE == null)

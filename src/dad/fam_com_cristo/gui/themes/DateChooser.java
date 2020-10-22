@@ -9,7 +9,7 @@ import dad.recursos.Utils;
 import mdlaf.utils.MaterialColors;
 
 public class DateChooser extends JDateChooser {
-	
+
 	/**
 	 * 
 	 */
@@ -22,16 +22,15 @@ public class DateChooser extends JDateChooser {
 		this.setMaxSelectableDate(new Date());
 		this.setDate(new Date());
 		this.getJCalendar().setWeekOfYearVisible(false);
-		
-		if(Utils.getInstance().getCurrentTheme().equals(DarkTheme.getInstance())) {
+
+		if (Utils.getInstance().getCurrentTheme().equals(DarkTheme.getInstance())) {
 			this.getJCalendar().setForeground(MaterialColors.WHITE);
 			this.getJCalendar().setDecorationBackgroundColor(MaterialColors.AMBER_800);
-			this.getJCalendar().setWeekdayForeground(MaterialColors.WHITE);			
-			
+			this.getJCalendar().setWeekdayForeground(MaterialColors.WHITE);
+
 		} else {
 			this.getJCalendar().setForeground(MaterialColors.BLACK);
 		}
-			
-	}
 
+	}
 }

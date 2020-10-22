@@ -56,6 +56,11 @@ public class DarkTheme extends JMarsDarkTheme implements Theme {
 	public ColorUIResource getColorLinhasImpares() {
 		return MaterialColors.GRAY_900;
 	}
+	
+	@Override
+	public ColorUIResource getColorHighlight() {
+		return MaterialColors.AMBER_900;
+	}
 
 	@Override
 	public String getThemeName() {

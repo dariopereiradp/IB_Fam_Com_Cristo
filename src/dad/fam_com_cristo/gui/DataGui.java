@@ -14,11 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -40,23 +36,23 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableRowSorter;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
 import com.qoppa.pdfWriter.PDFDocument;
 
 import dad.fam_com_cristo.Tipo_Membro;
+import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
+import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.FichaMembro_Vazia;
 import dad.recursos.Log;
 import dad.recursos.SairAction;
 import dad.recursos.TableToPDF;
 import dad.recursos.Utils;
-import dad.recursos.ZipCompress;
 
 /**
  * Classe que torna visível a 'data' das várias bases de dados.
@@ -81,7 +77,8 @@ public class DataGui extends JFrame {
 			menuOrdenar, menuAtualizar, menuConfig;
 	private JTextField pesquisa;
 	private JPanel filtrosPanel;
-	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca, check_ex_membros;
+	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca, check_ex_membros,
+			checkEntradas, checkSaidas;
 	private JMenuItem mntmRelatarErro;
 	private JMenuItem mnLimpar;
 	private JMenuItem menuManual;
@@ -97,7 +94,7 @@ public class DataGui extends JFrame {
 	private JMenuItem mnLight;
 	private JMenuItem mnDark;
 	private JMenu mnTema;
-	
+
 	private DataGui() {
 		INSTANCE = this;
 		setTitle(Main.TITLE_SMALL);
@@ -151,6 +148,16 @@ public class DataGui extends JFrame {
 		filtrosPanel.add(check_ex_membros);
 		check_ex_membros.setToolTipText("Pessoas que já foram membros mas saíram por transferência ou abandono");
 
+		checkEntradas = new JCheckBox("Entradas");
+		checkEntradas.setSelected(true);
+		filtrosPanel.add(checkEntradas);
+		checkEntradas.setVisible(false);
+
+		checkSaidas = new JCheckBox("Saídas");
+		checkSaidas.setSelected(true);
+		filtrosPanel.add(checkSaidas);
+		checkSaidas.setVisible(false);
+
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
@@ -159,8 +166,7 @@ public class DataGui extends JFrame {
 		tabbedPane.addTab("Finanças", FinancasPanel.getInstance());
 		tabbedPane.setToolTipTextAt(0,
 				"Pessoas que vão à IBFC com alguma regularidade: liderança, membros ativos, membros nominais e congregados ou alguém que já foi membro");
-		
-		//Atualizcao TODO
+
 		tabbedPane.setToolTipTextAt(1, "Registrar entradas e saídas financeiras da igreja");
 
 		JMenuBar menuBar = new JMenuBar();
@@ -184,7 +190,7 @@ public class DataGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				backup();
+				Utils.getInstance().backup();
 			}
 		});
 		mnArquivo.add(menuBackup);
@@ -199,45 +205,45 @@ public class DataGui extends JFrame {
 
 			}
 		});
-		
+
 		mnConf = new JMenu("Configura\u00E7\u00F5es");
 		mnArquivo.add(mnConf);
-				
-				mnTema = new JMenu("Tema");
-				mnConf.add(mnTema);
-				
-				mnLight = new JMenuItem("Claro");
-				mnTema.add(mnLight);
-				
-				mnLight.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Utils.getInstance().changeTheme(new LiteTheme());
-						
-					}
-				});
-				
-				mnDark = new JMenuItem("Escuro");
-				mnTema.add(mnDark);
 
-				mnDark.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Utils.getInstance().changeTheme(DarkTheme.getInstance());
-					}
-				});
-		
-				menuConfig = new JMenuItem("Outra configura\u00E7\u00F5es");
-				mnConf.add(menuConfig);
-				menuConfig.addActionListener(new ActionListener() {
+		mnTema = new JMenu("Tema");
+		mnConf.add(mnTema);
 
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						new Config().open();
-					}
-				});
+		mnLight = new JMenuItem("Claro");
+		mnTema.add(mnLight);
+
+		mnLight.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Utils.getInstance().changeTheme(new LiteTheme());
+
+			}
+		});
+
+		mnDark = new JMenuItem("Escuro");
+		mnTema.add(mnDark);
+
+		mnDark.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Utils.getInstance().changeTheme(DarkTheme.getInstance());
+			}
+		});
+
+		menuConfig = new JMenuItem("Outra configura\u00E7\u00F5es");
+		mnConf.add(menuConfig);
+		menuConfig.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Config().open();
+			}
+		});
 
 		menuAtualizar = new JMenuItem("Atualizar Tabelas");
 		mnArquivo.add(menuAtualizar);
@@ -254,7 +260,7 @@ public class DataGui extends JFrame {
 						"Limpar espaço", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
 						new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
 				if (ok == JOptionPane.YES_OPTION)
-					limpar();
+					Log.getInstance().limpar();
 			}
 		});
 		mnArquivo.add(mnLimpar);
@@ -411,8 +417,6 @@ public class DataGui extends JFrame {
 		});
 		mnAjuda.add(menuSobre);
 
-		getRootPane().setDefaultButton(MembroPanel.getInstance().getbAdd());
-
 		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		manager.addKeyEventDispatcher(new MyDispatcher());
 
@@ -494,17 +498,64 @@ public class DataGui extends JFrame {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
+		
+		checkEntradas.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				newFilter(pesquisa.getText().toLowerCase());
+			}
+		});
+		
+		checkSaidas.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				newFilter(pesquisa.getText().toLowerCase());
+			}
+		});
 
 		TableModelMembro.getInstance().addListeners();
+		TableModelFinancas.getInstance().addListeners();
 
 		tabbedPane.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
+				visibleBoxes();
 				newFilter("");
 				updateItems();
+				
+				if(tabbedPane.getSelectedIndex() == 1)
+					getRootPane().setDefaultButton(FinancasPanel.getInstance().getBtnAdd());
+				else
+					getRootPane().setDefaultButton(null);
 			}
 		});
+	}
+
+	/**
+	 * Atualiza quais check-box estarão visíveis, dependendo da tabela que estiver
+	 * ativa.
+	 */
+	public void visibleBoxes() {
+		if (tabbedPane.getSelectedIndex() == 0) {
+			checkMembroAtivo.setVisible(true);
+			checkMembroNominal.setVisible(true);
+			checkCongregados.setVisible(true);
+			checkLideranca.setVisible(true);
+			check_ex_membros.setVisible(true);
+			checkEntradas.setVisible(false);
+			checkSaidas.setVisible(false);
+		} else if (tabbedPane.getSelectedIndex() == 1) {
+			checkMembroAtivo.setVisible(false);
+			checkMembroNominal.setVisible(false);
+			checkCongregados.setVisible(false);
+			checkLideranca.setVisible(false);
+			check_ex_membros.setVisible(false);
+			checkEntradas.setVisible(true);
+			checkSaidas.setVisible(true);
+		}
 	}
 
 	/**
@@ -528,82 +579,14 @@ public class DataGui extends JFrame {
 	}
 
 	/**
-	 * Apaga os logs dos meses anteriores, para limpar espaço no sistema.
-	 */
-	public void limpar() {
-		String logPath = Main.DATA_DIR + "Logs/";
-		String month_year = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMyyyy")).toUpperCase();
-		File logs = new File(logPath);
-		File logMonth = new File(logPath + month_year + "/");
-		File logMonthTmp = new File(Main.DATA_DIR + month_year + "/");
-
-		try {
-			FileUtils.copyDirectory(logMonth, logMonthTmp);
-			FileUtils.deleteDirectory(logs);
-		} catch (IOException e) {
-			try {
-				FileUtils.copyDirectory(logMonthTmp, logMonth);
-				FileUtils.deleteDirectory(logMonthTmp);
-				JOptionPane.showMessageDialog(null, "Limpeza feita!", "Limpar espaço - Sucesso", JOptionPane.OK_OPTION,
-						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
-			} catch (IOException e1) {
-				Log.getInstance().printLog("Erro ao limpar o espaço! - " + e.getMessage());
-				JOptionPane.showMessageDialog(null, "Erro ao fazer a limpeza! - " + e.getMessage(),
-						"Limpar espaço - Erro", JOptionPane.OK_OPTION,
-						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
-				e1.printStackTrace();
-			}
-		}
-
-	}
-
-	/**
-	 * Cria um backup das bases de dados e imagens.
-	 */
-	public void backup() {
-		String message = "Deseja criar uma cópia de segurança de todas as bases de dados do programa?"
-				+ "\nObs: A cópia irá incluir as configurações, membros, finanças e imagens, que serão salvos em um único ficheiro.\n"
-				+ "Não modifique esse ficheiro!\n"
-				+ "Você deve copiá-lo para um lugar seguro (por exemplo, uma pen-drive) para mais tarde ser possível restaurar,\n"
-				+ "caso o computador seja formatado ou você pretenda usar o programa em outro computador.";
-		int ok = JOptionPane.showOptionDialog(null, message, "Cópia de Segurança", JOptionPane.YES_NO_OPTION,
-				JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS,
-				Main.OPTIONS[0]);
-		if (ok == JOptionPane.OK_OPTION) {
-			backupDirect();
-			JOptionPane.showMessageDialog(null, "Cópia de segurança salva com sucesso na pasta:\n" + Main.BACKUP_DIR,
-					"Cópia de Segurança - Sucesso", JOptionPane.OK_OPTION,
-					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
-			try {
-				Desktop.getDesktop().open(new File(Main.BACKUP_DIR));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Cria um backup da base de dados diretamente.
-	 * 
-	 * @return o nome do ficheiro de backup criado.
-	 */
-	public String backupDirect() {
-		String name = "IB_Fam_com_Cristo-Backup-" + new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date())
-				+ ".fccb";
-		ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
-		return Main.BACKUP_DIR + name;
-	}
-
-	/**
-	 * Atualiza os menus anular e refazer, de acordo com a tabela que estiver
-	 * ativa no momento.
+	 * Atualiza os menus anular e refazer, de acordo com a tabela que estiver ativa
+	 * no momento.
 	 */
 	public void updateItems() {
 		if (tabbedPane.getSelectedIndex() == 0)
 			TableModelMembro.getInstance().updateItems();
 		else if (tabbedPane.getSelectedIndex() == 1)
-			// TODO
-			return;
+			TableModelFinancas.getInstance().updateItems();
 	}
 
 	/**
@@ -635,8 +618,7 @@ public class DataGui extends JFrame {
 		if (tabbedPane.getSelectedIndex() == 0)
 			TableModelMembro.getInstance().getUndoManager().undo();
 		else if (tabbedPane.getSelectedIndex() == 1)
-			// TODO
-			return;
+			TableModelFinancas.getInstance().getUndoManager().undo();
 	}
 
 	/**
@@ -646,8 +628,7 @@ public class DataGui extends JFrame {
 		if (tabbedPane.getSelectedIndex() == 0)
 			TableModelMembro.getInstance().getUndoManager().redo();
 		else if (tabbedPane.getSelectedIndex() == 1)
-			// TODO
-			return;
+			TableModelFinancas.getInstance().getUndoManager().redo();
 	}
 
 	/**
@@ -659,50 +640,75 @@ public class DataGui extends JFrame {
 	}
 
 	/**
-	 * Realiza o filtro de pesquisa na tabela que estiver ativa e de acordo com
-	 * as check box marcadas.
+	 * Realiza o filtro de pesquisa na tabela que estiver ativa e de acordo com as
+	 * check box marcadas.
 	 * 
-	 * @param filtro
-	 *            - expressão que se pretende pesquisar
+	 * @param filtro - expressão que se pretende pesquisar
 	 */
 	public void newFilter(String filtro) {
-		RowFilter<TableModelMembro, Object> rf = null;
-		RowFilter<TableModelMembro, Object> rowFilter = null;
-		TableRowSorter<TableModelMembro> sorter = new TableRowSorter<TableModelMembro>(TableModelMembro.getInstance());
-		List<RowFilter<TableModelMembro, Object>> filters = new ArrayList<RowFilter<TableModelMembro, Object>>(5);
-		List<RowFilter<TableModelMembro, Object>> andFilters = new ArrayList<RowFilter<TableModelMembro, Object>>(1);
-		MembroPanel.getInstance().getMembros().setRowSorter(sorter);
-		andFilters.add(RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString())));
-		if (checkMembroAtivo.isSelected()) {
-			filters.add(RowFilter.regexFilter(Tipo_Membro.MEMBRO_ATIVO.getDescricao(), 3));
-		}
-		if (checkMembroNominal.isSelected()) {
-			filters.add(RowFilter.regexFilter(Tipo_Membro.MEMBRO_NOMINAL.getDescricao(), 3));
-		}
-		if (check_ex_membros.isSelected()) {
-			filters.add(RowFilter.regexFilter(Tipo_Membro.EX_MEMBRO.getDescricao(), 3));
-		}
-		if (checkCongregados.isSelected()) {
-			filters.add(RowFilter.regexFilter(Tipo_Membro.CONGREGADO.getDescricao(), 3));
-		}
-		if (checkLideranca.isSelected()) {
-			filters.add(RowFilter.regexFilter(Tipo_Membro.LIDERANCA.getDescricao(), 3));
+		if (tabbedPane.getSelectedIndex() == 0) {
+			RowFilter<TableModelMembro, Object> rf = null;
+			RowFilter<TableModelMembro, Object> rowFilter = null;
+			TableRowSorter<TableModelMembro> sorter = new TableRowSorter<TableModelMembro>(
+					TableModelMembro.getInstance());
+			List<RowFilter<TableModelMembro, Object>> filters = new ArrayList<RowFilter<TableModelMembro, Object>>(5);
+			List<RowFilter<TableModelMembro, Object>> andFilters = new ArrayList<RowFilter<TableModelMembro, Object>>(
+					1);
+			MembroPanel.getInstance().getMembros().setRowSorter(sorter);
+			andFilters.add(
+					RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString())));
+			if (checkMembroAtivo.isSelected()) {
+				filters.add(RowFilter.regexFilter(Tipo_Membro.MEMBRO_ATIVO.getDescricao(), 3));
+			}
+			if (checkMembroNominal.isSelected()) {
+				filters.add(RowFilter.regexFilter(Tipo_Membro.MEMBRO_NOMINAL.getDescricao(), 3));
+			}
+			if (check_ex_membros.isSelected()) {
+				filters.add(RowFilter.regexFilter(Tipo_Membro.EX_MEMBRO.getDescricao(), 3));
+			}
+			if (checkCongregados.isSelected()) {
+				filters.add(RowFilter.regexFilter(Tipo_Membro.CONGREGADO.getDescricao(), 3));
+			}
+			if (checkLideranca.isSelected()) {
+				filters.add(RowFilter.regexFilter(Tipo_Membro.LIDERANCA.getDescricao(), 3));
+			}
+
+			try {
+				rf = RowFilter.orFilter(filters);
+				andFilters.add(rf);
+				rowFilter = RowFilter.andFilter(andFilters);
+			} catch (java.util.regex.PatternSyntaxException e) {
+				return;
+			}
+			sorter.setRowFilter(rowFilter);
+		} else if (tabbedPane.getSelectedIndex() == 1) {
+			RowFilter<TableModelFinancas, Object> rf = null;
+			RowFilter<TableModelFinancas, Object> rowFilter = null;
+			TableRowSorter<TableModelFinancas> sorter = new TableRowSorter<TableModelFinancas>(
+					TableModelFinancas.getInstance());
+			List<RowFilter<TableModelFinancas, Object>> filters = new ArrayList<RowFilter<TableModelFinancas, Object>>(5);
+			List<RowFilter<TableModelFinancas, Object>> andFilters = new ArrayList<RowFilter<TableModelFinancas, Object>>(
+					1);
+			FinancasPanel.getInstance().getTransacoes().setRowSorter(sorter);
+			andFilters.add(
+					RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString())));
+			if (checkEntradas.isSelected()) {
+				filters.add(RowFilter.regexFilter(Tipo_Transacao.ENTRADA.getDescricao(), 3));
+			}
+			if (checkSaidas.isSelected()) {
+				filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 3));
+			}
+
+			try {
+				rf = RowFilter.orFilter(filters);
+				andFilters.add(rf);
+				rowFilter = RowFilter.andFilter(andFilters);
+			} catch (java.util.regex.PatternSyntaxException e) {
+				return;
+			}
+			sorter.setRowFilter(rowFilter);
 		}
 
-		try {
-			rf = RowFilter.orFilter(filters);
-			andFilters.add(rf);
-			rowFilter = RowFilter.andFilter(andFilters);
-		} catch (java.util.regex.PatternSyntaxException e) {
-			return;
-		}
-		sorter.setRowFilter(rowFilter);
-	}
-
-	public static DataGui getInstance() {
-		if (INSTANCE == null)
-			INSTANCE = new DataGui();
-		return INSTANCE;
 	}
 
 	public JMenuItem getMenuAnular() {
@@ -717,4 +723,9 @@ public class DataGui extends JFrame {
 		return pesquisa;
 	}
 
+	public static DataGui getInstance() {
+		if (INSTANCE == null)
+			INSTANCE = new DataGui();
+		return INSTANCE;
+	}
 }

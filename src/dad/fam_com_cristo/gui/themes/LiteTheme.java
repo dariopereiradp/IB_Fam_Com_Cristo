@@ -26,6 +26,11 @@ public class LiteTheme extends MaterialLiteTheme implements Theme {
 	public ColorUIResource getColorLinhasImpares() {
 		return MaterialColors.GRAY_100;
 	}
+	
+	@Override
+	public ColorUIResource getColorHighlight() {
+		return MaterialColors.YELLOW_400;
+	}
 
 	public static LiteTheme getInstance() {
 		if(INSTANCE == null)
@@ -37,5 +42,7 @@ public class LiteTheme extends MaterialLiteTheme implements Theme {
 	public String getThemeName() {
 		return Utils.THEME_LITE;
 	}
+
+	
 
 }

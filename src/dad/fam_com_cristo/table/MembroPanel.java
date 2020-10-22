@@ -1,7 +1,6 @@
 package dad.fam_com_cristo.table;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -46,10 +45,13 @@ import javax.swing.text.MaskFormatter;
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.MembroDetail;
+import dad.fam_com_cristo.gui.themes.Table;
 import dad.recursos.CellRenderer;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialColors;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 /**
  * Classe que representa a tabela de Membros na DataGui.
@@ -329,7 +331,7 @@ public class MembroPanel extends JPanel {
 		popupMenu.add(delete);
 		popupMenu.add(atualizar);
 
-		popupMenu.setPopupSize(350, 150);
+		popupMenu.setPopupSize(200, 100);
 
 		membros.setComponentPopupMenu(popupMenu);
 
@@ -338,8 +340,9 @@ public class MembroPanel extends JPanel {
 	public void inicializarBotoes() {
 		pInferior.add(panel2, BorderLayout.WEST);
 		JButton bSair = new JButton("SAIR");
-		bSair.setBackground(new Color(247, 247, 255));
-		bSair.setForeground(MaterialColors.LIGHT_BLUE_400);
+		bSair.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.EXIT_TO_APP,
+                MaterialColors.COSMO_BLACK));
 		Utils.personalizarBotao(bSair);
 		bSair.addActionListener(new SairAction());
 		panel2.add(bSair);
@@ -348,8 +351,9 @@ public class MembroPanel extends JPanel {
 		pInferior.add(panel4, BorderLayout.EAST);
 
 		bAdd = new JButton("ADICIONAR");
-		bAdd.setForeground(MaterialColors.WHITE);//
-		bAdd.setBackground(MaterialColors.LIGHT_GREEN_500);//
+		bAdd.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PERSON_ADD,
+                MaterialColors.COSMO_BLACK));
 		Utils.personalizarBotao(bAdd);
 		bAdd.addActionListener(new ActionListener() {
 

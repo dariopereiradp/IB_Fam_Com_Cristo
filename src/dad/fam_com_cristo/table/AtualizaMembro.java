@@ -190,7 +190,6 @@ public class AtualizaMembro implements Command {
 			default:
 				break;
 			}
-//			pst.setInt(2, membro.getId());
 			pst.execute();
 			table.fireTableDataChanged();
 		} catch (Exception e) {

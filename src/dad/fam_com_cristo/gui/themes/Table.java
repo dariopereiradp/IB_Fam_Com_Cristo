@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dad.fam_com_cristo.table;
+package dad.fam_com_cristo.gui.themes;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -10,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import dad.fam_com_cristo.gui.TableHeaderWithSortIcons;
+import dad.fam_com_cristo.table.TableHeaderWithSortIcons;
 
 /**
  * @author dariopereiradp
@@ -24,10 +24,23 @@ public class Table extends JTable {
 	private static final long serialVersionUID = 4473733357164145475L;
 	private AbstractTableModel model;
 	private String[] columnToolTips;
-	private boolean cellEditable;
+	private boolean[] cellEditable;
 
 	public Table(AbstractTableModel model, String[] columnToolTips, boolean cellEditable) {
 		super(model);
+		boolean[] cellEditableValues = new boolean[columnToolTips.length];
+		for (int i = 0; i < cellEditableValues.length; i++) {
+			cellEditableValues[i] = cellEditable;
+		}
+		init(model, columnToolTips, cellEditableValues);
+	}
+
+	public Table(AbstractTableModel model, String[] columnToolTips, boolean[] cellEditable) {
+		super(model);
+		init(model, columnToolTips, cellEditable);
+	}
+
+	private void init(AbstractTableModel model, String[] columnToolTips, boolean[] cellEditable) {
 		this.model = model;
 		this.columnToolTips = columnToolTips;
 		this.cellEditable = cellEditable;
@@ -40,7 +53,7 @@ public class Table extends JTable {
 
 	@Override
 	public boolean isCellEditable(int data, int columns) {
-		return cellEditable;
+		return cellEditable[columns];
 	}
 
 	// Implement table cell tool tips.

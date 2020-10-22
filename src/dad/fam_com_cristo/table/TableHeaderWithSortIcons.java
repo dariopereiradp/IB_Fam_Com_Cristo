@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.gui;
+package dad.fam_com_cristo.table;
 
 import java.awt.Component;
 import java.awt.Dimension;

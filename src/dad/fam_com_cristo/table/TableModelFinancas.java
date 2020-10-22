@@ -1,5 +1,6 @@
 package dad.fam_com_cristo.table;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +17,7 @@ import dad.recursos.Command;
 import dad.recursos.ConexaoFinancas;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
+import dad.recursos.Utils;
 
 /**
  * Classe que representa o TableModel para as financas
@@ -31,7 +33,7 @@ public class TableModelFinancas extends AbstractTableModel {
 	private static final long serialVersionUID = 3247984074345998765L;
 	private static TableModelFinancas INSTANCE;
 	private ArrayList<Transacao> transacoes;
-	private String[] colunas = { "ID", "Data", "Valor", "Tipo", "Descrição", "Total" };
+	private String[] colunas = { "ID", "Data", "Valor", "Tipo", "Descrição", "Sub-total" };
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
@@ -57,11 +59,10 @@ public class TableModelFinancas extends AbstractTableModel {
 				do {
 					int id = rs.getInt(1);
 					Date data = rs.getDate(2);
-					double valor = rs.getDouble(3);
+					BigDecimal valor = rs.getBigDecimal(3);
 					Tipo_Transacao tipo = Tipo_Transacao.getEnum(rs.getString(4));
-					;
 					String descricao = rs.getString(5);
-					double total = rs.getDouble(6);
+					BigDecimal total = rs.getBigDecimal(6);
 					Transacao transacao = new Transacao(valor, tipo, descricao, data, total);
 					transacao.setId(id);
 					if (id > maior)
@@ -165,13 +166,13 @@ public class TableModelFinancas extends AbstractTableModel {
 		case 1:
 			return new SimpleDateFormat("dd/MM/yyyy").format(transacoes.get(rowIndex).getData());
 		case 2:
-			return transacoes.get(rowIndex).getValue();
+			return Utils.getInstance().getNumberFormatCurrency().format(transacoes.get(rowIndex).getValue());
 		case 3:
 			return transacoes.get(rowIndex).getTipo();
 		case 4:
 			return transacoes.get(rowIndex).getDescricao();
 		case 5:
-			return transacoes.get(rowIndex).getTotal();
+			return Utils.getInstance().getNumberFormatCurrency().format(transacoes.get(rowIndex).getTotal());
 		default:
 			return transacoes.get(rowIndex);
 		}
@@ -184,11 +185,11 @@ public class TableModelFinancas extends AbstractTableModel {
 		case 0:
 			return Integer.class;
 		case 2:
-			return Double.class;
+			return BigDecimal.class;
 		case 3:
 			return Tipo_Transacao.class;
 		case 5:
-			return Double.class;
+			return BigDecimal.class;
 		default:
 			return String.class;
 		}
@@ -197,7 +198,7 @@ public class TableModelFinancas extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object valor, int rowIndex, int columnIndex) {
 		try {
-			if (!(columnIndex == 0 && (String.valueOf(valor)).trim().equals(""))) {
+			if (valor != null) {
 				if ((String.valueOf(valor).trim().equals("")))
 					valor = "-";
 				Transacao transacao = transacoes.get(rowIndex);
@@ -209,9 +210,9 @@ public class TableModelFinancas extends AbstractTableModel {
 						undoManager.execute(new AtualizaTransacao(this, "Data", transacao, valor, true));
 					break;
 				case 2:
-					String value = (String) valor;
-					if (!Double.valueOf(transacao.getValue()).equals(Double.parseDouble(value)))
+					if (transacao.getValue().compareTo((BigDecimal) valor) != 0) {
 						undoManager.execute(new AtualizaTransacao(this, "Valor", transacao, valor));
+					}
 					break;
 				case 3:
 					if (transacao.getTipo() != (Tipo_Transacao) valor) {
@@ -220,13 +221,14 @@ public class TableModelFinancas extends AbstractTableModel {
 					break;
 				case 4:
 					String descricao = (String) valor;
-					if(!transacao.getDescricao().equals(descricao))
+					if (!transacao.getDescricao().equals(descricao))
 						undoManager.execute(new AtualizaTransacao(this, "Descricao", transacao, valor));
 				default:
 					transacoes.get(rowIndex);
 					break;
 				}
 				fireTableDataChanged();
+				atualizarTextFieldsNumeros();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -235,11 +237,12 @@ public class TableModelFinancas extends AbstractTableModel {
 	}
 
 	/**
-	 * Método para inserir uma transacao na base de dados, na posição pretendida. <br>
+	 * Método para inserir uma transacao na base de dados, na posição pretendida.
+	 * <br>
 	 * Útil para o redo
 	 * 
 	 * @param transacao - transacao que se pretende inserir.
-	 * @param row    - linha em que se pretende inserir a transacao.
+	 * @param row       - linha em que se pretende inserir a transacao.
 	 */
 	public void insertTransacao(Transacao transacao, int row) {
 		transacao.adicionarNaBaseDeDados();
@@ -346,41 +349,40 @@ public class TableModelFinancas extends AbstractTableModel {
 	}
 
 	/**
-	 * Atualiza as estatísticas dos membros
+	 * Atualiza as estatísticas das finanças
 	 */
 	public void atualizarTextFieldsNumeros() {
-		FinancasPanel.getInstance().getJtfTotal().setText(String.valueOf(getTotal()));
-		FinancasPanel.getInstance().getJtfEntradas().setText(String.valueOf(getTotal_Entradas()));
-		FinancasPanel.getInstance().getJtfSaidas().setText(String.valueOf(getTotal_Saidas()));
+		FinancasPanel.getInstance().getJtfTotal().setValue(getTotal());
+		FinancasPanel.getInstance().getJtfEntradas().setValue(getTotal_Entradas());
+		FinancasPanel.getInstance().getJtfSaidas().setValue(getTotal_Saidas());
 	}
 
 	/**
 	 * 
 	 * @return o número total de transações
 	 */
-	public double getTotal() {
-		return getTotal_Entradas() - getTotal_Saidas();
+	public BigDecimal getTotal() {
+		return getTotal_Entradas().subtract(getTotal_Saidas());
 	}
 
-	public double getTotal_Entradas() {
-		double n = 0;
+	public BigDecimal getTotal_Entradas() {
+		BigDecimal n = new BigDecimal("0.0");
 		for (Transacao t : transacoes) {
 			if (t.getTipo() == Tipo_Transacao.ENTRADA)
-				n += t.getValue();
+				n = n.add(t.getValue());
 		}
 		return n;
 	}
 
-	public double getTotal_Saidas() {
-		double n = 0;
+	public BigDecimal getTotal_Saidas() {
+		BigDecimal n = new BigDecimal("0.0");
 		for (Transacao t : transacoes) {
 			if (t.getTipo() == Tipo_Transacao.SAIDA)
-				n += t.getValue();
+				n = n.add(t.getValue());
 		}
 		return n;
 	}
 
-	
 //	/**
 //	 * Ordena a tabela de membros por ordem alfabética
 //	 */

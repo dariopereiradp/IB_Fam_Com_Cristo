@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import dad.fam_com_cristo.gui.DataGui;
-import mdlaf.utils.MaterialColors;
 
 /** Classe para renderer das células de uma JTable que não são editáveis.
  * Também está adaptada para pesquisa e filtragem, desenhando um retângulo amarelo em volta do filtro.
@@ -38,7 +37,7 @@ public class CellRendererNoImage extends DefaultTableCellRenderer {
 		String match = getText().substring(preMatch.length(), preMatch.length() + filter.length());
 		int pmw = g.getFontMetrics().stringWidth(preMatch);
 		int w = g.getFontMetrics().stringWidth(match);
-		g.setColor(MaterialColors.YELLOW_A200);
+		g.setColor(Utils.getInstance().getCurrentTheme().getColorHighlight());
 		g.fillRect(pmw + 1, 5, w - 1, getHeight() - 10);
 		g.setColor(getForeground());
 		Rectangle r = g.getFontMetrics().getStringBounds(match, g).getBounds();

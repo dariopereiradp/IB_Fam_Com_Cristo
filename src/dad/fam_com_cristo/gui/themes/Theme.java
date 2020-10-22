@@ -15,7 +15,12 @@ public interface Theme {
 	 * @return
 	 */
 	ColorUIResource getColorLinhasImpares();
+	
+	/**
+	 * Cor do highlight do filtro
+	 * @return
+	 */
+	ColorUIResource getColorHighlight();
 
 	String getThemeName();
-
 }
