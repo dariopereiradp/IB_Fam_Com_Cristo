@@ -19,37 +19,35 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 
 import dad.recursos.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
+import dad.recursos.IconPasswordField;
+import dad.recursos.IconTextField;
 import dad.recursos.Log;
-import dad.recursos.RegistoLogin;
+import dad.recursos.RoundedBorder;
 import dad.recursos.Utils;
-import mdlaf.utils.MaterialColors;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import java.awt.Color;
 import java.awt.Font;
-import java.awt.Insets;
-
+import java.awt.Image;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
 /**
- * Classe que permite que um funcionário possa fazer o login e entrar no programa.
+ * Classe que permite que um funcionário possa fazer o login e entrar no
+ * programa.
+ * 
  * @author Dário Pereira
  *
  */
 public class Login {
 
 	private JFrame frame;
-	private JTextField user;
-	private JPasswordField pass;
+	private IconTextField user;
+	private IconPasswordField pass;
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
@@ -67,53 +65,43 @@ public class Login {
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 
-		JLabel txUser = new JLabel("USUÁRIO:");
-		txUser.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.ACCOUNT_CIRCLE,
-                MaterialColors.COSMO_BLACK));
-		txUser.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txUser.setBounds(5, 320, 70, 15);
-		frame.getContentPane().add(txUser);
+		recreate();
+	}
 
-		JLabel txSenha = new JLabel("SENHA:");
-		txSenha.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.LOCK,
-                MaterialColors.COSMO_BLACK));
-		txSenha.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txSenha.setBounds(5, 351, 70, 15);
-		frame.getContentPane().add(txSenha);
-
-		JLabel titulo = new JLabel(Main.TITLE);
-		titulo.setFont(new Font("Roboto Black", Font.PLAIN, 18));
-		titulo.setHorizontalAlignment(SwingConstants.CENTER);
-		titulo.setBounds(5, 229, 380, 39);
-		frame.getContentPane().add(titulo);
-
+	/**
+	 * 
+	 */
+	public void recreate() {
 		JLabel image = new JLabel("");
 		image.setHorizontalAlignment(SwingConstants.CENTER);
-		image.setIcon(new ImageIcon(Login.class.getResource("/FC_T.png")));
-		image.setBounds(95, 81, 200, 137);
+		ImageIcon icon = new ImageIcon(new ImageIcon(Login.class.getResource("/FC-T-Big.png")).getImage()
+				.getScaledInstance(290, 240, Image.SCALE_SMOOTH));
+		image.setIcon(icon);
+		image.setBounds(40, 22, 325, 270);
 		frame.getContentPane().add(image);
 
-		user = new JTextField();
-		user.setFont(new Font("Roboto", Font.PLAIN, 15));
-		user.setBounds(75, 315, 304, 20);
-		user.setBorder(new LineBorder(Color.WHITE, 1));
-		user.setMargin(new Insets(0, 0, 20, 0));
+		user = new IconTextField();
+		user.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.ACCOUNT_CIRCLE,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		user.setHint("Usuário");
+		user.setFont(new Font("Dialog", Font.PLAIN, 15));
+		user.setBounds(100, 300, 200, 30);
 		frame.getContentPane().add(user);
-		user.setColumns(10);
 
-		pass = new JPasswordField();
-		pass.setFont(new Font("Roboto", Font.PLAIN, 14));
-		pass.setBounds(75, 346, 304, 20);
+		pass = new IconPasswordField();
+		pass.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.LOCK,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		pass.setHint("Senha");
+		pass.setFont(new Font("Dialog", Font.PLAIN, 15));
+		pass.setBounds(100, 335, 200, 30);
 		frame.getContentPane().add(pass);
 
 		JButton entrar = new JButton("ENTRAR");
-		entrar.setBounds(150, 387, 90, 23);
-		entrar.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.CHECK_CIRCLE,
-                MaterialColors.COSMO_BLACK));
+		entrar.setBounds(140, 380, 130, 30);
+		entrar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.CHECK_CIRCLE,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(entrar);
+		entrar.setBorder(new RoundedBorder(10));
 		frame.getContentPane().add(entrar);
 		entrar.addActionListener(new ActionListener() {
 
@@ -123,19 +111,6 @@ public class Login {
 
 			}
 		});
-
-		JLabel texto = new JLabel(
-				"Escreva o seu nome de utilizador e senha e clique no bot\u00E3o abaixo para entrar no programa");
-		texto.setHorizontalAlignment(SwingConstants.CENTER);
-		texto.setFont(new Font("Roboto", Font.PLAIN, 9));
-		texto.setBounds(5, 270, 390, 20);
-		frame.getContentPane().add(texto);
-		
-		JLabel lblLogin = new JLabel("LOGIN");
-		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
-		lblLogin.setFont(new Font("Roboto Black", Font.PLAIN, 18));
-		lblLogin.setBounds(5, 31, 380, 39);
-		frame.getContentPane().add(lblLogin);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				long time = System.currentTimeMillis() - Main.inicialTime;
@@ -176,15 +151,9 @@ public class Login {
 		});
 	}
 
-	public static Login getInstance() {
-		if (INSTANCE == null) {
-			new Login();
-		}
-		return INSTANCE;
-	}
-
 	/**
-	 * Verifica se os campos estão preenchidos e se o funcionário existe na base de dados.
+	 * Verifica se os campos estão preenchidos e se o funcionário existe na base de
+	 * dados.
 	 */
 	public void verify() {
 		String username = user.getText();
@@ -222,6 +191,7 @@ public class Login {
 
 	/**
 	 * Verifica se a password está correta e faz o login do funcionário no sistema.
+	 * 
 	 * @param username
 	 * @param password
 	 */
@@ -270,8 +240,9 @@ public class Login {
 
 	/**
 	 * verifica se é preciso fazer o registo.
-	 * @return true - se apenas existe 1 funcionário registrado, que é o admin
-	 * 		   <br>false - caso contrário
+	 * 
+	 * @return true - se apenas existe 1 funcionário registrado, que é o admin <br>
+	 *         false - caso contrário
 	 */
 	public boolean registo() {
 		con = ConexaoLogin.getConnection();
@@ -300,7 +271,8 @@ public class Login {
 	}
 
 	/**
-	 * Torna o diálogo visível, verificando antes se é preciso fazer registro antes ou não (caso não exista funcionário registrado)
+	 * Torna o diálogo visível, verificando antes se é preciso fazer registro antes
+	 * ou não (caso não exista funcionário registrado)
 	 */
 	public void open() {
 		if (registo())
@@ -319,5 +291,16 @@ public class Login {
 		frame.setVisible(true);
 		user.setText("");
 		pass.setText("");
+	}
+	
+	public JFrame getFrame() {
+		return frame;
+	}
+	
+	public static Login getInstance() {
+		if (INSTANCE == null) {
+			new Login();
+		}
+		return INSTANCE;
 	}
 }

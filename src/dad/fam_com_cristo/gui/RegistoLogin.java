@@ -1,5 +1,8 @@
-package dad.recursos;
+package dad.fam_com_cristo.gui;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,35 +18,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
-
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
 import dad.fam_com_cristo.Funcionario;
-import dad.fam_com_cristo.gui.Login;
-import dad.fam_com_cristo.gui.Main;
 import dad.fam_com_cristo.table.TableModelFuncionario;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
+import dad.recursos.IconPasswordField;
+import dad.recursos.IconTextField;
 import dad.recursos.Log;
-import mdlaf.animation.MaterialUIMovement;
-import mdlaf.utils.MaterialColors;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.Insets;
-
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-import java.awt.Color;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
+import dad.recursos.Utils;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 /**
  * Classe para fazer um registo de funcionário no programa.
@@ -53,8 +47,8 @@ import javax.swing.JDialog;
 public class RegistoLogin {
 
 	private JDialog dialog;
-	private JTextField user;
-	private JPasswordField pass;
+	private IconTextField user;
+	private IconPasswordField pass;
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
@@ -67,53 +61,40 @@ public class RegistoLogin {
 		dialog.setTitle("Igreja Batista Famílias com Cristo - Registro");
 		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
-		dialog.setBounds(100, 100, 500, 400);
+		dialog.setBounds(100, 100, 480, 420);
 		dialog.setLocationRelativeTo(null);
 		dialog.setResizable(false);
 		dialog.getContentPane().setLayout(null);
 
-		JLabel txUser = new JLabel("USU\u00C1RIO:");
-		txUser.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txUser.setBounds(10, 261, 70, 15);
-		dialog.getContentPane().add(txUser);
-
-		JLabel txSenha = new JLabel("SENHA:");
-		txSenha.setFont(new Font("Roboto", Font.PLAIN, 13));
-		txSenha.setBounds(10, 287, 70, 15);
-		dialog.getContentPane().add(txSenha);
-
-		JLabel titulo = new JLabel(Main.TITLE);
-		titulo.setFont(new Font("Roboto Black", Font.PLAIN, 20));
-		titulo.setHorizontalAlignment(SwingConstants.CENTER);
-		titulo.setBounds(5, 193, 490, 39);
-		dialog.getContentPane().add(titulo);
-
 		JLabel image = new JLabel("");
 		image.setHorizontalAlignment(SwingConstants.CENTER);
-		image.setIcon(new ImageIcon(RegistoLogin.class.getResource("/FC_T.png")));
-		image.setBounds(150, 61, 200, 124);
+		ImageIcon icon = new ImageIcon(new ImageIcon(Login.class.getResource("/FC-T-Big.png")).getImage()
+				.getScaledInstance(240, 200, Image.SCALE_SMOOTH));
+		image.setIcon(icon);
+		image.setBounds(120, 20, 240, 200);
 		dialog.getContentPane().add(image);
 
-		user = new JTextField();
-		user.setFont(new Font("Roboto", Font.PLAIN, 15));
-		user.setBounds(85, 256, 399, 20);
-		user.setBorder(new LineBorder(Color.WHITE, 1));
-		user.setMargin(new Insets(0, 0, 20, 0));
+		user = new IconTextField();
+		user.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.ACCOUNT_CIRCLE,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		user.setFont(new Font("Dialog", Font.PLAIN, 15));
+		user.setHint("Criar usuário");
+		user.setBounds(115, 255, 250, 30);
 		dialog.getContentPane().add(user);
-		user.setColumns(10);
 
-		pass = new JPasswordField();
-		pass.setFont(new Font("Roboto", Font.PLAIN, 14));
-		pass.setBounds(85, 285, 399, 20);
-		pass.setBorder(new LineBorder(Color.WHITE, 1));
-		pass.setMargin(new Insets(0, 0, 20, 0));
+		pass = new IconPasswordField();
+		pass.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.LOCK,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		pass.setHint("Criar senha");
+		pass.setFont(new Font("Dialog", Font.PLAIN, 15));
+		pass.setBounds(115, 295, 250, 30);
 		dialog.getContentPane().add(pass);
 
-		JButton registar = new JButton("REGISTRAR");
-		registar.setFont(new Font("Roboto", Font.BOLD, 12));
-		registar.setBounds(190, 341, 120, 23);
-		registar.setBackground(MaterialColors.LIGHT_BLUE_600);
-		MaterialUIMovement.add(registar, MaterialColors.GRAY_300, 5, 1000 / 30);
+		JButton registar = new JButton("Registrar");
+		registar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.VERIFIED_USER,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		Utils.personalizarBotao(registar);
+		registar.setBounds(180, 350, 120, 30);
 		dialog.getContentPane().add(registar);
 		registar.addActionListener(new ActionListener() {
 
@@ -124,32 +105,19 @@ public class RegistoLogin {
 			}
 		});
 
-		JLabel texto = new JLabel(
-				"Escreva o nome de utilizador e a senha que vai ficar associada e clique no bot\u00E3o abaixo para fazer o registro");
-		texto.setHorizontalAlignment(SwingConstants.CENTER);
-		texto.setFont(new Font("Dialog", Font.PLAIN, 9));
-		texto.setBounds(0, 230, 490, 20);
-		dialog.getContentPane().add(texto);
-
 		JLabel warning = new JLabel(
 				"ATEN\u00C7\u00C3O: N\u00E3o esque\u00E7a da senha! Apenas o administrador pode recuper\u00E1-la!");
-		warning.setFont(new Font("Roboto", Font.PLAIN, 12));
+		warning.setFont(new Font("Dialog", Font.PLAIN, 12));
 		warning.setForeground(Color.RED);
 		warning.setHorizontalAlignment(SwingConstants.CENTER);
-		warning.setBounds(10, 316, 474, 14);
+		warning.setBounds(5, 230, 470, 15);
 		dialog.getContentPane().add(warning);
 
 		JCheckBox showPass = new JCheckBox("Mostrar senha");
 		pass.setEchoChar('*');
-		showPass.setFont(new Font("Roboto", Font.PLAIN, 10));
-		showPass.setBounds(10, 341, 110, 23);
+		showPass.setFont(new Font("Dialog", Font.PLAIN, 10));
+		showPass.setBounds(10, 345, 110, 25);
 		dialog.getContentPane().add(showPass);
-		
-		JLabel lblRegistro = new JLabel("REGISTRO");
-		lblRegistro.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRegistro.setFont(new Font("Roboto Black", Font.PLAIN, 20));
-		lblRegistro.setBounds(5, 11, 490, 39);
-		dialog.getContentPane().add(lblRegistro);
 		showPass.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -261,10 +229,10 @@ public class RegistoLogin {
 			pst.setDate(5, new Date(System.currentTimeMillis()));
 			pst.execute();
 			TableModelFuncionario.getInstance().addFuncionario(new Funcionario(username, 0, new java.util.Date(), new java.util.Date()));
-			JOptionPane.showMessageDialog(dialog, "O usuário '" + username + "' foi criado com sucesso!",
-					"USUÁRIO CRIADO", JOptionPane.INFORMATION_MESSAGE,
+			JOptionPane.showMessageDialog(dialog, "O funcionário '" + username + "' foi criado com sucesso!",
+					"FUNCIONÁRIO CRIADO", JOptionPane.INFORMATION_MESSAGE,
 					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
-			Log.getInstance().printLog("O usuário '" + username + "' foi criado com sucesso!");
+			Log.getInstance().printLog("O funcionário '" + username + "' foi criado com sucesso!");
 			if (login)
 				Login.getInstance().openDirect();
 			dialog.dispose();

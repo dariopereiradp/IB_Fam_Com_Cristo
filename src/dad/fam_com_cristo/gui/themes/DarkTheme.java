@@ -40,6 +40,7 @@ public class DarkTheme extends JMarsDarkTheme implements Theme {
 
 		this.backgroundTable = getColorLinhasPares();
 		this.backgroundTableHeader = MaterialColors.AMBER_900;
+		super.gridColorTable = MaterialColors.GREEN_400;
 		super.alternateRowBackgroundTable = getColorLinhasImpares();
 		super.selectionBackgroundTable = MaterialColors.bleach(this.highlightBackgroundPrimary, 0.2f);
 
@@ -65,6 +66,16 @@ public class DarkTheme extends JMarsDarkTheme implements Theme {
 	@Override
 	public String getThemeName() {
 		return Utils.THEME_DARK;
+	}
+
+	@Override
+	public ColorUIResource getColorIcons() {
+		return MaterialColors.WHITE;
+	}
+
+	@Override
+	public ColorUIResource getColorHint() {
+		return MaterialColors.GRAY_200;
 	}
 
 }

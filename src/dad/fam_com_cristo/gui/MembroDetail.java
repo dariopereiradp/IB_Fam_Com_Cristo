@@ -39,7 +39,6 @@ import dad.fam_com_cristo.table.CompositeCommand;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.ImageViewer;
 import dad.recursos.Utils;
-import mdlaf.utils.MaterialColors;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 import net.miginfocom.swing.MigLayout;
@@ -134,12 +133,12 @@ public class MembroDetail extends JDialog {
 		if (membro == null) {
 			apagar.setIcon(MaterialImageFactory.getInstance().getImage(
 	                MaterialIconFont.CANCEL,
-	                MaterialColors.COSMO_BLACK));
+	                Utils.getInstance().getCurrentTheme().getColorIcons()));
 			apagar.setText("Cancelar");
 		} else {
 			apagar.setIcon(MaterialImageFactory.getInstance().getImage(
 	                MaterialIconFont.DELETE,
-	                MaterialColors.COSMO_BLACK));
+	                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		}
 		apagar.addActionListener(new ActionListener() {
 
@@ -166,21 +165,21 @@ public class MembroDetail extends JDialog {
 		ok = new JButton("Ok");
 		ok.setIcon(MaterialImageFactory.getInstance().getImage(
                 MaterialIconFont.CHECK,
-                MaterialColors.COSMO_BLACK));
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(ok);
 		botoesPrincipais.add(ok, "cell 17 0,alignx right,aligny center");
 
 		editar = new JButton("Editar");
 		editar.setIcon(MaterialImageFactory.getInstance().getImage(
                 MaterialIconFont.MODE_EDIT,
-                MaterialColors.COSMO_BLACK));
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(editar);
 		botoesSecund.add(editar, "cell 0 0");
 
 		b_exportar = new JButton("Exportar");
 		b_exportar.setIcon(MaterialImageFactory.getInstance().getImage(
                 MaterialIconFont.PICTURE_AS_PDF,
-                MaterialColors.COSMO_BLACK));
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		b_exportar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				save(false);
@@ -193,7 +192,7 @@ public class MembroDetail extends JDialog {
 		salvar = new JButton("Salvar");
 		salvar.setIcon(MaterialImageFactory.getInstance().getImage(
                 MaterialIconFont.SAVE,
-                MaterialColors.COSMO_BLACK));
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(salvar);
 		botoesSecund.add(salvar, "cell 17 0");
 		salvar.setEnabled(false);
@@ -530,11 +529,10 @@ public class MembroDetail extends JDialog {
 			addImage.setText("Adicionar Imagem");
 		else
 			addImage.setText("Alterar imagem");
-		addImage.setBackground(MaterialColors.BLUE_GRAY_500);
 		Utils.personalizarBotao(addImage);
 		addImage.setIcon(MaterialImageFactory.getInstance().getImage(
                 MaterialIconFont.ADD_A_PHOTO,
-                MaterialColors.COSMO_BLACK));
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		imagePanel.add(image);
 		imagePanel.add(addImage, "center");
 
@@ -734,7 +732,7 @@ public class MembroDetail extends JDialog {
 				apagar.setText("Apagar");
 				apagar.setIcon(MaterialImageFactory.getInstance().getImage(
 		                MaterialIconFont.DELETE,
-		                MaterialColors.COSMO_BLACK));
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
 			} else {
 				System.out.println("Aqui");
 				TableModelMembro.getInstance().getUndoManager().execute(new CompositeCommand(

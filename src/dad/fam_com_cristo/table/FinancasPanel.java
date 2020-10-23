@@ -54,7 +54,6 @@ import dad.recursos.CellRendererNoImage;
 import dad.recursos.CurrencyCell;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
-import mdlaf.utils.MaterialColors;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 
@@ -103,6 +102,14 @@ public class FinancasPanel extends JPanel {
 		setLayout(new BorderLayout());
 		modelFinancas = TableModelFinancas.getInstance();
 
+		recreate();
+
+	}
+
+	/**
+	 * 
+	 */
+	public void recreate() {
 		MaskFormatter mascaraData;
 		JFormattedTextField data;
 
@@ -195,7 +202,6 @@ public class FinancasPanel extends JPanel {
 		inicializarMenus();
 
 		modelFinancas.atualizarTextFieldsNumeros();
-
 	}
 
 	private void inicializarMenus() {
@@ -268,10 +274,10 @@ public class FinancasPanel extends JPanel {
 
 	public void inicializarBotoes() {
 		pInferior.add(panel2, BorderLayout.WEST);
-		JButton bSair = new JButton("SAIR");
+		JButton bSair = new JButton("Sair");
 		bSair.setIcon(MaterialImageFactory.getInstance().getImage(
                 MaterialIconFont.EXIT_TO_APP,
-                MaterialColors.COSMO_BLACK));
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(bSair);
 		bSair.addActionListener(new SairAction());
 		panel2.add(bSair, BorderLayout.CENTER);
@@ -279,7 +285,8 @@ public class FinancasPanel extends JPanel {
 		btnAdd = new JButton("Adicionar");
 		btnAdd.setIcon(MaterialImageFactory.getInstance().getImage(
                 MaterialIconFont.ADD_SHOPPING_CART,
-                MaterialColors.COSMO_BLACK));
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		Utils.personalizarBotao(btnAdd);
 		panel_2.add(btnAdd);
 		
 		btnAdd.addActionListener(new ActionListener() {

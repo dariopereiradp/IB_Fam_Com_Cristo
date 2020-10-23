@@ -30,6 +30,9 @@ import javax.swing.border.LineBorder;
 import dad.recursos.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
+import dad.recursos.Utils;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 /**
  * Classe que representa um diálogo para alterar a senha de um funcionário.
@@ -54,7 +57,7 @@ public class ChangePassword extends JDialog {
 	public ChangePassword(String nome, boolean admin) {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		this.nome = nome;
-		setBounds(100, 100, 450, 210);
+		setBounds(100, 100, 450, 220);
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -104,7 +107,6 @@ public class ChangePassword extends JDialog {
 		{
 			newPass = new JPasswordField();
 			newPass.setMargin(new Insets(0, 0, 20, 0));
-			newPass.setFont(new Font("Roboto", Font.PLAIN, 14));
 			newPass.setEchoChar('*');
 			newPass.setBorder(new LineBorder(new Color(50, 205, 50)));
 			newPass.setBounds(131, 71, 303, 25);
@@ -113,7 +115,6 @@ public class ChangePassword extends JDialog {
 		{
 			confPass = new JPasswordField();
 			confPass.setMargin(new Insets(0, 0, 20, 0));
-			confPass.setFont(new Font("Roboto", Font.PLAIN, 14));
 			confPass.setEchoChar('*');
 			confPass.setBorder(new LineBorder(new Color(50, 205, 50)));
 			confPass.setBounds(132, 106, 302, 25);
@@ -144,6 +145,10 @@ public class ChangePassword extends JDialog {
 			}
 			{
 				JButton okButton = new JButton("OK");
+				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.CHECK,
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				Utils.personalizarBotao(okButton);
 				okButton.addActionListener(new ActionListener() {
 
 					@Override
@@ -160,6 +165,10 @@ public class ChangePassword extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.CANCEL,
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				Utils.personalizarBotao(cancelButton);
 				cancelButton.addActionListener(new ActionListener() {
 
 					@Override

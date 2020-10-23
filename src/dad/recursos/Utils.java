@@ -1,4 +1,5 @@
 package dad.recursos;
+
 import java.awt.Desktop;
 import java.awt.Font;
 import java.io.File;
@@ -19,13 +20,16 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
 import dad.fam_com_cristo.gui.DataGui;
+import dad.fam_com_cristo.gui.Login;
 import dad.fam_com_cristo.gui.Main;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.gui.themes.Theme;
+import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.animation.MaterialUIMovement;
@@ -37,13 +41,13 @@ import mdlaf.utils.MaterialColors;
  *
  */
 public class Utils {
-	
+
 	private Theme current_theme;
 	private static Utils INSTANCE;
 	public static final String APP_THEME = "APP_THEME";
 	public static final String THEME_LITE = "Lite";
 	public static final String THEME_DARK = "Dark";
-	
+
 	public Utils() {
 		FileInputStream inputStream;
 		try {
@@ -61,13 +65,23 @@ public class Utils {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	public void changeTheme(Theme theme) {
-		MaterialLookAndFeel.changeTheme((MaterialTheme) theme);
-		SwingUtilities.updateComponentTreeUI(DataGui.getInstance());
-		SwingUtilities.updateComponentTreeUI(MembroPanel.getInstance());
 		current_theme = theme;
+
+		MaterialLookAndFeel.changeTheme((MaterialTheme) theme);
+		UIManager.getLookAndFeelDefaults().put("TabbedPane[tab].height", 5);
+
+		SwingUtilities.updateComponentTreeUI(DataGui.getInstance());
+		SwingUtilities.updateComponentTreeUI(Login.getInstance().getFrame());
+		
+		MembroPanel.getInstance().removeAll();
+		MembroPanel.getInstance().recreate();
+		FinancasPanel.getInstance().removeAll();
+		FinancasPanel.getInstance().recreate();
+		Login.getInstance().getFrame().getContentPane().removeAll();
+		Login.getInstance().recreate();
+
 		try {
 			FileInputStream input = new FileInputStream(getPropertiesFile());
 			Properties prop = new Properties();
@@ -78,18 +92,18 @@ public class Utils {
 			prop.store(output, Main.AVISO_INI);
 			output.close();
 		} catch (IOException e) {
-			
+
 		}
 	}
-	
+
 	public File getPropertiesFile() {
-		return new File(Main.DATABASE_DIR + "conf.dad");	
+		return new File(Main.DATABASE_DIR + "conf.dad");
 	}
-	
+
 	public Theme getCurrentTheme() {
 		return current_theme;
 	}
-	
+
 	/**
 	 * Cria um backup das bases de dados e imagens.
 	 */
@@ -114,7 +128,7 @@ public class Utils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Cria um backup da base de dados diretamente.
 	 * 
@@ -126,7 +140,7 @@ public class Utils {
 		ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
 		return Main.BACKUP_DIR + name;
 	}
-	
+
 	/**
 	 * Personaliza o aspecto dos botões.
 	 * 
@@ -134,9 +148,10 @@ public class Utils {
 	 */
 	public static void personalizarBotao(JButton jb) {
 		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
+		jb.setBorder(new RoundedBorder(10));
 		MaterialUIMovement.getMovement(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
 	}
-	
+
 	public NumberFormat getNumberFormatCurrency() {
 		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "br"));
 		format.setMinimumFractionDigits(2);
@@ -144,27 +159,27 @@ public class Utils {
 		format.setRoundingMode(RoundingMode.HALF_UP);
 		return format;
 	}
-	
+
 	public JFormattedTextField getNewCurrencyTextField() {
 		NumberFormatter formatter = new NumberFormatter(getNumberFormatCurrency());
 		formatter.setAllowsInvalid(false);
 		formatter.setMinimum(0.0);
 		return new JFormattedTextField(formatter);
 	}
-	
-	  public BigDecimal getNumberFromFormat(Object valor) {
-      	BigDecimal value = new BigDecimal("0.0");
-      	try {
-				value = new BigDecimal(getNumberFormatCurrency().parse((String) valor).toString());
-			} catch (ParseException e) {
-				Log.getInstance().printLog(e.getMessage());
-				e.printStackTrace();
-			}
-          return value;
-      }
-	
+
+	public BigDecimal getNumberFromFormat(Object valor) {
+		BigDecimal value = new BigDecimal("0.0");
+		try {
+			value = new BigDecimal(getNumberFormatCurrency().parse((String) valor).toString());
+		} catch (ParseException e) {
+			Log.getInstance().printLog(e.getMessage());
+			e.printStackTrace();
+		}
+		return value;
+	}
+
 	public static Utils getInstance() {
-		if(INSTANCE == null)
+		if (INSTANCE == null)
 			INSTANCE = new Utils();
 		return INSTANCE;
 	}

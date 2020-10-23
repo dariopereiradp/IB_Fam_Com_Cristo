@@ -392,6 +392,14 @@ public class TableModelFinancas extends AbstractTableModel {
 //		Log.getInstance().printLog("Membros ordenados com sucesso!");
 
 //	}
+	
+	@SuppressWarnings("unchecked")
+	public Date getOldestDate() {
+		ArrayList<Transacao> sorted = (ArrayList<Transacao>) transacoes.clone();
+		
+		sorted.sort((o1, o2) -> o1.getData().compareTo(o2.getData()));
+		return sorted.get(0).getData();
+	}
 
 	public static TableModelFinancas getInstance() {
 		if (INSTANCE == null) {

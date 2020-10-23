@@ -20,7 +20,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import dad.recursos.ImageViewer;
-import mdlaf.utils.MaterialColors;
+import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 
@@ -132,7 +132,8 @@ public class About extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
 		                MaterialIconFont.CHECK,
-		                MaterialColors.COSMO_BLACK));
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				Utils.personalizarBotao(okButton);
 				okButton.addActionListener(new ActionListener() {
 
 					@Override

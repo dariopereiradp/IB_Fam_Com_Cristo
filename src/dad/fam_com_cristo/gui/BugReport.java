@@ -1,7 +1,10 @@
 package dad.fam_com_cristo.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -15,24 +18,20 @@ import java.util.Date;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
 import dad.recursos.Log;
 import dad.recursos.Utils;
 import dad.recursos.ZipCompress;
-import mdlaf.utils.MaterialColors;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 import net.lingala.zip4j.ZipFile;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.Desktop;
 
 /**
  * Classe que representa um Diálogo para reportar bugs no programa.
@@ -90,7 +89,8 @@ public class BugReport extends JDialog{
 				JButton okButton = new JButton("OK");
 				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
 		                MaterialIconFont.CHECK,
-		                MaterialColors.COSMO_BLACK));
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				Utils.personalizarBotao(okButton);
 				okButton.addActionListener(new ActionListener() {
 					
 					@Override
@@ -105,7 +105,8 @@ public class BugReport extends JDialog{
 				JButton cancelButton = new JButton("Cancelar");
 				cancelButton.setIcon(MaterialImageFactory.getInstance().getImage(
 		                MaterialIconFont.CANCEL,
-		                MaterialColors.COSMO_BLACK));
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				Utils.personalizarBotao(cancelButton);
 				cancelButton.addActionListener(new ActionListener() {
 					
 					@Override

@@ -1,8 +1,11 @@
 package dad.recursos;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import javax.swing.BorderFactory;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import dad.fam_com_cristo.gui.DataGui;
@@ -43,4 +46,14 @@ public class CellRendererNoImage extends DefaultTableCellRenderer {
 		Rectangle r = g.getFontMetrics().getStringBounds(match, g).getBounds();
 		g.drawString(match, pmw + 1, -r.y + 6);
 	}
+
+	@Override
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+			int row, int column) {
+		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		setBorder(BorderFactory.createRaisedSoftBevelBorder());
+		return this;
+	}
+	
+	
 }

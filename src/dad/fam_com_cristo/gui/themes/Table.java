@@ -5,6 +5,7 @@ package dad.fam_com_cristo.gui.themes;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
@@ -94,6 +95,18 @@ public class Table extends JTable {
 
 	public void personalizarHeader() {
 		TableCellRenderer tcr = getTableHeader().getDefaultRenderer();
-		getTableHeader().setDefaultRenderer(new TableHeaderWithSortIcons(tcr));
+		setTableHeader(new JTableHeader(columnModel) {
+			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1343809023580748958L;
+
+			@Override
+			public void setDefaultRenderer(TableCellRenderer defaultRenderer) {
+				super.setDefaultRenderer(new TableHeaderWithSortIcons(tcr));
+			}
+			
+		});
 	}
 }

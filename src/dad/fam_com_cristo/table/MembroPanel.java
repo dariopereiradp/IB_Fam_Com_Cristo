@@ -49,7 +49,6 @@ import dad.fam_com_cristo.gui.themes.Table;
 import dad.recursos.CellRenderer;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
-import mdlaf.utils.MaterialColors;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 
@@ -114,11 +113,16 @@ public class MembroPanel extends JPanel {
 		INSTANCE = this;
 		setLayout(new BorderLayout());
 		modelMembro = TableModelMembro.getInstance();
+		recreate();
+	}
 
+	/**
+	 * 
+	 */
+	public void recreate() {
 		membros = new Table(modelMembro, columnToolTips, true);
-		
-		membros.setPreferredScrollableViewportSize(new Dimension(800, 600));
 
+		membros.setPreferredScrollableViewportSize(new Dimension(800, 600));
 
 		membros.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
 		membros.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
@@ -252,7 +256,6 @@ public class MembroPanel extends JPanel {
 			}
 		});
 		modelMembro.atualizarTextFieldsNumeros();
-
 	}
 
 	private void inicializarMenus() {
@@ -339,10 +342,9 @@ public class MembroPanel extends JPanel {
 
 	public void inicializarBotoes() {
 		pInferior.add(panel2, BorderLayout.WEST);
-		JButton bSair = new JButton("SAIR");
-		bSair.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.EXIT_TO_APP,
-                MaterialColors.COSMO_BLACK));
+		JButton bSair = new JButton("Sair");
+		bSair.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.EXIT_TO_APP,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(bSair);
 		bSair.addActionListener(new SairAction());
 		panel2.add(bSair);
@@ -350,10 +352,9 @@ public class MembroPanel extends JPanel {
 		JPanel panel4 = new JPanel(new GridLayout(2, 1));
 		pInferior.add(panel4, BorderLayout.EAST);
 
-		bAdd = new JButton("ADICIONAR");
-		bAdd.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.PERSON_ADD,
-                MaterialColors.COSMO_BLACK));
+		bAdd = new JButton("Adicionar");
+		bAdd.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PERSON_ADD,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(bAdd);
 		bAdd.addActionListener(new ActionListener() {
 
@@ -492,6 +493,7 @@ public class MembroPanel extends JPanel {
 
 	/**
 	 * Converte as posições selecionadas para indices do modelo
+	 * 
 	 * @return um array contendo as posições selecionadas em indices do modelo
 	 */
 	public int[] convertRowsIndextoModel() {
@@ -572,13 +574,14 @@ public class MembroPanel extends JPanel {
 	public JTextField getJft_criancas() {
 		return jft_criancas;
 	}
-	
+
 	public JButton getbAdd() {
 		return bAdd;
 	}
 
 	/**
 	 * ActionListener para apagar um membro
+	 * 
 	 * @author Dário Pereira
 	 *
 	 */
@@ -595,7 +598,8 @@ public class MembroPanel extends JPanel {
 		}
 	}
 
-	/** Devole uma tabela filtrada com aquilo que se pretende imprimir
+	/**
+	 * Devole uma tabela filtrada com aquilo que se pretende imprimir
 	 * 
 	 * @param descricao tipo de tabela que se pretende imprimir
 	 * @return a tabela pronta para imprimir
@@ -651,12 +655,10 @@ public class MembroPanel extends JPanel {
 
 		return table;
 	}
-	
-	
+
 	public static MembroPanel getInstance() {
 		if (INSTANCE == null)
 			INSTANCE = new MembroPanel();
 		return INSTANCE;
 	}
-
 }

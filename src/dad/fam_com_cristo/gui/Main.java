@@ -1,6 +1,7 @@
 package dad.fam_com_cristo.gui;
 
 import java.awt.EventQueue;
+import java.awt.Insets;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Properties;
+
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -54,6 +56,7 @@ public class Main {
 	public static final String[] OPTIONS = { "Sim", "Não" };
 	public static final String AVISO_INI = "SE ALTERAR ESSE FICHEIRO O PROGRAMA PODE NÃO FUNCIONAR CORRETAMENTE";
 	public static long inicialTime;
+
 	/**
 	 * Inicializa o LookAndFeel, as bases de dados e a splash screen.
 	 */
@@ -64,6 +67,8 @@ public class Main {
 					(MaterialTheme) Utils.getInstance().getCurrentTheme());
 
 			UIManager.setLookAndFeel(materialTheme);
+			UIManager.getLookAndFeelDefaults().put("TabbedPane[tab].height", 5);
+			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0,0,0,0)); 
 			Splash screen = new Splash();
 			EventQueue.invokeLater(new Runnable() {
 

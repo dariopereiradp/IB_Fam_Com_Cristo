@@ -21,6 +21,18 @@ public interface Theme {
 	 * @return
 	 */
 	ColorUIResource getColorHighlight();
+	
+	/**
+	 * Cor dos ícones
+	 * @return
+	 */
+	ColorUIResource getColorIcons();
+	
+	/**
+	 * Cor da fonte dos hints (dicas)
+	 * @return
+	 */
+	ColorUIResource getColorHint();
 
 	String getThemeName();
 }

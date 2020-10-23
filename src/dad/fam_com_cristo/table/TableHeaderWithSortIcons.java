@@ -10,13 +10,11 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.RowSorter.SortKey;
 import javax.swing.table.TableCellRenderer;
-
-import mdlaf.utils.MaterialColors;
 
 public class TableHeaderWithSortIcons implements TableCellRenderer {
 	
@@ -39,8 +37,8 @@ public class TableHeaderWithSortIcons implements TableCellRenderer {
 			label.setPreferredSize(new Dimension(100, 30));
 			label.setIcon(getSortIcon(table, column));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
-			label.setFont(new Font("Roboto", Font.BOLD, 15));
-			label.setBorder(BorderFactory.createMatteBorder(0, 1, 3, 1, MaterialColors.GREEN_300));
+			label.setFont(new Font("Dialog", Font.BOLD, 15));
+			label.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 			return label;
 		}
 		return comp;
@@ -67,4 +65,6 @@ public class TableHeaderWithSortIcons implements TableCellRenderer {
 		}
 		return SortOrder.UNSORTED;
 	}
+	
+	
 }

@@ -43,6 +43,16 @@ public class LiteTheme extends MaterialLiteTheme implements Theme {
 		return Utils.THEME_LITE;
 	}
 
+	@Override
+	public ColorUIResource getColorIcons() {
+		return MaterialColors.COSMO_BLACK;
+	}
+
+	@Override
+	public ColorUIResource getColorHint() {
+		return MaterialColors.GRAY_800;
+	}
+
 	
 
 }

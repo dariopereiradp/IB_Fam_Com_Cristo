@@ -43,6 +43,7 @@ import com.qoppa.pdfWriter.PDFDocument;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
+import dad.fam_com_cristo.gui.themes.DateChooser;
 import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
@@ -69,7 +70,7 @@ public class DataGui extends JFrame {
 	/**
 	 * Tempo de espera para a janela de informações fechar.
 	 */
-	private static final int DELAY = 2000;
+	private static final int DELAY = 1500;
 	private static DataGui INSTANCE;
 	private JTabbedPane tabbedPane;
 	private JMenu mnArquivo, mnAjuda, mnEditar;
@@ -79,6 +80,7 @@ public class DataGui extends JFrame {
 	private JPanel filtrosPanel;
 	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca, check_ex_membros,
 			checkEntradas, checkSaidas;
+	private DateChooser data_inicio, data_fim;
 	private JMenuItem mntmRelatarErro;
 	private JMenuItem mnLimpar;
 	private JMenuItem menuManual;
@@ -112,6 +114,13 @@ public class DataGui extends JFrame {
 		});
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
+		recreate();
+	}
+
+	/**
+	 * Cria os componentes
+	 */
+	public void recreate() {
 		JPanel pesquisaPanel = new JPanel(new BorderLayout());
 		pesquisa = new JTextField();
 		JLabel pesquisaLabel = new JLabel("Pesquisa: ");
@@ -157,6 +166,16 @@ public class DataGui extends JFrame {
 		checkSaidas.setSelected(true);
 		filtrosPanel.add(checkSaidas);
 		checkSaidas.setVisible(false);
+		
+		data_inicio = new DateChooser();
+		filtrosPanel.add(data_inicio);
+		data_inicio.setDate(TableModelFinancas.getInstance().getOldestDate());
+		data_inicio.setMinSelectableDate(TableModelFinancas.getInstance().getOldestDate());
+		data_inicio.setVisible(false);
+		
+		data_fim = new DateChooser();
+		filtrosPanel.add(data_fim);
+		data_fim.setVisible(false);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -514,7 +533,7 @@ public class DataGui extends JFrame {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
-
+		
 		TableModelMembro.getInstance().addListeners();
 		TableModelFinancas.getInstance().addListeners();
 
@@ -547,6 +566,8 @@ public class DataGui extends JFrame {
 			check_ex_membros.setVisible(true);
 			checkEntradas.setVisible(false);
 			checkSaidas.setVisible(false);
+			data_inicio.setVisible(false);
+			data_fim.setVisible(false);
 		} else if (tabbedPane.getSelectedIndex() == 1) {
 			checkMembroAtivo.setVisible(false);
 			checkMembroNominal.setVisible(false);
@@ -555,6 +576,8 @@ public class DataGui extends JFrame {
 			check_ex_membros.setVisible(false);
 			checkEntradas.setVisible(true);
 			checkSaidas.setVisible(true);
+			data_inicio.setVisible(true);
+			data_fim.setVisible(true);
 		}
 	}
 
@@ -721,6 +744,14 @@ public class DataGui extends JFrame {
 
 	public JTextField getPesquisa() {
 		return pesquisa;
+	}
+	
+	public DateChooser getData_inicio() {
+		return data_inicio;
+	}
+	
+	public DateChooser getData_fim() {
+		return data_fim;
 	}
 
 	public static DataGui getInstance() {

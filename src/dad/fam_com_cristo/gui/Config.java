@@ -12,8 +12,9 @@ import javax.swing.border.EmptyBorder;
 
 import dad.fam_com_cristo.table.GerirFuncionarios;
 import dad.recursos.Log;
-import dad.recursos.RegistoLogin;
 import dad.recursos.Utils;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -49,41 +50,43 @@ public class Config extends JDialog {
 	public Config() {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setTitle("Configurações");
+		setBounds(100, 100, 450, 350);
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 
-		JLabel lblConfiguraes = new JLabel("CONFIGURA\u00C7\u00D5ES");
-		lblConfiguraes.setBackground(new Color(60, 179, 113));
-		lblConfiguraes.setFont(new Font("Dialog", Font.PLAIN, 17));
-		lblConfiguraes.setHorizontalAlignment(SwingConstants.CENTER);
-		lblConfiguraes.setBounds(0, 0, 444, 25);
-		contentPanel.add(lblConfiguraes);
-
 		JLabel lNome = new JLabel("Nome do Pastor Titular: ");
 		lNome.setBackground(new Color(255, 255, 255));
-		lNome.setFont(new Font("Perpetua", Font.PLAIN, 15));
-		lNome.setBounds(25, 72, 145, 30);
+		lNome.setBounds(25, 70, 180, 30);
 		contentPanel.add(lNome);
 
 		JButton bAddFuncionrio = new JButton("ADICIONAR FUNCION\u00C1RIO");
+		bAddFuncionrio.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PERSON_ADD,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		Utils.personalizarBotao(bAddFuncionrio);
 		bAddFuncionrio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				RegistoLogin.getInstance().open(false);
 			}
 		});
-		bAddFuncionrio.setBounds(25, 130, 240, 25);
+		bAddFuncionrio.setBounds(25, 130, 240, 30);
 		contentPanel.add(bAddFuncionrio);
 
 		JLabel lBemVindo = new JLabel("Bem vindo! Est\u00E1 ligado como " + Login.NOME);
-		lBemVindo.setBounds(90, 33, 260, 20);
+		lBemVindo.setFont(new Font("Dialog", Font.PLAIN, 14));
+		lBemVindo.setBounds(25, 11, 400, 20);
 		contentPanel.add(lBemVindo);
 		lBemVindo.setHorizontalAlignment(SwingConstants.CENTER);
 
 		JButton bGerirFunc = new JButton("GERIR FUNCION\u00C1RIOS");
+		bGerirFunc.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PERSON,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		Utils.personalizarBotao(bGerirFunc);
 		bGerirFunc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JPasswordField pass = new JPasswordField();
@@ -100,7 +103,7 @@ public class Config extends JDialog {
 
 			}
 		});
-		bGerirFunc.setBounds(25, 166, 240, 25);
+		bGerirFunc.setBounds(25, 170, 240, 30);
 		contentPanel.add(bGerirFunc);
 		if (!Login.NOME.equals("admin")) {
 			bGerirFunc.setEnabled(false);
@@ -108,12 +111,16 @@ public class Config extends JDialog {
 		}
 
 		JButton bAlterarPass = new JButton("ALTERAR SENHA");
+		bAlterarPass.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.LOCK_OPEN,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		Utils.personalizarBotao(bAlterarPass);
 		bAlterarPass.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new ChangePassword(Login.NOME, false).open();
 			}
 		});
-		bAlterarPass.setBounds(25, 202, 240, 25);
+		bAlterarPass.setBounds(25, 210, 240, 30);
 		if (Login.NOME.equals("admin")) {
 			bAlterarPass.setEnabled(false);
 			bAlterarPass.setToolTipText("Não é possível alterar a senha do utilizador 'admin'!");
@@ -137,7 +144,7 @@ public class Config extends JDialog {
 		
 
 		pastor = new JTextField();
-		pastor.setBounds(183, 77, 240, 25);
+		pastor.setBounds(215, 70, 210, 30);
 		contentPanel.add(pastor);
 		pastor.setColumns(10);
 		pastor.setText(pastorName);
@@ -147,6 +154,10 @@ public class Config extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.CHECK,
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				Utils.personalizarBotao(okButton);
 				okButton.addActionListener(new ActionListener() {
 					
 					/**
@@ -206,6 +217,10 @@ public class Config extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.CANCEL,
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				Utils.personalizarBotao(cancelButton);
 				cancelButton.addActionListener(new ActionListener() {
 
 					@Override

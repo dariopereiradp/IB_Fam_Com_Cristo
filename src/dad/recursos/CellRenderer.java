@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -53,6 +54,7 @@ public class CellRenderer extends DefaultTableCellRenderer {
 			int row, int column) {
 		super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
 		this.setIcon(table.isCellEditable(row, column) ? editIcon : null);
+		setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		return this;
 	}
 }

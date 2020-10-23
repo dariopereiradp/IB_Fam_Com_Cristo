@@ -12,6 +12,9 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import dad.fam_com_cristo.gui.DataGui;
+import dad.recursos.Utils;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 import javax.swing.JTable;
 
@@ -53,6 +56,10 @@ public class GerirFuncionarios extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
+		                MaterialIconFont.CHECK,
+		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				Utils.personalizarBotao(okButton);
 				okButton.addActionListener(new ActionListener() {
 					
 					@Override
