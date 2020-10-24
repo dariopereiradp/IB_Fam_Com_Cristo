@@ -4,9 +4,8 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
@@ -21,6 +20,7 @@ import dad.recursos.Command;
 import dad.recursos.ConexaoMembro;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
+import dad.recursos.Utils;
 
 /**
  * Classe que representa o TableModel para os membros.
@@ -62,7 +62,7 @@ public class TableModelMembro extends AbstractTableModel {
 				do {
 					int id = rs.getInt(1);
 					String nome = rs.getString(2);
-					Date data_nascimento = rs.getDate(3);
+					LocalDate data_nascimento = rs.getDate(3).toLocalDate();
 					Sexo sexo = Sexo.getEnum(rs.getString(4));
 					Estado_Civil estado_civil = Estado_Civil.getEnum(rs.getString(5));
 					String profissao = rs.getString(6);
@@ -72,8 +72,8 @@ public class TableModelMembro extends AbstractTableModel {
 					String igreja_origem = rs.getString(10);
 					Tipo_Membro tipo_membro = Tipo_Membro.getEnum(rs.getString(11));
 					Sim_Nao batizado = Sim_Nao.getEnum(rs.getString(12));
-					Date membro_desde = rs.getDate(13);
-					Date data_batismo = rs.getDate(14);
+					LocalDate membro_desde = rs.getDate(13).toLocalDate();
+					LocalDate data_batismo = rs.getDate(14).toLocalDate();
 					String observacoes = rs.getString(15);
 					ImageIcon img = null;
 					File f = new File(Membro.imgPath + id + ".jpg");
@@ -181,7 +181,7 @@ public class TableModelMembro extends AbstractTableModel {
 		case 0:
 			return membros.get(rowIndex).getNome();
 		case 1:
-			return new SimpleDateFormat("dd/MM/yyyy").format(membros.get(rowIndex).getData_nascimento());
+			return membros.get(rowIndex).getData_nascimento().format(Utils.getInstance().getDateFormat());
 		case 2:
 			String phone = membros.get(rowIndex).getTelefone();
 			if (phone.length() == 11)
@@ -200,6 +200,8 @@ public class TableModelMembro extends AbstractTableModel {
 	@Override
 	public Class getColumnClass(int column) {
 		switch (column) {
+		case 1:
+			return LocalDate.class;
 		case 3:
 			return Tipo_Membro.class;
 		default:
@@ -217,21 +219,20 @@ public class TableModelMembro extends AbstractTableModel {
 				switch (columnIndex) {
 				case 0:
 					if (!((String) valor).equals(membro.getNome())) {
-						undoManager.execute(new AtualizaMembro(this, "Nome", membro, valor));
+						undoManager.execute(new AtualizaMembro("Nome", membro, valor));
 					}
 					break;
 				case 1:
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					Date data_nasc = dateFormat.parse((String) valor);
-					if (!dateFormat.format(membro.getData_nascimento()).equals(dateFormat.format(data_nasc)))
-						undoManager.execute(new AtualizaMembro(this, "Data_Nascimento", membro, valor, true));
+					LocalDate data = (LocalDate) valor;
+					if(!data.isEqual(membro.getData_nascimento()))
+						undoManager.execute(new AtualizaMembro("Data_Nascimento", membro, valor));
 					break;
 				case 2:
 					String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ",
 							"");
 					if (!membro.getTelefone().equals(telefone))
 						if (telefone.length() == 11)
-							undoManager.execute(new AtualizaMembro(this, "Telefone", membro, valor));
+							undoManager.execute(new AtualizaMembro("Telefone", membro, valor));
 					break;
 				case 3:
 					if (membro.getTipo_membro() != (Tipo_Membro) valor) {
@@ -245,8 +246,8 @@ public class TableModelMembro extends AbstractTableModel {
 						
 							
 						undoManager.execute(new CompositeCommand("Tipo de Membro",
-								new AtualizaMembro(this, "Tipo_Membro", membro, valor),
-								new AtualizaMembro(this, "Batizado", membro, valor_batismo)));
+								new AtualizaMembro("Tipo_Membro", membro, valor),
+								new AtualizaMembro("Batizado", membro, valor_batismo)));
 					}
 
 					break;

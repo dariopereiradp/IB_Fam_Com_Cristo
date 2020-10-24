@@ -45,8 +45,8 @@ import javax.swing.text.MaskFormatter;
 import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.MembroDetail;
-import dad.fam_com_cristo.gui.themes.Table;
 import dad.recursos.CellRenderer;
+import dad.recursos.DataCellEditor;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
@@ -129,38 +129,6 @@ public class MembroPanel extends JPanel {
 		membros.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
 		membros.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
 
-		MaskFormatter mascaraData;
-		JFormattedTextField data;
-
-		try {
-			mascaraData = new MaskFormatter("##/##/####");
-			mascaraData.setCommitsOnValidEdit(true);
-			data = new JFormattedTextField(mascaraData);
-		} catch (ParseException e1) {
-			data = new JFormattedTextField();
-			e1.printStackTrace();
-		}
-		data.setFont(new Font("Arial", Font.PLAIN, 15));
-
-		final TableCellEditor dataEditor = new DefaultCellEditor(data);
-
-		membros.getColumnModel().getColumn(1).setCellEditor(dataEditor);
-
-		InputMap iMap = data.getInputMap(JComponent.WHEN_FOCUSED);
-		iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
-		ActionMap aMap = data.getActionMap();
-		aMap.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dataEditor.stopCellEditing();
-			}
-		});
-
 		MaskFormatter maskPhone;
 		JFormattedTextField phone;
 
@@ -175,7 +143,6 @@ public class MembroPanel extends JPanel {
 		phone.setFont(new Font("Arial", Font.PLAIN, 15));
 
 		final TableCellEditor phoneEditor = new DefaultCellEditor(phone);
-		membros.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
 
 		InputMap iMap1 = phone.getInputMap(JComponent.WHEN_FOCUSED);
 		iMap1.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
@@ -191,11 +158,13 @@ public class MembroPanel extends JPanel {
 				phoneEditor.stopCellEditing();
 			}
 		});
-
+		
 		JComboBox<Tipo_Membro> tipo_membro = new JComboBox<Tipo_Membro>();
 		tipo_membro.setBounds(370, 255, 191, 25);
 		tipo_membro.setModel(new DefaultComboBoxModel<Tipo_Membro>(Tipo_Membro.values()));
-
+		
+		membros.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
+		membros.getColumnModel().getColumn(1).setCellEditor(new DataCellEditor());
 		membros.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_membro));
 
 		JScrollPane jsMembros = new JScrollPane(membros);

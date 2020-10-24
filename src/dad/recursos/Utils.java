@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
@@ -22,6 +23,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
+
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
 
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.Login;
@@ -42,6 +46,7 @@ import mdlaf.utils.MaterialColors;
  */
 public class Utils {
 
+	public static final String DATE_FORMAT = "dd/MM/yyyy";
 	private Theme current_theme;
 	private static Utils INSTANCE;
 	public static final String APP_THEME = "APP_THEME";
@@ -75,6 +80,8 @@ public class Utils {
 		SwingUtilities.updateComponentTreeUI(DataGui.getInstance());
 		SwingUtilities.updateComponentTreeUI(Login.getInstance().getFrame());
 		
+		DataGui.getInstance().getContentPane().removeAll();
+		DataGui.getInstance().recreate();
 		MembroPanel.getInstance().removeAll();
 		MembroPanel.getInstance().recreate();
 		FinancasPanel.getInstance().removeAll();
@@ -177,7 +184,46 @@ public class Utils {
 		}
 		return value;
 	}
+	
+	public DateTimeFormatter getDateFormat() {
+		return DateTimeFormatter.ofPattern(DATE_FORMAT);
+	}
 
+	public DatePickerSettings getDateSettings() {
+		DatePickerSettings dateSettings = new DatePickerSettings(new Locale("pt", "br"));
+		dateSettings.setFormatForDatesBeforeCommonEra(DATE_FORMAT);
+		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT);
+		dateSettings.setAllowKeyboardEditing(false);
+		dateSettings.setAllowEmptyDates(false);
+		
+        dateSettings.setColor(DateArea.TextMonthAndYearMenuLabels, getCurrentTheme().getColorIcons());
+        dateSettings.setColor(DateArea.TextMonthAndYearNavigationButtons, getCurrentTheme().getColorIcons());
+        dateSettings.setColor(DateArea.TextTodayLabel, getCurrentTheme().getColorIcons());
+        dateSettings.setColor(DateArea.TextClearLabel, getCurrentTheme().getColorIcons());
+		dateSettings.setColor(DateArea.CalendarTextNormalDates, getCurrentTheme().getColorIcons());
+		
+        dateSettings.setColor(DateArea.BackgroundCalendarPanelLabelsOnHover, MaterialColors.LIGHT_BLUE_400);
+        dateSettings.setColor(DateArea.TextCalendarPanelLabelsOnHover, MaterialColors.WHITE);
+		
+		dateSettings.setColor(DateArea.CalendarBackgroundNormalDates, getCurrentTheme().getColorLinhasImpares());
+        dateSettings.setColor(DateArea.BackgroundOverallCalendarPanel, getCurrentTheme().getColorBackgroundCalendar());
+        dateSettings.setColor(DateArea.BackgroundMonthAndYearMenuLabels, getCurrentTheme().getColorLinhasImpares());
+        dateSettings.setColor(DateArea.BackgroundTodayLabel, getCurrentTheme().getColorLinhasImpares());
+        dateSettings.setColor(DateArea.BackgroundClearLabel, getCurrentTheme().getColorLinhasImpares());
+        dateSettings.setColor(DateArea.BackgroundMonthAndYearNavigationButtons, getCurrentTheme().getColorLinhasImpares());
+        dateSettings.setColor(DateArea.CalendarBackgroundSelectedDate, MaterialColors.LIGHT_BLUE_400);
+        
+        dateSettings.setColor(DateArea.TextFieldBackgroundValidDate, getCurrentTheme().getColorFields());
+        dateSettings.setColor(DateArea.DatePickerTextValidDate, getCurrentTheme().getColorIcons());
+        
+//        dateSettings.setColor(DateArea.CalendarBorderSelectedDate, Color.WHITE);
+//        dateSettings.setColorBackgroundWeekdayLabels(Color.ORANGE, true);
+//        dateSettings.setColorBackgroundWeekNumberLabels(Color.ORANGE, true);		
+        
+        return dateSettings;
+		
+	}
+	
 	public static Utils getInstance() {
 		if (INSTANCE == null)
 			INSTANCE = new Utils();

@@ -2,29 +2,23 @@ package dad.fam_com_cristo.table;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
-import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -39,19 +33,15 @@ import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.MaskFormatter;
-
-import com.toedter.calendar.JDateChooser;
 
 import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.Transacao;
 import dad.fam_com_cristo.gui.themes.DateChooser;
-import dad.fam_com_cristo.gui.themes.Table;
 import dad.recursos.CellRenderer;
 import dad.recursos.CellRendererNoImage;
 import dad.recursos.CurrencyCell;
+import dad.recursos.DataCellEditor;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
@@ -93,7 +83,7 @@ public class FinancasPanel extends JPanel {
 	private JLabel lblDescricao;
 	private JTextField jtfDescricao;
 	private JLabel lblData;
-	private JDateChooser data;
+	private DateChooser data;
 	private JButton btnAdd;
 
 	public FinancasPanel() {
@@ -110,35 +100,6 @@ public class FinancasPanel extends JPanel {
 	 * 
 	 */
 	public void recreate() {
-		MaskFormatter mascaraData;
-		JFormattedTextField data;
-
-		try {
-			mascaraData = new MaskFormatter("##/##/####");
-			mascaraData.setCommitsOnValidEdit(true);
-			data = new JFormattedTextField(mascaraData);
-		} catch (ParseException e1) {
-			data = new JFormattedTextField();
-			e1.printStackTrace();
-		}
-		data.setFont(new Font("Arial", Font.PLAIN, 15));
-
-		final TableCellEditor dataEditor = new DefaultCellEditor(data);
-
-		InputMap iMap = data.getInputMap(JComponent.WHEN_FOCUSED);
-		iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
-		ActionMap aMap = data.getActionMap();
-		aMap.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dataEditor.stopCellEditing();
-			}
-		});
 
 		JComboBox<Tipo_Transacao> tipo_transacao = new JComboBox<Tipo_Transacao>();
 		tipo_transacao.setBounds(370, 255, 191, 25);
@@ -153,25 +114,27 @@ public class FinancasPanel extends JPanel {
 		financas.setPreferredScrollableViewportSize(new Dimension(800, 600));
 
 		financas.getColumnModel().getColumn(0).setCellRenderer(new CellRendererNoImage());
-		financas.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
+		financas.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());		
 		financas.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(4).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(5).setCellRenderer(new CellRendererNoImage());
 
-		financas.getColumnModel().getColumn(1).setCellEditor(dataEditor);
+		financas.getColumnModel().getColumn(1).setCellEditor(new DataCellEditor());
 		financas.getColumnModel().getColumn(2).setCellEditor(new CurrencyCell());
 
 		financas.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_transacao));
 
-		financas.getColumnModel().getColumn(0).setMinWidth(80);
+		
+		financas.getColumnModel().getColumn(0).setPreferredWidth(100);
 		financas.getColumnModel().getColumn(1).setPreferredWidth(160);
 		financas.getColumnModel().getColumn(2).setPreferredWidth(160);
 		financas.getColumnModel().getColumn(3).setPreferredWidth(160);
+		financas.getColumnModel().getColumn(4).setPreferredWidth(500);
+		financas.getColumnModel().getColumn(0).setMinWidth(100);
 		financas.getColumnModel().getColumn(1).setMinWidth(160);
 		financas.getColumnModel().getColumn(2).setMinWidth(160);
 		financas.getColumnModel().getColumn(3).setMinWidth(160);
-		financas.getColumnModel().getColumn(4).setPreferredWidth(500);
 		financas.getColumnModel().getColumn(4).setMinWidth(450);
 		financas.getColumnModel().getColumn(5).setMinWidth(90);
 
@@ -309,7 +272,7 @@ public class FinancasPanel extends JPanel {
 		} else {
 			Tipo_Transacao tipo = (Tipo_Transacao) comboTipo.getSelectedItem(); 
 			String descricao = jtfDescricao.getText();
-			Date dataTransacao = data.getDate();
+			LocalDate dataTransacao = data.getDate();
 			
 			if(descricao.trim().equals(""))
 				descricao = "-";
@@ -395,6 +358,7 @@ public class FinancasPanel extends JPanel {
 		panel_2.add(lblData);
 
 		data = new DateChooser();
+		data.getSettings().setDateRangeLimits(null, LocalDate.now());
 		panel_2.add(data);
 
 	}

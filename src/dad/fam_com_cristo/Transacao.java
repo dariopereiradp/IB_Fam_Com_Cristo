@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 
 import dad.recursos.ConexaoFinancas;
 import dad.recursos.Log;
@@ -20,12 +20,23 @@ public class Transacao {
 	private BigDecimal value;
 	private Tipo_Transacao tipo;
 	private String descricao;
-	private Date data;
+	private LocalDate data;
 	private BigDecimal total;
 	private static Connection con;
 	private static PreparedStatement pst;
 	
-	public Transacao(BigDecimal value, Tipo_Transacao tipo, String descricao, Date data, BigDecimal total) {
+	public Transacao(BigDecimal value, Tipo_Transacao tipo, String descricao, LocalDate data, BigDecimal total) {
+		init(value, tipo, descricao, data, total);
+	}
+
+	/**
+	 * @param value
+	 * @param tipo
+	 * @param descricao
+	 * @param data
+	 * @param total
+	 */
+	public void init(BigDecimal value, Tipo_Transacao tipo, String descricao, LocalDate data, BigDecimal total) {
 		con = ConexaoFinancas.getConnection();
 		id = ++countID;
 		this.value = value;
@@ -66,12 +77,12 @@ public class Transacao {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
-	public Date getData() {
+	
+	public LocalDate getData() {
 		return data;
 	}
-
-	public void setData(Date data) {
+	
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 

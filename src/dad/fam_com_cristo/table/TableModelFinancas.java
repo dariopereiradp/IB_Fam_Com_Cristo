@@ -4,9 +4,8 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -33,7 +32,7 @@ public class TableModelFinancas extends AbstractTableModel {
 	private static final long serialVersionUID = 3247984074345998765L;
 	private static TableModelFinancas INSTANCE;
 	private ArrayList<Transacao> transacoes;
-	private String[] colunas = { "ID", "Data", "Valor", "Tipo", "Descrição", "Sub-total" };
+	private String[] colunas = { "Nº Transação", "Data", "Valor", "Tipo", "Descrição", "Sub-total" };
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
@@ -58,7 +57,7 @@ public class TableModelFinancas extends AbstractTableModel {
 			if (rs.next()) {
 				do {
 					int id = rs.getInt(1);
-					Date data = rs.getDate(2);
+					LocalDate data = rs.getDate(2).toLocalDate();
 					BigDecimal valor = rs.getBigDecimal(3);
 					Tipo_Transacao tipo = Tipo_Transacao.getEnum(rs.getString(4));
 					String descricao = rs.getString(5);
@@ -164,7 +163,7 @@ public class TableModelFinancas extends AbstractTableModel {
 		case 0:
 			return transacoes.get(rowIndex).getId();
 		case 1:
-			return new SimpleDateFormat("dd/MM/yyyy").format(transacoes.get(rowIndex).getData());
+			return transacoes.get(rowIndex).getData();
 		case 2:
 			return Utils.getInstance().getNumberFormatCurrency().format(transacoes.get(rowIndex).getValue());
 		case 3:
@@ -184,6 +183,8 @@ public class TableModelFinancas extends AbstractTableModel {
 		switch (column) {
 		case 0:
 			return Integer.class;
+		case 1:
+			return LocalDate.class;
 		case 2:
 			return BigDecimal.class;
 		case 3:
@@ -204,10 +205,10 @@ public class TableModelFinancas extends AbstractTableModel {
 				Transacao transacao = transacoes.get(rowIndex);
 				switch (columnIndex) {
 				case 1:
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					Date data = dateFormat.parse((String) valor);
-					if (!dateFormat.format(transacao.getData()).equals(dateFormat.format(data)))
-						undoManager.execute(new AtualizaTransacao(this, "Data", transacao, valor, true));
+					LocalDate data = (LocalDate) valor;
+					if (!data.isEqual(transacao.getData())) {
+						undoManager.execute(new AtualizaTransacao(this, "Data", transacao, valor));
+					}
 					break;
 				case 2:
 					if (transacao.getValue().compareTo((BigDecimal) valor) != 0) {
@@ -394,7 +395,7 @@ public class TableModelFinancas extends AbstractTableModel {
 //	}
 	
 	@SuppressWarnings("unchecked")
-	public Date getOldestDate() {
+	public LocalDate getOldestDate() {
 		ArrayList<Transacao> sorted = (ArrayList<Transacao>) transacoes.clone();
 		
 		sorted.sort((o1, o2) -> o1.getData().compareTo(o2.getData()));

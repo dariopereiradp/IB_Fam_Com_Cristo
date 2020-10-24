@@ -1,11 +1,9 @@
 package dad.fam_com_cristo.table;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.swing.table.AbstractTableModel;
+import java.time.LocalDate;
 
 import dad.fam_com_cristo.Estado_Civil;
 import dad.fam_com_cristo.Membro;
@@ -31,27 +29,15 @@ public class AtualizaMembro implements Command {
 	private String coluna;
 	private Object valor;
 	private Object old;
-	private AbstractTableModel table;
-	private boolean data_string;
-
-	public AtualizaMembro(AbstractTableModel table, String coluna, Membro membro, Object valor) {
-		this.table = table;
+	private TableModelMembro table;
+	
+	public AtualizaMembro(String coluna, Membro membro, Object valor) {
+		this.table = TableModelMembro.getInstance();
 		this.coluna = coluna;
 		this.membro = membro;
 		this.valor = valor;
 		con = ConexaoMembro.getConnection();
 		inicializar();
-		data_string = false;
-	}
-
-	public AtualizaMembro(TableModelMembro table, String coluna, Membro membro, Object valor, boolean data_string) {
-		this.table = table;
-		this.coluna = coluna;
-		this.membro = membro;
-		this.valor = valor;
-		con = ConexaoMembro.getConnection();
-		inicializar();
-		this.data_string = data_string;
 	}
 
 	private void inicializar() {
@@ -114,18 +100,9 @@ public class AtualizaMembro implements Command {
 				membro.setNome((String) valor);
 				break;
 			case "Data_Nascimento":
-				if (data_string) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					Date data_nasc = dateFormat.parse((String) valor);
-					membro.setData_nascimento(data_nasc);
-					String data = new SimpleDateFormat("yyyy-M-d").format(data_nasc);
-					pst.setDate(1, java.sql.Date.valueOf(data));
-				} else {
-					Date data_nasc = (Date) valor;
-					membro.setData_nascimento(data_nasc);
-					String data = new SimpleDateFormat("yyyy-M-d").format(data_nasc);
-					pst.setDate(1, java.sql.Date.valueOf(data));
-				}
+				LocalDate data_nasc = (LocalDate) valor;
+				membro.setData_nascimento(data_nasc);
+				pst.setDate(1, Date.valueOf(data_nasc));
 				break;
 			case "Sexo":
 				Sexo sexo = (Sexo) valor;
@@ -172,16 +149,14 @@ public class AtualizaMembro implements Command {
 				membro.setBatizado(sim_Nao);
 				break;
 			case "Membro_Desde":
-				Date membro_desde = (Date) valor;
+				LocalDate membro_desde = (LocalDate) valor;
 				membro.setMembro_desde(membro_desde);
-				String data_membro = new SimpleDateFormat("yyyy-M-d").format(membro_desde);
-				pst.setDate(1, java.sql.Date.valueOf(data_membro));
+				pst.setDate(1, java.sql.Date.valueOf(membro_desde));
 				break;
 			case "Data_Batismo":
-				Date data_batismo = (Date) valor;
+				LocalDate data_batismo = (LocalDate) valor;
 				membro.setData_batismo(data_batismo);
-				String batismo_data = new SimpleDateFormat("yyyy-M-d").format(data_batismo);
-				pst.setDate(1, java.sql.Date.valueOf(batismo_data));
+				pst.setDate(1, java.sql.Date.valueOf(data_batismo));
 				break;
 			case "Observacoes":
 				pst.setString(1, (String) valor);
@@ -209,9 +184,8 @@ public class AtualizaMembro implements Command {
 				membro.setNome((String) old);
 				break;
 			case "Data_Nascimento":
-				String data = new SimpleDateFormat("yyyy-M-d").format((Date) old);
-				pst.setDate(1, java.sql.Date.valueOf(data));
-				membro.setData_nascimento((Date) old);
+				pst.setDate(1, java.sql.Date.valueOf((LocalDate) old));
+				membro.setData_nascimento((LocalDate) old);
 				break;
 			case "Sexo":
 				Sexo sexo = (Sexo) old;
@@ -255,14 +229,12 @@ public class AtualizaMembro implements Command {
 				membro.setBatizado(sim_Nao);
 				break;
 			case "Membro_Desde":
-				String membro_desde = new SimpleDateFormat("yyyy-M-d").format((Date) old);
-				pst.setDate(1, java.sql.Date.valueOf(membro_desde));
-				membro.setData_nascimento((Date) old);
+				pst.setDate(1, java.sql.Date.valueOf((LocalDate) old));
+				membro.setData_nascimento((LocalDate) old);
 				break;
 			case "Data_Batismo":
-				String data_batismo = new SimpleDateFormat("yyyy-M-d").format((Date) old);
-				pst.setDate(1, java.sql.Date.valueOf(data_batismo));
-				membro.setData_nascimento((Date) old);
+				pst.setDate(1, java.sql.Date.valueOf((LocalDate) old));
+				membro.setData_nascimento((LocalDate) old);
 				break;
 			case "Observacoes":
 				pst.setString(1, (String) old);

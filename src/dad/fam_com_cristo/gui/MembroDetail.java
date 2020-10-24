@@ -15,9 +15,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.ParseException;
-import java.util.Date;
+import java.time.LocalDate;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -26,14 +29,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.MaskFormatter;
 
+import dad.fam_com_cristo.Estado_Civil;
 import dad.fam_com_cristo.Membro;
+import dad.fam_com_cristo.Sexo;
+import dad.fam_com_cristo.Sim_Nao;
+import dad.fam_com_cristo.Tipo_Membro;
+import dad.fam_com_cristo.gui.themes.DateChooser;
 import dad.fam_com_cristo.table.AtualizaMembro;
 import dad.fam_com_cristo.table.CompositeCommand;
 import dad.fam_com_cristo.table.TableModelMembro;
@@ -42,19 +52,10 @@ import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JTextArea;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import dad.fam_com_cristo.Tipo_Membro;
-import dad.fam_com_cristo.gui.themes.DateChooser;
-import dad.fam_com_cristo.Estado_Civil;
-import dad.fam_com_cristo.Sexo;
-import dad.fam_com_cristo.Sim_Nao;
-
-import javax.swing.border.MatteBorder;
 
 /**
- * Classe que permite visualizar e editar os detalhes de um membro existentes ou criar um membro novo
+ * Classe que permite visualizar e editar os detalhes de um membro existentes ou
+ * criar um membro novo
  * 
  * @author Dário Pereira
  *
@@ -110,7 +111,7 @@ public class MembroDetail extends JDialog {
 	 */
 	private void inicializar() {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		setSize(new Dimension(1000, 520));
+		setSize(new Dimension(1000, 550));
 		setMinimumSize(new Dimension(1000, 520));
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
@@ -131,14 +132,12 @@ public class MembroDetail extends JDialog {
 
 		apagar = new JButton("Apagar");
 		if (membro == null) {
-			apagar.setIcon(MaterialImageFactory.getInstance().getImage(
-	                MaterialIconFont.CANCEL,
-	                Utils.getInstance().getCurrentTheme().getColorIcons()));
+			apagar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.CANCEL,
+					Utils.getInstance().getCurrentTheme().getColorIcons()));
 			apagar.setText("Cancelar");
 		} else {
-			apagar.setIcon(MaterialImageFactory.getInstance().getImage(
-	                MaterialIconFont.DELETE,
-	                Utils.getInstance().getCurrentTheme().getColorIcons()));
+			apagar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.DELETE,
+					Utils.getInstance().getCurrentTheme().getColorIcons()));
 		}
 		apagar.addActionListener(new ActionListener() {
 
@@ -163,23 +162,20 @@ public class MembroDetail extends JDialog {
 		Utils.personalizarBotao(apagar);
 
 		ok = new JButton("Ok");
-		ok.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.CHECK,
-                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		ok.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.CHECK,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(ok);
 		botoesPrincipais.add(ok, "cell 17 0,alignx right,aligny center");
 
 		editar = new JButton("Editar");
-		editar.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.MODE_EDIT,
-                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		editar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.MODE_EDIT,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(editar);
 		botoesSecund.add(editar, "cell 0 0");
 
 		b_exportar = new JButton("Exportar");
-		b_exportar.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.PICTURE_AS_PDF,
-                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		b_exportar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		b_exportar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				save(false);
@@ -190,9 +186,8 @@ public class MembroDetail extends JDialog {
 		Utils.personalizarBotao(b_exportar);
 
 		salvar = new JButton("Salvar");
-		salvar.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.SAVE,
-                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		salvar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.SAVE,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(salvar);
 		botoesSecund.add(salvar, "cell 17 0");
 		salvar.setEnabled(false);
@@ -200,21 +195,22 @@ public class MembroDetail extends JDialog {
 		nome = new JTextField("");
 		nome.setBounds(68, 45, 448, 25);
 		nome.setEditable(false);
-		
+
 		idade = new JTextField("");
 		idade.setEditable(false);
-		idade.setBounds(70, 186, 44, 25);
+		idade.setBounds(70, 195, 44, 25);
 		infoPanel.add(idade);
 
 		data_nascimento = new DateChooser();
-		data_nascimento.setBounds(164, 80, 166, 25);
-		
+		data_nascimento.getSettings().setDateRangeLimits(null, LocalDate.now());
+		data_nascimento.setBounds(164, 80, 166, 37);
+
 		profissao = new JTextField("");
 		profissao.setBounds(603, 45, 191, 25);
 		profissao.setEditable(false);
 
 		endereco = new JTextField("");
-		endereco.setBounds(120, 114, 672, 25);
+		endereco.setBounds(120, 127, 672, 25);
 		endereco.setEditable(false);
 
 		MaskFormatter maskPhone;
@@ -223,7 +219,7 @@ public class MembroDetail extends JDialog {
 			maskPhone = new MaskFormatter("(##) # ####-####");
 			maskPhone.setCommitsOnValidEdit(true);
 			telefone = new JFormattedTextField(maskPhone);
-			telefone.setBounds(120, 150, 178, 25);
+			telefone.setBounds(120, 160, 178, 25);
 		} catch (ParseException e1) {
 			telefone = new JFormattedTextField();
 			e1.printStackTrace();
@@ -247,14 +243,14 @@ public class MembroDetail extends JDialog {
 		infoPanel.add(label_2);
 		infoPanel.add(profissao);
 		JLabel label_3 = new JLabel("Endereço: ");
-		label_3.setBounds(5, 115, 105, 25);
+		label_3.setBounds(5, 127, 105, 25);
 		infoPanel.add(label_3);
 		infoPanel.add(endereco);
 		JLabel label_4 = new JLabel("Igreja de Origem: ");
 		label_4.setBounds(5, 255, 149, 25);
 		infoPanel.add(label_4);
 		JLabel label_5 = new JLabel("Observações: ");
-		label_5.setBounds(4, 335, 110, 60);
+		label_5.setBounds(4, 340, 110, 60);
 		infoPanel.add(label_5);
 		JLabel label_6 = new JLabel("Motivo de Saída: ");
 		label_6.setBounds(668, -43, 83, 14);
@@ -269,7 +265,7 @@ public class MembroDetail extends JDialog {
 		observacoes.setLineWrap(true);
 		JScrollPane jsp = new JScrollPane(observacoes);
 		jsp.setBorder(new LineBorder(Color.BLACK, 1));
-		jsp.setBounds(118, 335, 672, 60);
+		jsp.setBounds(118, 340, 672, 60);
 
 		infoPanel.add(jsp);
 
@@ -285,12 +281,12 @@ public class MembroDetail extends JDialog {
 		infoPanel.add(lInfo);
 
 		JLabel lInfo2 = new JLabel("Vida Crist\u00E3");
-		lInfo2.setBounds(6, 210, 250, 32);
+		lInfo2.setBounds(6, 220, 250, 32);
 		lInfo2.setFont(new Font("Dialog", Font.BOLD, 17));
 		infoPanel.add(lInfo2);
 
 		JLabel lblTelefone = new JLabel("Telefone: ");
-		lblTelefone.setBounds(5, 150, 105, 25);
+		lblTelefone.setBounds(5, 160, 105, 25);
 		infoPanel.add(lblTelefone);
 
 		igreja_origem = new JComboBox<String>();
@@ -326,8 +322,9 @@ public class MembroDetail extends JDialog {
 		infoPanel.add(estado_civil);
 
 		data_batismo = new DateChooser();
-		data_batismo.setBounds(601, 295, 191, 25);
+		data_batismo.setBounds(601, 295, 191, 37);
 		data_batismo.setEnabled(false);
+		data_batismo.getSettings().setDateRangeLimits(null, LocalDate.now());
 		infoPanel.add(data_batismo);
 
 		lblDataDeBatismo = new JLabel("Data de Batismo: ");
@@ -339,17 +336,18 @@ public class MembroDetail extends JDialog {
 		infoPanel.add(lblMembroDesde);
 
 		membro_desde = new DateChooser();
-		membro_desde.setBounds(135, 295, 178, 25);
+		membro_desde.setBounds(135, 295, 178, 37);
 		membro_desde.setEnabled(false);
+		membro_desde.getSettings().setDateRangeLimits(null, LocalDate.now());
 		infoPanel.add(membro_desde);
 
 		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setBounds(317, 150, 86, 25);
+		lblEmail.setBounds(317, 160, 86, 25);
 		infoPanel.add(lblEmail);
 
 		email = new JTextField((String) null);
 		email.setEditable(false);
-		email.setBounds(405, 150, 387, 25);
+		email.setBounds(405, 160, 387, 25);
 		infoPanel.add(email);
 
 		batizado_cb = new JComboBox<Sim_Nao>();
@@ -358,9 +356,9 @@ public class MembroDetail extends JDialog {
 		batizado_cb.setEnabled(false);
 		batizado_cb.setBounds(393, 295, 70, 25);
 		infoPanel.add(batizado_cb);
-		
+
 		JLabel lblIdade = new JLabel("Idade: ");
-		lblIdade.setBounds(5, 186, 63, 25);
+		lblIdade.setBounds(5, 195, 63, 25);
 		infoPanel.add(lblIdade);
 
 		tipo_membro.addActionListener(new ActionListener() {
@@ -426,6 +424,7 @@ public class MembroDetail extends JDialog {
 
 		/**
 		 * ActionListener para adicionar uma imagem de perfil ao membro.
+		 * 
 		 * @author Dário Pereira
 		 *
 		 */
@@ -445,7 +444,8 @@ public class MembroDetail extends JDialog {
 			}
 		}
 
-		/**ActionListener para apagar a imagem de perfil do membro
+		/**
+		 * ActionListener para apagar a imagem de perfil do membro
 		 * 
 		 * @author Dário Pereira
 		 *
@@ -530,9 +530,8 @@ public class MembroDetail extends JDialog {
 		else
 			addImage.setText("Alterar imagem");
 		Utils.personalizarBotao(addImage);
-		addImage.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.ADD_A_PHOTO,
-                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		addImage.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.ADD_A_PHOTO,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		imagePanel.add(image);
 		imagePanel.add(addImage, "center");
 
@@ -573,6 +572,7 @@ public class MembroDetail extends JDialog {
 
 		/**
 		 * ActionListener para salvar as edições dos detalhes do membro
+		 * 
 		 * @author Dário Pereira
 		 *
 		 */
@@ -623,7 +623,7 @@ public class MembroDetail extends JDialog {
 	}
 
 	/**
-	 * Torna os text_fields editáveis 
+	 * Torna os text_fields editáveis
 	 */
 	protected void editState() {
 		nome.setEditable(true);
@@ -639,9 +639,9 @@ public class MembroDetail extends JDialog {
 		membro_desde.setEnabled(true);
 		data_batismo.setEnabled(true);
 		observacoes.setEditable(true);
-		if(membro!=null && membro.getTipo_membro()==Tipo_Membro.EX_MEMBRO)
+		if (membro != null && membro.getTipo_membro() == Tipo_Membro.EX_MEMBRO)
 			batizado_cb.setEnabled(true);
-		if(batizado_cb.getSelectedIndex()==0){
+		if (batizado_cb.getSelectedIndex() == 0) {
 			data_batismo.setEnabled(false);
 			data_batismo.setVisible(false);
 			lblDataDeBatismo.setVisible(false);
@@ -650,6 +650,7 @@ public class MembroDetail extends JDialog {
 		}
 		editar.setEnabled(false);
 		salvar.setEnabled(true);
+
 	}
 
 	/**
@@ -672,6 +673,7 @@ public class MembroDetail extends JDialog {
 		batizado_cb.setEnabled(false);
 		editar.setEnabled(true);
 		salvar.setEnabled(false);
+
 	}
 
 	/**
@@ -694,13 +696,16 @@ public class MembroDetail extends JDialog {
 			data_batismo.setDate(membro.getData_batismo());
 			observacoes.setText(membro.getObservacoes());
 			idade.setText(String.valueOf(membro.getIdade()));
+
 		}
 	}
 
 	/**
 	 * Cria um novo membro ou salva as novas informações do membro atual.
+	 * 
 	 * @param close indica se deve fechar o diálogo após salvar ou não
-	 * @return true se teve sucesso <br> false caso contrário
+	 * @return true se teve sucesso <br>
+	 *         false caso contrário
 	 */
 	public boolean save(boolean close) {
 		if (nome.getText().trim().equals("")) {
@@ -709,7 +714,7 @@ public class MembroDetail extends JDialog {
 			return false;
 		} else {
 			String nome = this.nome.getText();
-			Date data_nascimento = this.data_nascimento.getDate();
+			LocalDate data_nascimento = this.data_nascimento.getDate();
 			Sexo sexo = (Sexo) this.sexo.getSelectedItem();
 			Estado_Civil estado_civil = (Estado_Civil) this.estado_civil.getSelectedItem();
 			String profissao = this.profissao.getText();
@@ -720,8 +725,8 @@ public class MembroDetail extends JDialog {
 			String igreja_origem = (String) this.igreja_origem.getSelectedItem();
 			Tipo_Membro tipo_membro = (Tipo_Membro) this.tipo_membro.getSelectedItem();
 			Sim_Nao batizado = (Sim_Nao) batizado_cb.getSelectedItem();
-			Date membro_desde = this.membro_desde.getDate();
-			Date data_batismo = this.data_batismo.getDate();
+			LocalDate membro_desde = this.membro_desde.getDate();
+			LocalDate data_batismo = this.data_batismo.getDate();
 			String observacoes = this.observacoes.getText();
 			ImageIcon img = (ImageIcon) image.getIcon();
 
@@ -730,27 +735,26 @@ public class MembroDetail extends JDialog {
 						igreja_origem, tipo_membro, batizado, membro_desde, data_batismo, observacoes, img);
 				TableModelMembro.getInstance().addMembro(membro);
 				apagar.setText("Apagar");
-				apagar.setIcon(MaterialImageFactory.getInstance().getImage(
-		                MaterialIconFont.DELETE,
-		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				apagar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.DELETE,
+						Utils.getInstance().getCurrentTheme().getColorIcons()));
 			} else {
 				System.out.println("Aqui");
 				TableModelMembro.getInstance().getUndoManager().execute(new CompositeCommand(
 						"Atualizar detalhes do membro",
-						new AtualizaMembro(TableModelMembro.getInstance(), "Nome", membro, nome),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Data_Nascimento", membro, data_nascimento),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Sexo", membro, sexo),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Estado_Civil", membro, estado_civil),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Profissao", membro, profissao),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Endereco", membro, endereco),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Telefone", membro, telefone),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Email", membro, email),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Igreja_Origem", membro, igreja_origem),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Tipo_Membro", membro, tipo_membro),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Batizado", membro, batizado),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Membro_Desde", membro, membro_desde),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Data_Batismo", membro, data_batismo),
-						new AtualizaMembro(TableModelMembro.getInstance(), "Observacoes", membro, observacoes)));
+						new AtualizaMembro("Nome", membro, nome),
+						new AtualizaMembro("Data_Nascimento", membro, data_nascimento),
+						new AtualizaMembro("Sexo", membro, sexo),
+						new AtualizaMembro("Estado_Civil", membro, estado_civil),
+						new AtualizaMembro("Profissao", membro, profissao),
+						new AtualizaMembro("Endereco", membro, endereco),
+						new AtualizaMembro("Telefone", membro, telefone),
+						new AtualizaMembro("Email", membro, email),
+						new AtualizaMembro("Igreja_Origem", membro, igreja_origem),
+						new AtualizaMembro("Tipo_Membro", membro, tipo_membro),
+						new AtualizaMembro("Batizado", membro, batizado),
+						new AtualizaMembro("Membro_Desde", membro, membro_desde),
+						new AtualizaMembro("Data_Batismo", membro, data_batismo),
+						new AtualizaMembro("Observacoes", membro, observacoes)));
 				TableModelMembro.getInstance().fireTableDataChanged();
 			}
 			savedState();

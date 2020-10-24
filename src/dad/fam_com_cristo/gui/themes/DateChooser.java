@@ -1,14 +1,13 @@
 package dad.fam_com_cristo.gui.themes;
 
-import java.util.Date;
-import java.util.Locale;
-
-import com.toedter.calendar.JDateChooser;
+import com.github.lgooddatepicker.components.DatePicker;
 
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialColors;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
-public class DateChooser extends JDateChooser {
+public class DateChooser extends DatePicker {
 
 	/**
 	 * 
@@ -17,20 +16,16 @@ public class DateChooser extends JDateChooser {
 
 	public DateChooser() {
 		super();
-		this.setLocale(new Locale("pt", "BR"));
-		this.setDateFormatString("dd/MM/yyyy");
-		this.setMaxSelectableDate(new Date());
-		this.setDate(new Date());
-		this.getJCalendar().setWeekOfYearVisible(false);
 
-		if (Utils.getInstance().getCurrentTheme().equals(DarkTheme.getInstance())) {
-			this.getJCalendar().setForeground(MaterialColors.WHITE);
-			this.getJCalendar().setDecorationBackgroundColor(MaterialColors.AMBER_800);
-			this.getJCalendar().setWeekdayForeground(MaterialColors.WHITE);
-
-		} else {
-			this.getJCalendar().setForeground(MaterialColors.BLACK);
-		}
+		setSettings(Utils.getInstance().getDateSettings());
+		
+		getComponentDateTextField().setDisabledTextColor(MaterialColors.GRAY_600);
+		getComponentDateTextField().setForeground(Utils.getInstance().getCurrentTheme().getColorIcons());
+		getComponentToggleCalendarButton().setText("");
+		getComponentToggleCalendarButton().setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.DATE_RANGE,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		this.setDateToToday();
 
 	}
 }

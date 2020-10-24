@@ -78,4 +78,14 @@ public class DarkTheme extends JMarsDarkTheme implements Theme {
 		return MaterialColors.GRAY_200;
 	}
 
+	@Override
+	public ColorUIResource getColorBackgroundCalendar() {
+		return MaterialColors.BLUE_GRAY_700;
+	}
+
+	@Override
+	public ColorUIResource getColorFields() {
+		return MaterialColors.GRAY_800;
+	}
+
 }

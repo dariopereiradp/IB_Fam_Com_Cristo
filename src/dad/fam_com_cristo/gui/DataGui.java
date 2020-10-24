@@ -169,8 +169,8 @@ public class DataGui extends JFrame {
 		
 		data_inicio = new DateChooser();
 		filtrosPanel.add(data_inicio);
-		data_inicio.setDate(TableModelFinancas.getInstance().getOldestDate());
-		data_inicio.setMinSelectableDate(TableModelFinancas.getInstance().getOldestDate());
+//		data_inicio.setDate(TableModelFinancas.getInstance().getOldestDate());
+//		data_inicio.setMinSelectableDate(TableModelFinancas.getInstance().getOldestDate());
 		data_inicio.setVisible(false);
 		
 		data_fim = new DateChooser();

@@ -8,9 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -39,8 +37,7 @@ public class Membro implements Comparable<Membro> {
 	 */
 	public static final String imgPath = Main.DATABASE_DIR + "Imagens/";
 	/**
-	 * Variável usada para controle do próximo id a ser atribuído a um novo
-	 * membro.
+	 * Variável usada para controle do próximo id a ser atribuído a um novo membro.
 	 */
 	public static int countID = 0;
 	private int id;
@@ -50,13 +47,38 @@ public class Membro implements Comparable<Membro> {
 	private Sexo sexo;
 	private Estado_Civil estado_civil;
 	private String nome, profissao, endereco, igreja_origem, email, telefone, observacoes;
-	private Date data_nascimento, data_batismo, membro_desde;
+	private LocalDate data_nascimento, data_batismo, membro_desde;
 	private Sim_Nao batizado;
 	private ImageIcon img;
 
-	public Membro(String nome, Date data_nascimento, Sexo sexo, Estado_Civil estado_civil, String profissao,
+	public Membro(String nome, LocalDate data_nascimento, Sexo sexo, Estado_Civil estado_civil, String profissao,
 			String endereco, String telefone, String email, String igreja_origem, Tipo_Membro tipo_membro,
-			Sim_Nao batizado, Date membro_desde, Date data_batismo, String observacoes, ImageIcon img) {
+			Sim_Nao batizado, LocalDate membro_desde, LocalDate data_batismo, String observacoes, ImageIcon img) {
+
+		init(nome, data_nascimento, sexo, estado_civil, profissao, endereco, telefone, email, igreja_origem,
+				tipo_membro, batizado, membro_desde, data_batismo, observacoes, img);
+	}
+
+	/**
+	 * @param nome
+	 * @param data_nascimento
+	 * @param sexo
+	 * @param estado_civil
+	 * @param profissao
+	 * @param endereco
+	 * @param telefone
+	 * @param email
+	 * @param igreja_origem
+	 * @param tipo_membro
+	 * @param batizado
+	 * @param membro_desde
+	 * @param data_batismo
+	 * @param observacoes
+	 * @param img
+	 */
+	public void init(String nome, LocalDate data_nascimento, Sexo sexo, Estado_Civil estado_civil, String profissao,
+			String endereco, String telefone, String email, String igreja_origem, Tipo_Membro tipo_membro,
+			Sim_Nao batizado, LocalDate membro_desde, LocalDate data_batismo, String observacoes, ImageIcon img) {
 		con = ConexaoMembro.getConnection();
 		setId(++countID);
 		this.nome = WordUtils.capitalize(nome);
@@ -131,22 +153,22 @@ public class Membro implements Comparable<Membro> {
 		this.nome = nome;
 	}
 
-	public Date getData_nascimento() {
+	public LocalDate getData_nascimento() {
 		return data_nascimento;
 	}
 
-	public void setData_nascimento(Date data_nascimento) {
+	public void setData_nascimento(LocalDate data_nascimento) {
 		this.data_nascimento = data_nascimento;
 	}
 
 	/**
 	 * Calcula a idade do membro com base na data de nascimento e na data de hoje.
+	 * 
 	 * @return a idade calculada do membro.
 	 */
 	public int getIdade() {
-		LocalDate birth = new Date(data_nascimento.getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		return Math.toIntExact(ChronoUnit.YEARS.between(birth, LocalDate.now()));
-	}	
+		return Math.toIntExact(ChronoUnit.YEARS.between(data_nascimento, LocalDate.now()));
+	}
 
 	public String getTelefone() {
 		return telefone;
@@ -230,19 +252,19 @@ public class Membro implements Comparable<Membro> {
 		this.igreja_origem = igreja_origem;
 	}
 
-	public Date getData_batismo() {
+	public LocalDate getData_batismo() {
 		return data_batismo;
 	}
 
-	public void setData_batismo(Date data_batismo) {
+	public void setData_batismo(LocalDate data_batismo) {
 		this.data_batismo = data_batismo;
 	}
 
-	public Date getMembro_desde() {
+	public LocalDate getMembro_desde() {
 		return membro_desde;
 	}
 
-	public void setMembro_desde(Date membro_desde) {
+	public void setMembro_desde(LocalDate membro_desde) {
 		this.membro_desde = membro_desde;
 	}
 
@@ -267,7 +289,9 @@ public class Membro implements Comparable<Membro> {
 	}
 
 	/**
-	 * Devolve a descrição do estado civil, dependendo se o membro é homem ou mulher (ex Solteiro, se for homem, mas Solteira se for mulher)
+	 * Devolve a descrição do estado civil, dependendo se o membro é homem ou mulher
+	 * (ex Solteiro, se for homem, mas Solteira se for mulher)
+	 * 
 	 * @return a descrição correta do estado civil
 	 */
 	public String getEstado_Civil_String() {
@@ -319,9 +343,9 @@ public class Membro implements Comparable<Membro> {
 	}
 
 	/**
-	 * Altera o estado da variavel batizado automaticamente, dependendo do tipo de membro.
-	 * Se for Congregado, não é batizado. Caso contrário (exceto ex-membro) é batizado.
-	 * Se for ex-membro não faz nada.
+	 * Altera o estado da variavel batizado automaticamente, dependendo do tipo de
+	 * membro. Se for Congregado, não é batizado. Caso contrário (exceto ex-membro)
+	 * é batizado. Se for ex-membro não faz nada.
 	 */
 	public void setBatizado() {
 		if (tipo_membro == Tipo_Membro.CONGREGADO) {
@@ -333,10 +357,11 @@ public class Membro implements Comparable<Membro> {
 
 	/**
 	 * Diz se o membro é batizado ou não, dependendo do tipo de membro.<br>
-	 * Se for Congregado, não é batizado. Caso contrário (exceto ex-membro) é batizado.
-	 * Se for ex-membro retorna o estado atual da variavel batizado.
+	 * Se for Congregado, não é batizado. Caso contrário (exceto ex-membro) é
+	 * batizado. Se for ex-membro retorna o estado atual da variavel batizado.
 	 * 
-	 * @return um enumerado do tipo Sim_Nao, indicando se o membro é ou não batizado.
+	 * @return um enumerado do tipo Sim_Nao, indicando se o membro é ou não
+	 *         batizado.
 	 */
 	public Sim_Nao newBatizadoState() {
 		if (tipo_membro == Tipo_Membro.CONGREGADO) {

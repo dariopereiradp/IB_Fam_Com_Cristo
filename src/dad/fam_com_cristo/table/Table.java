@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dad.fam_com_cristo.gui.themes;
+package dad.fam_com_cristo.table;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -10,8 +10,6 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-
-import dad.fam_com_cristo.table.TableHeaderWithSortIcons;
 
 /**
  * @author dariopereiradp
@@ -49,7 +47,7 @@ public class Table extends JTable {
 		setFillsViewportHeight(true);
 		setAutoCreateRowSorter(true);
 		getTableHeader().setReorderingAllowed(false);
-		setRowHeight(30);
+		setRowHeight(36);
 	}
 
 	@Override

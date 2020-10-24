@@ -4,6 +4,8 @@ import javax.swing.plaf.ColorUIResource;
 
 public interface Theme {
 	
+	String getThemeName();
+	
 	/**
 	 * Cor das linhas pares da tabela
 	 * @return
@@ -34,5 +36,7 @@ public interface Theme {
 	 */
 	ColorUIResource getColorHint();
 
-	String getThemeName();
+	ColorUIResource getColorBackgroundCalendar();
+
+	ColorUIResource getColorFields();
 }

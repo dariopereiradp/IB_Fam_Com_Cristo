@@ -53,6 +53,16 @@ public class LiteTheme extends MaterialLiteTheme implements Theme {
 		return MaterialColors.GRAY_800;
 	}
 
+	@Override
+	public ColorUIResource getColorBackgroundCalendar() {
+		return MaterialColors.GRAY_400;
+	}
+
+	@Override
+	public ColorUIResource getColorFields() {
+		return MaterialColors.WHITE;
+	}
+
 	
 
 }
