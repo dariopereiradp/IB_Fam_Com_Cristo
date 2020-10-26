@@ -3,6 +3,7 @@ package dad.fam_com_cristo.gui;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
@@ -14,6 +15,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -43,7 +45,6 @@ import com.qoppa.pdfWriter.PDFDocument;
 import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
-import dad.fam_com_cristo.gui.themes.DateChooser;
 import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
@@ -51,6 +52,7 @@ import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.recursos.FichaMembro_Vazia;
 import dad.recursos.Log;
+import dad.recursos.MultiDatePicker;
 import dad.recursos.SairAction;
 import dad.recursos.TableToPDF;
 import dad.recursos.Utils;
@@ -80,7 +82,7 @@ public class DataGui extends JFrame {
 	private JPanel filtrosPanel;
 	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca, check_ex_membros,
 			checkEntradas, checkSaidas;
-	private DateChooser data_inicio, data_fim;
+	private MultiDatePicker datas;
 	private JMenuItem mntmRelatarErro;
 	private JMenuItem mnLimpar;
 	private JMenuItem menuManual;
@@ -125,7 +127,13 @@ public class DataGui extends JFrame {
 		pesquisa = new JTextField();
 		JLabel pesquisaLabel = new JLabel("Pesquisa: ");
 		pesquisaPanel.add(pesquisaLabel, BorderLayout.WEST);
-		pesquisaPanel.add(pesquisa, BorderLayout.CENTER);
+
+		JPanel pesquisaPanel1 = new JPanel(new GridLayout(3, 1));
+		pesquisaPanel1.add(new JLabel(""));
+		pesquisaPanel1.add(pesquisa);
+		pesquisaPanel1.add(new JLabel(""));
+
+		pesquisaPanel.add(pesquisaPanel1, BorderLayout.CENTER);
 
 		getContentPane().add(pesquisaPanel, BorderLayout.NORTH);
 
@@ -166,16 +174,6 @@ public class DataGui extends JFrame {
 		checkSaidas.setSelected(true);
 		filtrosPanel.add(checkSaidas);
 		checkSaidas.setVisible(false);
-		
-		data_inicio = new DateChooser();
-		filtrosPanel.add(data_inicio);
-//		data_inicio.setDate(TableModelFinancas.getInstance().getOldestDate());
-//		data_inicio.setMinSelectableDate(TableModelFinancas.getInstance().getOldestDate());
-		data_inicio.setVisible(false);
-		
-		data_fim = new DateChooser();
-		filtrosPanel.add(data_fim);
-		data_fim.setVisible(false);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -187,6 +185,10 @@ public class DataGui extends JFrame {
 				"Pessoas que vão à IBFC com alguma regularidade: liderança, membros ativos, membros nominais e congregados ou alguém que já foi membro");
 
 		tabbedPane.setToolTipTextAt(1, "Registrar entradas e saídas financeiras da igreja");
+
+		datas = new MultiDatePicker();
+		filtrosPanel.add(datas);
+		datas.setVisible(false);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -517,7 +519,7 @@ public class DataGui extends JFrame {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
-		
+
 		checkEntradas.addChangeListener(new ChangeListener() {
 
 			@Override
@@ -525,7 +527,7 @@ public class DataGui extends JFrame {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
-		
+
 		checkSaidas.addChangeListener(new ChangeListener() {
 
 			@Override
@@ -533,7 +535,7 @@ public class DataGui extends JFrame {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
-		
+
 		TableModelMembro.getInstance().addListeners();
 		TableModelFinancas.getInstance().addListeners();
 
@@ -544,8 +546,8 @@ public class DataGui extends JFrame {
 				visibleBoxes();
 				newFilter("");
 				updateItems();
-				
-				if(tabbedPane.getSelectedIndex() == 1)
+
+				if (tabbedPane.getSelectedIndex() == 1)
 					getRootPane().setDefaultButton(FinancasPanel.getInstance().getBtnAdd());
 				else
 					getRootPane().setDefaultButton(null);
@@ -566,8 +568,7 @@ public class DataGui extends JFrame {
 			check_ex_membros.setVisible(true);
 			checkEntradas.setVisible(false);
 			checkSaidas.setVisible(false);
-			data_inicio.setVisible(false);
-			data_fim.setVisible(false);
+			datas.setVisible(false);
 		} else if (tabbedPane.getSelectedIndex() == 1) {
 			checkMembroAtivo.setVisible(false);
 			checkMembroNominal.setVisible(false);
@@ -576,8 +577,7 @@ public class DataGui extends JFrame {
 			check_ex_membros.setVisible(false);
 			checkEntradas.setVisible(true);
 			checkSaidas.setVisible(true);
-			data_inicio.setVisible(true);
-			data_fim.setVisible(true);
+			datas.setVisible(true);
 		}
 	}
 
@@ -709,7 +709,8 @@ public class DataGui extends JFrame {
 			RowFilter<TableModelFinancas, Object> rowFilter = null;
 			TableRowSorter<TableModelFinancas> sorter = new TableRowSorter<TableModelFinancas>(
 					TableModelFinancas.getInstance());
-			List<RowFilter<TableModelFinancas, Object>> filters = new ArrayList<RowFilter<TableModelFinancas, Object>>(5);
+			List<RowFilter<TableModelFinancas, Object>> filters = new ArrayList<RowFilter<TableModelFinancas, Object>>(
+					5);
 			List<RowFilter<TableModelFinancas, Object>> andFilters = new ArrayList<RowFilter<TableModelFinancas, Object>>(
 					1);
 			FinancasPanel.getInstance().getTransacoes().setRowSorter(sorter);
@@ -721,7 +722,27 @@ public class DataGui extends JFrame {
 			if (checkSaidas.isSelected()) {
 				filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 3));
 			}
+			if (datas.getInitDate() != null) {
+				andFilters.add(new RowFilter<TableModelFinancas, Object>(){
 
+					@Override
+					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
+						LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
+						return data.isAfter(datas.getInitDate());
+					}
+					
+				});
+			}
+			if (datas.getFinalDate() != null)
+				andFilters.add(new RowFilter<TableModelFinancas, Object>(){
+
+					@Override
+					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
+						LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
+						return data.isBefore(datas.getFinalDate());
+					}
+					
+				});
 			try {
 				rf = RowFilter.orFilter(filters);
 				andFilters.add(rf);
@@ -745,13 +766,9 @@ public class DataGui extends JFrame {
 	public JTextField getPesquisa() {
 		return pesquisa;
 	}
-	
-	public DateChooser getData_inicio() {
-		return data_inicio;
-	}
-	
-	public DateChooser getData_fim() {
-		return data_fim;
+
+	public JPanel getDatas() {
+		return datas;
 	}
 
 	public static DataGui getInstance() {

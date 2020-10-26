@@ -73,13 +73,12 @@ public class Utils {
 
 	public void changeTheme(Theme theme) {
 		current_theme = theme;
-
 		MaterialLookAndFeel.changeTheme((MaterialTheme) theme);
 		UIManager.getLookAndFeelDefaults().put("TabbedPane[tab].height", 5);
 
 		SwingUtilities.updateComponentTreeUI(DataGui.getInstance());
 		SwingUtilities.updateComponentTreeUI(Login.getInstance().getFrame());
-		
+//		
 		DataGui.getInstance().getContentPane().removeAll();
 		DataGui.getInstance().recreate();
 		MembroPanel.getInstance().removeAll();

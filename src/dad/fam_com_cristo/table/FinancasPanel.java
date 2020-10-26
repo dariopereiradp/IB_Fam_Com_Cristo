@@ -445,7 +445,6 @@ public class FinancasPanel extends JPanel {
 		default:
 			break;
 		}
-
 		rf = RowFilter.orFilter(filters);
 		sorter.setRowFilter(rf);
 
