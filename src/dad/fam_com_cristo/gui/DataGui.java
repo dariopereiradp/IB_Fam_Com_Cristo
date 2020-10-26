@@ -16,8 +16,12 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
@@ -54,7 +58,8 @@ import dad.recursos.FichaMembro_Vazia;
 import dad.recursos.Log;
 import dad.recursos.MultiDatePicker;
 import dad.recursos.SairAction;
-import dad.recursos.TableToPDF;
+import dad.recursos.TableFinancasToPDF;
+import dad.recursos.TableMembrosToPDF;
 import dad.recursos.Utils;
 
 /**
@@ -86,7 +91,7 @@ public class DataGui extends JFrame {
 	private JMenuItem mntmRelatarErro;
 	private JMenuItem mnLimpar;
 	private JMenuItem menuManual;
-	private JMenu mnExportar;
+	private JMenu mnGerar;
 	private JMenuItem mListaBatizados;
 	private JMenuItem mListaAtivos;
 	private JMenuItem mListaTotal;
@@ -98,6 +103,12 @@ public class DataGui extends JFrame {
 	private JMenuItem mnLight;
 	private JMenuItem mnDark;
 	private JMenu mnTema;
+	private JMenu mnMembros;
+	private JMenu mnFinancas;
+	private JMenuItem mnRelatorioAnual;
+	private JMenuItem mnMesAnterior;
+	private JMenuItem mnRelatorioTotal;
+	private JMenuItem mnRelatorioPersonalizado;
 
 	private DataGui() {
 		INSTANCE = this;
@@ -304,17 +315,80 @@ public class DataGui extends JFrame {
 		menuOrdenar = new JMenuItem("Ordenar membros (A-Z)");
 		mnEditar.add(menuOrdenar);
 
-		mnExportar = new JMenu("Exportar");
-		menuBar.add(mnExportar);
+		mnGerar = new JMenu("Gerar");
+		menuBar.add(mnGerar);
 
-		mListaBatizados = new JMenuItem("Lista de Batizados (membros ativos e nominais)");
-		mListaBatizados.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Batizados"), "Batizados");
-			}
-		});
+		mnMembros = new JMenu("Membros");
+		mnGerar.add(mnMembros);
 
 		mntmFichaDeMembro = new JMenuItem("Ficha de Membro (para preencher)");
+		mnMembros.add(mntmFichaDeMembro);
+
+		mListaBatizados = new JMenuItem("Lista de Batizados (membros ativos e nominais)");
+		mnMembros.add(mListaBatizados);
+
+		mListaAtivos = new JMenuItem("Lista de Membros Ativos");
+		mnMembros.add(mListaAtivos);
+
+		mListaNom = new JMenuItem("Lista de Membros Nominais");
+		mnMembros.add(mListaNom);
+
+		mListaCong = new JMenuItem("Lista de Congregados");
+		mnMembros.add(mListaCong);
+
+		mntmListaDeLderes = new JMenuItem("Lista de L\u00EDderes");
+		mnMembros.add(mntmListaDeLderes);
+
+		mListaTotal = new JMenuItem("Lista Total (todos, exceto ex-membros)");
+		mnMembros.add(mListaTotal);
+
+		mnFinancas = new JMenu("Finan\u00E7as");
+		mnGerar.add(mnFinancas);
+
+		mnRelatorioAnual = new JMenuItem("Relat\u00F3rio do ano anterior");
+		mnFinancas.add(mnRelatorioAnual);
+
+		mnMesAnterior = new JMenuItem("Relat\u00F3rio do m\u00EAs anterior");
+		mnFinancas.add(mnMesAnterior);
+
+		mnRelatorioTotal = new JMenuItem("Relat\u00F3rio completo");
+		mnFinancas.add(mnRelatorioTotal);
+
+		mnRelatorioPersonalizado = new JMenuItem("Relat\u00F3rio personalizado");
+		mnFinancas.add(mnRelatorioPersonalizado);
+		mListaTotal.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				TableMembrosToPDF.membrosToPDF(MembroPanel.getInstance().newTable("Todos"), "Todos");
+
+			}
+		});
+		mntmListaDeLderes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TableMembrosToPDF.membrosToPDF(MembroPanel.getInstance().newTable("Líderes"), "Líderes");
+			}
+		});
+		mListaCong.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TableMembrosToPDF.membrosToPDF(MembroPanel.getInstance().newTable("Congregados"), "Congregados");
+			}
+		});
+		mListaNom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TableMembrosToPDF.membrosToPDF(MembroPanel.getInstance().newTable("Nominais"), "Nominais");
+			}
+		});
+		mListaAtivos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TableMembrosToPDF.membrosToPDF(MembroPanel.getInstance().newTable("Ativos"), "Ativos");
+			}
+		});
+		mListaBatizados.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TableMembrosToPDF.membrosToPDF(MembroPanel.getInstance().newTable("Batizados"), "Batizados");
+			}
+		});
 		mntmFichaDeMembro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				PDFDocument pdf = new FichaMembro_Vazia().generatePDF();
@@ -342,49 +416,41 @@ public class DataGui extends JFrame {
 				}
 			}
 		});
-		mnExportar.add(mntmFichaDeMembro);
-		mnExportar.add(mListaBatizados);
 
-		mListaAtivos = new JMenuItem("Lista de Membros Ativos");
-		mListaAtivos.addActionListener(new ActionListener() {
+		mnRelatorioAnual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Ativos"), "Ativos");
+				LocalDate now = LocalDate.now();
+				int year = now.getYear() - 1;
+				LocalDate init = LocalDate.of(year, Month.JANUARY, 1);
+				LocalDate fim = LocalDate.of(year, Month.DECEMBER, 31);
+				TableFinancasToPDF.membrosToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
+						String.valueOf(year));
 			}
 		});
-		mnExportar.add(mListaAtivos);
 
-		mListaNom = new JMenuItem("Lista de Membros Nominais");
-		mListaNom.addActionListener(new ActionListener() {
+		mnMesAnterior.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Nominais"), "Nominais");
+				LocalDate now = LocalDate.now();
+				int year = now.getYear();
+				Month month = now.getMonth().minus(1);
+				LocalDate init = LocalDate.of(year, month, 1);
+				int lastDay = init.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+				LocalDate fim = LocalDate.of(year, month, lastDay);
+				TableFinancasToPDF.membrosToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
+						month.getDisplayName(TextStyle.FULL, new Locale("pt")) + " " + year);
 			}
 		});
-		mnExportar.add(mListaNom);
-
-		mListaCong = new JMenuItem("Lista de Congregados");
-		mListaCong.addActionListener(new ActionListener() {
+		
+		mnRelatorioTotal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Congregados"), "Congregados");
+				TableFinancasToPDF.membrosToPDF(FinancasPanel.getInstance().newTable("Todos", null, null),
+						"Completo");
 			}
 		});
-		mnExportar.add(mListaCong);
-
-		mntmListaDeLderes = new JMenuItem("Lista de L\u00EDderes");
-		mntmListaDeLderes.addActionListener(new ActionListener() {
+		
+		mnRelatorioPersonalizado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Líderes"), "Líderes");
-			}
-		});
-		mnExportar.add(mntmListaDeLderes);
-
-		mListaTotal = new JMenuItem("Lista Total (todos, exceto ex-membros)");
-		mnExportar.add(mListaTotal);
-		mListaTotal.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				TableToPDF.toPDF(MembroPanel.getInstance().newTable("Todos"), "Todos");
-
+				// TODO Auto-generated method stub
 			}
 		});
 
@@ -712,7 +778,7 @@ public class DataGui extends JFrame {
 			List<RowFilter<TableModelFinancas, Object>> filters = new ArrayList<RowFilter<TableModelFinancas, Object>>(
 					5);
 			List<RowFilter<TableModelFinancas, Object>> andFilters = new ArrayList<RowFilter<TableModelFinancas, Object>>(
-					1);
+					3);
 			FinancasPanel.getInstance().getTransacoes().setRowSorter(sorter);
 			andFilters.add(
 					RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString())));
@@ -723,25 +789,31 @@ public class DataGui extends JFrame {
 				filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 3));
 			}
 			if (datas.getInitDate() != null) {
-				andFilters.add(new RowFilter<TableModelFinancas, Object>(){
+				andFilters.add(new RowFilter<TableModelFinancas, Object>() {
 
 					@Override
 					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
 						LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
-						return data.isAfter(datas.getInitDate());
+						if (data.isAfter(datas.getInitDate()) || data.isEqual(datas.getInitDate()))
+							return true;
+						else
+							return false;
 					}
-					
+
 				});
 			}
 			if (datas.getFinalDate() != null)
-				andFilters.add(new RowFilter<TableModelFinancas, Object>(){
+				andFilters.add(new RowFilter<TableModelFinancas, Object>() {
 
 					@Override
 					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
 						LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
-						return data.isBefore(datas.getFinalDate());
+						if (data.isBefore(datas.getFinalDate()) || data.isEqual(datas.getFinalDate()))
+							return true;
+						else
+							return false;
 					}
-					
+
 				});
 			try {
 				rf = RowFilter.orFilter(filters);

@@ -183,7 +183,7 @@ public class Utils {
 		}
 		return value;
 	}
-	
+
 	public DateTimeFormatter getDateFormat() {
 		return DateTimeFormatter.ofPattern(DATE_FORMAT);
 	}
@@ -194,35 +194,47 @@ public class Utils {
 		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT);
 		dateSettings.setAllowKeyboardEditing(false);
 		dateSettings.setAllowEmptyDates(false);
-		
-        dateSettings.setColor(DateArea.TextMonthAndYearMenuLabels, getCurrentTheme().getColorIcons());
-        dateSettings.setColor(DateArea.TextMonthAndYearNavigationButtons, getCurrentTheme().getColorIcons());
-        dateSettings.setColor(DateArea.TextTodayLabel, getCurrentTheme().getColorIcons());
-        dateSettings.setColor(DateArea.TextClearLabel, getCurrentTheme().getColorIcons());
+
+		dateSettings.setColor(DateArea.TextMonthAndYearMenuLabels, getCurrentTheme().getColorIcons());
+		dateSettings.setColor(DateArea.TextMonthAndYearNavigationButtons, getCurrentTheme().getColorIcons());
+		dateSettings.setColor(DateArea.TextTodayLabel, getCurrentTheme().getColorIcons());
+		dateSettings.setColor(DateArea.TextClearLabel, getCurrentTheme().getColorIcons());
 		dateSettings.setColor(DateArea.CalendarTextNormalDates, getCurrentTheme().getColorIcons());
-		
-        dateSettings.setColor(DateArea.BackgroundCalendarPanelLabelsOnHover, MaterialColors.LIGHT_BLUE_400);
-        dateSettings.setColor(DateArea.TextCalendarPanelLabelsOnHover, MaterialColors.WHITE);
-		
+
+		dateSettings.setColor(DateArea.BackgroundCalendarPanelLabelsOnHover, MaterialColors.LIGHT_BLUE_400);
+		dateSettings.setColor(DateArea.TextCalendarPanelLabelsOnHover, MaterialColors.WHITE);
+
 		dateSettings.setColor(DateArea.CalendarBackgroundNormalDates, getCurrentTheme().getColorLinhasImpares());
-        dateSettings.setColor(DateArea.BackgroundOverallCalendarPanel, getCurrentTheme().getColorBackgroundCalendar());
-        dateSettings.setColor(DateArea.BackgroundMonthAndYearMenuLabels, getCurrentTheme().getColorLinhasImpares());
-        dateSettings.setColor(DateArea.BackgroundTodayLabel, getCurrentTheme().getColorLinhasImpares());
-        dateSettings.setColor(DateArea.BackgroundClearLabel, getCurrentTheme().getColorLinhasImpares());
-        dateSettings.setColor(DateArea.BackgroundMonthAndYearNavigationButtons, getCurrentTheme().getColorLinhasImpares());
-        dateSettings.setColor(DateArea.CalendarBackgroundSelectedDate, MaterialColors.LIGHT_BLUE_400);
-        
-        dateSettings.setColor(DateArea.TextFieldBackgroundValidDate, getCurrentTheme().getColorFields());
-        dateSettings.setColor(DateArea.DatePickerTextValidDate, getCurrentTheme().getColorIcons());
-        
-//        dateSettings.setColor(DateArea.CalendarBorderSelectedDate, Color.WHITE);
-//        dateSettings.setColorBackgroundWeekdayLabels(Color.ORANGE, true);
-//        dateSettings.setColorBackgroundWeekNumberLabels(Color.ORANGE, true);		
-        
-        return dateSettings;
-		
+		dateSettings.setColor(DateArea.BackgroundOverallCalendarPanel, getCurrentTheme().getColorBackgroundCalendar());
+		dateSettings.setColor(DateArea.BackgroundMonthAndYearMenuLabels, getCurrentTheme().getColorLinhasImpares());
+		dateSettings.setColor(DateArea.BackgroundTodayLabel, getCurrentTheme().getColorLinhasImpares());
+		dateSettings.setColor(DateArea.BackgroundClearLabel, getCurrentTheme().getColorLinhasImpares());
+		dateSettings.setColor(DateArea.BackgroundMonthAndYearNavigationButtons,
+				getCurrentTheme().getColorLinhasImpares());
+		dateSettings.setColor(DateArea.CalendarBackgroundSelectedDate, MaterialColors.LIGHT_BLUE_400);
+
+		dateSettings.setColor(DateArea.TextFieldBackgroundValidDate, getCurrentTheme().getColorFields());
+		dateSettings.setColor(DateArea.DatePickerTextValidDate, getCurrentTheme().getColorIcons());
+
+		return dateSettings;
 	}
-	
+
+	public String getPastorName() {
+		FileInputStream input;
+		String pastorName = "";
+		try {
+			input = new FileInputStream(getPropertiesFile());
+			Properties prop = new Properties();
+			prop.load(input);
+			pastorName = prop.getProperty(Main.PASTOR, "");
+			input.close();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		return pastorName;
+	}
+
 	public static Utils getInstance() {
 		if (INSTANCE == null)
 			INSTANCE = new Utils();

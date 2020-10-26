@@ -37,25 +37,23 @@ import dad.fam_com_cristo.gui.Main;
  * @author Dário Pereira
  *
  */
-public class TableToPDF {
+public class TableMembrosToPDF {
 
 	private static String descricaoS;
 
 	/**
 	 * Gera um PDF da tabela, de acordo com o filtro pretendido
 	 * 
-	 * @param table
-	 *            tabela que se pretende converter em PDF
-	 * @param descricao
-	 *            são válidos como descrição: <br>
-	 *            Batizados<br>
-	 *            Ativos<br>
-	 *            Nominais<br>
-	 *            Congregados<br>
-	 *            Líderes<Todos>
+	 * @param table     tabela que se pretende converter em PDF
+	 * @param descricao são válidos como descrição: <br>
+	 *                  Batizados<br>
+	 *                  Ativos<br>
+	 *                  Nominais<br>
+	 *                  Congregados<br>
+	 *                  Líderes<Todos>
 	 * @return o nome do ficheiro PDF criado
 	 */
-	public static String toPDF(JTable table, String descricao) {
+	public static String membrosToPDF(JTable table, String descricao) {
 		descricaoS = descricao;
 		String title = "IBFC_Lista de Membros_" + descricao + "_" + new SimpleDateFormat("ddMMMyyyy").format(new Date())
 				+ ".pdf";
@@ -127,7 +125,8 @@ public class TableToPDF {
 			cellOne.setBorder(Rectangle.NO_BORDER);
 			// cellOne.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			assin.addCell(cellOne);
-			Paragraph pastor = new Paragraph(Main.PASTOR, FontFactory.getFont(FontFactory.TIMES, 10));
+			Paragraph pastor = new Paragraph(Utils.getInstance().getPastorName(),
+					FontFactory.getFont(FontFactory.TIMES, 10));
 			PdfPCell pastorCell = new PdfPCell(pastor);
 			pastorCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			pastorCell.setBorder(Rectangle.NO_BORDER);
@@ -211,5 +210,4 @@ public class TableToPDF {
 		}
 
 	}
-
 }

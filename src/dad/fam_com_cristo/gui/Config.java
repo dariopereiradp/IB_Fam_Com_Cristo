@@ -45,7 +45,7 @@ public class Config extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField pastor;
 	private File conf = Utils.getInstance().getPropertiesFile();
-	private String pastorName = "";
+	private String pastorName = Utils.getInstance().getPastorName();
 
 	public Config() {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
@@ -125,23 +125,7 @@ public class Config extends JDialog {
 			bAlterarPass.setEnabled(false);
 			bAlterarPass.setToolTipText("Não é possível alterar a senha do utilizador 'admin'!");
 		}
-		contentPanel.add(bAlterarPass);
-		
-		FileInputStream input;
-		try {
-			input = new FileInputStream(conf);
-			Properties prop = new Properties();
-			prop.load(input);
-			pastorName = prop.getProperty(Main.PASTOR, "");
-			input.close();
-		} catch (FileNotFoundException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+		contentPanel.add(bAlterarPass);		
 
 		pastor = new JTextField();
 		pastor.setBounds(215, 70, 210, 30);

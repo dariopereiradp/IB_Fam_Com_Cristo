@@ -114,7 +114,7 @@ public class FinancasPanel extends JPanel {
 		financas.setPreferredScrollableViewportSize(new Dimension(800, 600));
 
 		financas.getColumnModel().getColumn(0).setCellRenderer(new CellRendererNoImage());
-		financas.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());		
+		financas.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(4).setCellRenderer(new CellRenderer());
@@ -125,7 +125,6 @@ public class FinancasPanel extends JPanel {
 
 		financas.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_transacao));
 
-		
 		financas.getColumnModel().getColumn(0).setPreferredWidth(100);
 		financas.getColumnModel().getColumn(1).setPreferredWidth(160);
 		financas.getColumnModel().getColumn(2).setPreferredWidth(160);
@@ -159,7 +158,7 @@ public class FinancasPanel extends JPanel {
 		panel2 = new JPanel(new BorderLayout());
 
 		inicializarPanelAdd();
-		
+
 		inicializarBotoes();
 
 		inicializarMenus();
@@ -238,26 +237,24 @@ public class FinancasPanel extends JPanel {
 	public void inicializarBotoes() {
 		pInferior.add(panel2, BorderLayout.WEST);
 		JButton bSair = new JButton("Sair");
-		bSair.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.EXIT_TO_APP,
-                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		bSair.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.EXIT_TO_APP,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(bSair);
 		bSair.addActionListener(new SairAction());
 		panel2.add(bSair, BorderLayout.CENTER);
-		
+
 		btnAdd = new JButton("Adicionar");
-		btnAdd.setIcon(MaterialImageFactory.getInstance().getImage(
-                MaterialIconFont.ADD_SHOPPING_CART,
-                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		btnAdd.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.ADD_SHOPPING_CART,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(btnAdd);
 		panel_2.add(btnAdd);
-		
+
 		btnAdd.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				adicionarTransacao();
-				
+
 			}
 		});
 
@@ -265,30 +262,30 @@ public class FinancasPanel extends JPanel {
 
 	public void adicionarTransacao() {
 		BigDecimal valor = Utils.getInstance().getNumberFromFormat(jtfValor.getText());
-		
-		if(valor.compareTo(new BigDecimal("0")) == 0) {
-			JOptionPane.showMessageDialog(null, "Introduza um valor maior que R$ 0,00!",
-					"Salvar", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+
+		if (valor.compareTo(new BigDecimal("0")) == 0) {
+			JOptionPane.showMessageDialog(null, "Introduza um valor maior que R$ 0,00!", "Salvar",
+					JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 		} else {
-			Tipo_Transacao tipo = (Tipo_Transacao) comboTipo.getSelectedItem(); 
+			Tipo_Transacao tipo = (Tipo_Transacao) comboTipo.getSelectedItem();
 			String descricao = jtfDescricao.getText();
 			LocalDate dataTransacao = data.getDate();
-			
-			if(descricao.trim().equals(""))
+
+			if (descricao.trim().equals(""))
 				descricao = "-";
-			
+
 			BigDecimal total = modelFinancas.getTotal();
-			if(tipo.equals(Tipo_Transacao.ENTRADA))
+			if (tipo.equals(Tipo_Transacao.ENTRADA))
 				total = modelFinancas.getTotal().add(valor);
 			else
 				total = modelFinancas.getTotal().subtract(valor);
 			Transacao transacao = new Transacao(valor, tipo, descricao, dataTransacao, total);
 			modelFinancas.addTransacao(transacao);
-			
+
 			jtfValor.setValue(0);
 			jtfDescricao.setText("");
 		}
-		
+
 	}
 
 	private void inicializarPanelAdd() {
@@ -299,10 +296,10 @@ public class FinancasPanel extends JPanel {
 
 		panel_total = new JPanel();
 		both.add(panel_total);
-		
+
 		JLabel lblTotal = new JLabel("Total: ");
 		panel_total.add(lblTotal);
-		
+
 		jtfTotal = Utils.getInstance().getNewCurrencyTextField();
 		panel_total.add(jtfTotal);
 		jtfTotal.setEditable(false);
@@ -334,10 +331,10 @@ public class FinancasPanel extends JPanel {
 
 		lblValor = new JLabel("Valor: ");
 		panel_2.add(lblValor);
-		
-        jtfValor = Utils.getInstance().getNewCurrencyTextField();
-        jtfValor.setValue(0);
-        panel_2.add(jtfValor);
+
+		jtfValor = Utils.getInstance().getNewCurrencyTextField();
+		jtfValor.setValue(0);
+		panel_2.add(jtfValor);
 
 		lblTipo = new JLabel("Tipo: ");
 		panel_2.add(lblTipo);
@@ -399,7 +396,7 @@ public class FinancasPanel extends JPanel {
 	public JFormattedTextField getJtfSaidas() {
 		return jft_totalSaidas;
 	}
-	
+
 	public JButton getBtnAdd() {
 		return btnAdd;
 	}
@@ -417,7 +414,7 @@ public class FinancasPanel extends JPanel {
 		}
 	}
 
-	public JTable newTable(String descricao) {
+	public JTable newTable(String descricao, LocalDate init, LocalDate fim) {
 		JTable table = new JTable(TableModelFinancas.getInstance()) {
 			/**
 			 * 
@@ -431,8 +428,11 @@ public class FinancasPanel extends JPanel {
 		};
 
 		RowFilter<TableModelFinancas, Object> rf = null;
+		RowFilter<TableModelFinancas, Object> rowFilter = null;
 		TableRowSorter<TableModelFinancas> sorter = new TableRowSorter<TableModelFinancas>(
 				TableModelFinancas.getInstance());
+		List<RowFilter<TableModelFinancas, Object>> andFilters = new ArrayList<RowFilter<TableModelFinancas, Object>>(
+				3);
 		List<RowFilter<TableModelFinancas, Object>> filters = new ArrayList<RowFilter<TableModelFinancas, Object>>(5);
 		table.setRowSorter(sorter);
 		switch (descricao) {
@@ -442,11 +442,48 @@ public class FinancasPanel extends JPanel {
 		case "Saídas":
 			filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 3));
 			break;
+		case "Todos":
+			filters.add(RowFilter.regexFilter(Tipo_Transacao.ENTRADA.getDescricao(), 3));
+			filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 3));
+			break;
 		default:
 			break;
 		}
-		rf = RowFilter.orFilter(filters);
-		sorter.setRowFilter(rf);
+		if (init != null) {
+			andFilters.add(new RowFilter<TableModelFinancas, Object>() {
+
+				@Override
+				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
+					LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
+					if(data.isAfter(init) || data.isEqual(init))
+						return true;
+				else
+					return false;
+				}
+
+			});
+		}
+		if (fim != null)
+			andFilters.add(new RowFilter<TableModelFinancas, Object>() {
+
+				@Override
+				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
+					LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
+					if(data.isBefore(fim) || data.isEqual(fim))
+						return true;
+				else
+					return false;
+				}
+
+			});
+
+		try {
+			rf = RowFilter.orFilter(filters);
+			andFilters.add(rf);
+			rowFilter = RowFilter.andFilter(andFilters);
+		} catch (java.util.regex.PatternSyntaxException e) {
+		}
+		sorter.setRowFilter(rowFilter);
 
 		return table;
 	}
