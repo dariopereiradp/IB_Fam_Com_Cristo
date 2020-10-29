@@ -163,10 +163,12 @@ public class MembroPanel extends JPanel {
 		tipo_membro.setBounds(370, 255, 191, 25);
 		tipo_membro.setModel(new DefaultComboBoxModel<Tipo_Membro>(Tipo_Membro.values()));
 		
+		DefaultCellEditor tipoCell = new DefaultCellEditor(tipo_membro);
+		tipoCell.setClickCountToStart(2);
+		
 		membros.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
 		membros.getColumnModel().getColumn(1).setCellEditor(new DataCellEditor());
-		membros.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_membro));
-
+		membros.getColumnModel().getColumn(3).setCellEditor(tipoCell);
 		JScrollPane jsMembros = new JScrollPane(membros);
 		add(jsMembros, BorderLayout.CENTER);
 

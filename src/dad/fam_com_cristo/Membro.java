@@ -5,8 +5,8 @@ import java.awt.FileDialog;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -108,8 +108,7 @@ public class Membro implements Comparable<Membro> {
 							+ "Igreja_Origem,Tipo_Membro,Batizado,Membro_Desde,Data_Batismo,Observacoes) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			pst.setInt(1, getId());
 			pst.setString(2, getNome());
-			String data = new SimpleDateFormat("yyyy-M-d").format(data_nascimento);
-			pst.setDate(3, java.sql.Date.valueOf(data));
+			pst.setDate(3, Date.valueOf(getData_nascimento()));
 			pst.setString(4, getSexo().getDescricao());
 			pst.setString(5, getEstado_civil().getDescricao());
 			pst.setString(6, getProfissao());
@@ -119,10 +118,8 @@ public class Membro implements Comparable<Membro> {
 			pst.setString(10, getIgreja_origem());
 			pst.setString(11, getTipo_membro().getDescricao());
 			pst.setString(12, eBatizado().getDescricao());
-			data = new SimpleDateFormat("yyyy-M-d").format(getMembro_desde());
-			pst.setDate(13, java.sql.Date.valueOf(data));
-			data = new SimpleDateFormat("yyyy-M-d").format(getData_batismo());
-			pst.setDate(14, java.sql.Date.valueOf(data));
+			pst.setDate(13, Date.valueOf(getMembro_desde()));
+			pst.setDate(14, Date.valueOf(getData_batismo()));
 			pst.setString(15, getObservacoes());
 			pst.execute();
 		} catch (Exception e) {

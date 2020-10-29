@@ -160,7 +160,7 @@ public class Estatisticas extends JDialog {
 		totalSaidasMesAtual.setValue(financas.getTotalSaidas(init, end));
 		panelMesAtual.add(totalSaidasMesAtual);
 
-		JLabel lblSubTotalMes = new JLabel("Sub-total: ");
+		JLabel lblSubTotalMes = new JLabel("Movimento:");
 		lblSubTotalMes.setBounds(20, 145, 140, 25);
 		panelMesAtual.add(lblSubTotalMes);
 
@@ -207,7 +207,7 @@ public class Estatisticas extends JDialog {
 		totalSaidasMesAnterior.setValue(financas.getTotalSaidas(init, end));
 		panelMesAnterior.add(totalSaidasMesAnterior);
 
-		JLabel lblSubTotalMesAnterior = new JLabel("Sub-total: ");
+		JLabel lblSubTotalMesAnterior = new JLabel("Movimento: ");
 		lblSubTotalMesAnterior.setBounds(20, 145, 140, 25);
 		panelMesAnterior.add(lblSubTotalMesAnterior);
 
@@ -254,7 +254,7 @@ public class Estatisticas extends JDialog {
 		totalSaidasAnoAtual.setValue(financas.getTotalSaidas(init, end));
 		panelAnoAtual.add(totalSaidasAnoAtual);
 
-		JLabel lblSubTotalAnoAtual = new JLabel("Sub-total: ");
+		JLabel lblSubTotalAnoAtual = new JLabel("Movimento:");
 		lblSubTotalAnoAtual.setBounds(20, 145, 140, 25);
 		panelAnoAtual.add(lblSubTotalAnoAtual);
 
@@ -301,7 +301,7 @@ public class Estatisticas extends JDialog {
 		totalSaidasAnoAnterior.setValue(financas.getTotalSaidas(init, end));
 		panelAnoAnterior.add(totalSaidasAnoAnterior);
 
-		JLabel lblSubTotalAnoAnterior = new JLabel("Sub-total: ");
+		JLabel lblSubTotalAnoAnterior = new JLabel("Movimento: ");
 		lblSubTotalAnoAnterior.setBounds(20, 145, 140, 25);
 		panelAnoAnterior.add(lblSubTotalAnoAnterior);
 
@@ -347,7 +347,7 @@ public class Estatisticas extends JDialog {
 		totalSaidas.setEditable(false);
 		panelDesdeSempre.add(totalSaidas);
 
-		JLabel lblTotal = new JLabel("Total: ");
+		JLabel lblTotal = new JLabel("Saldo atual: ");
 		lblTotal.setBounds(20, 145, 140, 25);
 		panelDesdeSempre.add(lblTotal);
 
@@ -398,7 +398,7 @@ public class Estatisticas extends JDialog {
 		totalSaidasPers.setValue(0);
 		panelPersonal.add(totalSaidasPers);
 
-		JLabel lblTotalPers = new JLabel("Sub-total: ");
+		JLabel lblTotalPers = new JLabel("Movimento: ");
 		lblTotalPers.setBounds(20, 180, 140, 25);
 		panelPersonal.add(lblTotalPers);
 
@@ -418,8 +418,8 @@ public class Estatisticas extends JDialog {
 		panelGraficosFinancas.add(graficosFinancasChooser, BorderLayout.NORTH);
 
 		panelGraficosFinancas.add(
-				new XChartPanel<PieChart>(
-						GraficosFinancas.getEntrada_Saida_Chart(EstatisticaPeriodos.DESDE_SEMPRE, this)),
+				new XChartPanel<PieChart>(GraficosFinancas.getEntrada_Saida_Chart(EstatisticaPeriodos.DESDE_SEMPRE,
+						EstatisticaPeriodos.DESDE_SEMPRE.getInit(), EstatisticaPeriodos.DESDE_SEMPRE.getEnd(), false)),
 				BorderLayout.CENTER);
 
 		graficosFinancasChooser.add(new JLabel("Escolha o período: "));
@@ -441,10 +441,8 @@ public class Estatisticas extends JDialog {
 					datas1.setEnabled(false);
 					panelGraficosFinancas.remove(1);
 					EstatisticaPeriodos periodo = (EstatisticaPeriodos) opcoes.getSelectedItem();
-					panelGraficosFinancas.add(
-							new XChartPanel<PieChart>(
-									GraficosFinancas.getEntrada_Saida_Chart(periodo, Estatisticas.this)),
-							BorderLayout.CENTER);
+					panelGraficosFinancas.add(new XChartPanel<PieChart>(GraficosFinancas.getEntrada_Saida_Chart(periodo,
+							periodo.getInit(), periodo.getEnd(), false)), BorderLayout.CENTER);
 					datas1.getInitDateChooser().setDate(periodo.getInit());
 					datas1.getFinalDateChooser().setDate(periodo.getEnd());
 				}
@@ -853,9 +851,11 @@ public class Estatisticas extends JDialog {
 
 		@Override
 		public void dateChanged(DateChangeEvent event) {
-			panelGraficosFinancas.remove(1);
-			panelGraficosFinancas.add(new XChartPanel<PieChart>(
-					GraficosFinancas.getEntrada_Saida_Chart(EstatisticaPeriodos.PERSONALIZADO, Estatisticas.this)));
+			if (event.getSource().isEnabled()) {
+				panelGraficosFinancas.remove(1);
+				panelGraficosFinancas.add(new XChartPanel<PieChart>(GraficosFinancas.getEntrada_Saida_Chart(
+						EstatisticaPeriodos.PERSONALIZADO, datas1.getInitDate(), datas1.getFinalDate(), false)));
+			}
 		}
 
 	}

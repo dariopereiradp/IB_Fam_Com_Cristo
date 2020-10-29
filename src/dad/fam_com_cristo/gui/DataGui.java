@@ -16,9 +16,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.TextStyle;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -54,6 +52,7 @@ import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelMembro;
+import dad.recursos.EstatisticaPeriodos;
 import dad.recursos.Log;
 import dad.recursos.MultiDatePicker;
 import dad.recursos.SairAction;
@@ -108,7 +107,6 @@ public class DataGui extends JFrame {
 	private JMenuItem mnRelatorioAnual;
 	private JMenuItem mnMesAnterior;
 	private JMenuItem mnRelatorioTotal;
-	private JMenuItem mnRelatorioPersonalizado;
 
 	private DataGui() {
 		INSTANCE = this;
@@ -312,7 +310,7 @@ public class DataGui extends JFrame {
 		menuRefazer.setEnabled(false);
 		mnEditar.add(menuRefazer);
 
-		menuOrdenar = new JMenuItem("Ordenar membros (A-Z)");
+		menuOrdenar = new JMenuItem("Ordenar");
 		mnEditar.add(menuOrdenar);
 
 		mnGerar = new JMenu("Gerar");
@@ -353,9 +351,6 @@ public class DataGui extends JFrame {
 
 		mnRelatorioTotal = new JMenuItem("Relat\u00F3rio completo");
 		mnFinancas.add(mnRelatorioTotal);
-
-		mnRelatorioPersonalizado = new JMenuItem("Relat\u00F3rio personalizado");
-		mnFinancas.add(mnRelatorioPersonalizado);
 		mListaTotal.addActionListener(new ActionListener() {
 
 			@Override
@@ -419,39 +414,27 @@ public class DataGui extends JFrame {
 
 		mnRelatorioAnual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				LocalDate now = LocalDate.now();
-				int year = now.getYear() - 1;
-				LocalDate init = LocalDate.of(year, Month.JANUARY, 1);
-				LocalDate fim = LocalDate.of(year, Month.DECEMBER, 31);
+				LocalDate init = EstatisticaPeriodos.ANO_ANTERIOR.getInit();
+				LocalDate fim = EstatisticaPeriodos.ANO_ANTERIOR.getEnd();
 				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
-						String.valueOf(year));
+						String.valueOf(init.getYear()), EstatisticaPeriodos.ANO_ANTERIOR, init, fim, true);
 			}
 		});
 
 		mnMesAnterior.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				LocalDate now = LocalDate.now();
-				int year = now.getYear();
-				Month month = now.getMonth().minus(1);
-				LocalDate init = LocalDate.of(year, month, 1);
-				int lastDay = init.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
-				LocalDate fim = LocalDate.of(year, month, lastDay);
+				LocalDate init = EstatisticaPeriodos.MES_ANTERIOR.getInit();
+				LocalDate fim = EstatisticaPeriodos.MES_ANTERIOR.getEnd();
 				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
-						month.getDisplayName(TextStyle.FULL, new Locale("pt")) + " " + year);
+						init.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt")) + " " + init.getYear(),
+						EstatisticaPeriodos.MES_ANTERIOR, init, fim, false);
 			}
 		});
 
 		mnRelatorioTotal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", null, null), "Completo");
-			}
-		});
-
-		mnRelatorioPersonalizado.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				// Abrir GUI (JDialog) para deixar escolher data inicial e final e marcar entradas/saídas
-				// e talvez mais opçoes
+				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", null, null),
+						"Completo", EstatisticaPeriodos.DESDE_SEMPRE, null, null, false);
 			}
 		});
 
@@ -727,6 +710,8 @@ public class DataGui extends JFrame {
 	public void ordenar() {
 		if (tabbedPane.getSelectedIndex() == 0)
 			TableModelMembro.getInstance().ordenar();
+		else if (tabbedPane.getSelectedIndex() == 1)
+			TableModelFinancas.getInstance().ordenar();
 	}
 
 	/**
@@ -843,11 +828,11 @@ public class DataGui extends JFrame {
 	public MultiDatePicker getDatas() {
 		return datas;
 	}
-	
+
 	public JCheckBox getCheckEntradas() {
 		return checkEntradas;
 	}
-	
+
 	public JCheckBox getCheckSaidas() {
 		return checkSaidas;
 	}

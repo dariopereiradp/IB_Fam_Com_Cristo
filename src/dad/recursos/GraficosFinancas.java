@@ -16,7 +16,6 @@ import org.knowm.xchart.PieChartBuilder;
 import org.knowm.xchart.style.Styler.ChartTheme;
 
 import dad.fam_com_cristo.Tipo_Transacao;
-import dad.fam_com_cristo.gui.Estatisticas;
 import dad.fam_com_cristo.gui.Main;
 import dad.fam_com_cristo.table.TableModelFinancas;
 import mdlaf.utils.MaterialColors;
@@ -29,7 +28,7 @@ public class GraficosFinancas {
 	 * 
 	 * @return o gráfico das finanças (entradas/saídas)
 	 */
-	public static PieChart getEntrada_Saida_Chart(EstatisticaPeriodos periodo, Estatisticas estatiscas) {
+	public static PieChart getEntrada_Saida_Chart(EstatisticaPeriodos periodo, LocalDate initDate, LocalDate finalDate, boolean print) {
 		PieChart chart = new PieChartBuilder().width(800).height(500)
 				.title(Main.TITLE_SMALL + " - Entradas / Saídas - " + periodo.toString()).theme(ChartTheme.GGPlot2)
 				.build();
@@ -43,12 +42,13 @@ public class GraficosFinancas {
 		chart.getStyler().setStartAngleInDegrees(90);
 		chart.getStyler().setDrawAllAnnotations(true);
 
-		GraficosMembros.customizeDarkMode(chart.getStyler());
+		if (!print)
+			GraficosMembros.customizeDarkMode(chart.getStyler());
 
-		LocalDate initDate = periodo.equals(EstatisticaPeriodos.PERSONALIZADO) ? estatiscas.getDatas1().getInitDate()
-				: periodo.getInit();
-		LocalDate finalDate = periodo.equals(EstatisticaPeriodos.PERSONALIZADO) ? estatiscas.getDatas1().getFinalDate()
-				: periodo.getEnd();
+//		LocalDate initDate = periodo.equals(EstatisticaPeriodos.PERSONALIZADO) ? estatiscas.getDatas1().getInitDate()
+//				: periodo.getInit();
+//		LocalDate finalDate = periodo.equals(EstatisticaPeriodos.PERSONALIZADO) ? estatiscas.getDatas1().getFinalDate()
+//				: periodo.getEnd();
 
 		chart.addSeries(Tipo_Transacao.ENTRADA.getDescricao(),
 				TableModelFinancas.getInstance().getTotalEntradas(initDate, finalDate));
@@ -72,7 +72,8 @@ public class GraficosFinancas {
 						new Color[] { MaterialColors.GREEN_500, MaterialColors.RED_500, MaterialColors.YELLOW_500 })
 				.setChartPadding(10).setChartTitlePadding(10).setDecimalPattern("R$ ###,###.###");
 
-		GraficosMembros.customizeDarkMode(chart.getStyler());
+		if (!print)
+			GraficosMembros.customizeDarkMode(chart.getStyler());
 
 		// chart.getStyler().setPlotContentSize(0.7);
 

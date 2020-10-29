@@ -16,6 +16,7 @@ import dad.fam_com_cristo.Transacao;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.command.AtualizaTransacao;
 import dad.fam_com_cristo.table.command.Command;
+import dad.fam_com_cristo.table.command.CompositeCommand;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
@@ -214,8 +215,13 @@ public class TableModelFinancas extends AbstractTableModel {
 					}
 					break;
 				case 2:
-					if (transacao.getValue().compareTo((BigDecimal) valor) != 0) {
-						undoManager.execute(new AtualizaTransacao(this, "Valor", transacao, valor));
+					if (transacao.getValue().compareTo((BigDecimal) valor) != 0
+							&& ((BigDecimal) valor).compareTo(new BigDecimal("0")) != 0) {
+						BigDecimal diferenca = transacao.getValue().subtract((BigDecimal) valor);
+						diferenca = transacao.getTotal().subtract(diferenca);
+						undoManager.execute(new CompositeCommand("Atualizar valor",
+								new AtualizaTransacao(this, "Valor", transacao, valor),
+								new AtualizaTransacao(this, "Total", transacao, diferenca)));
 					}
 					break;
 				case 3:
@@ -446,29 +452,29 @@ public class TableModelFinancas extends AbstractTableModel {
 		return getTotalEntradas(init, end).subtract(getTotalSaidas(init, end));
 	}
 
-	public List<BigDecimal> getTotalEntradasPorMes(int ano){
+	public List<BigDecimal> getTotalEntradasPorMes(int ano) {
 		List<BigDecimal> list = new ArrayList<>(12);
-		for(int i=1; i<=12; i++) {
+		for (int i = 1; i <= 12; i++) {
 			LocalDate init = LocalDate.of(ano, i, 1);
 			LocalDate end = init.with(TemporalAdjusters.lastDayOfMonth());
 			list.add(getTotalEntradas(init, end));
 		}
 		return list;
 	}
-	
-	public List<BigDecimal> getTotalSaidasPorMes(int ano){
+
+	public List<BigDecimal> getTotalSaidasPorMes(int ano) {
 		List<BigDecimal> list = new ArrayList<>(12);
-		for(int i=1; i<=12; i++) {
+		for (int i = 1; i <= 12; i++) {
 			LocalDate init = LocalDate.of(ano, i, 1);
 			LocalDate end = init.with(TemporalAdjusters.lastDayOfMonth());
 			list.add(getTotalSaidas(init, end));
 		}
 		return list;
 	}
-	
-	public List<BigDecimal> getSubTotalPorMes(int ano){
+
+	public List<BigDecimal> getSubTotalPorMes(int ano) {
 		List<BigDecimal> list = new ArrayList<>(12);
-		for(int i=1; i<=12; i++) {
+		for (int i = 1; i <= 12; i++) {
 			LocalDate init = LocalDate.of(ano, i, 1);
 			LocalDate end = init.with(TemporalAdjusters.lastDayOfMonth());
 			list.add(getTotalPeriod(init, end));
@@ -476,15 +482,89 @@ public class TableModelFinancas extends AbstractTableModel {
 		return list;
 	}
 
-//	/**
-//	 * Ordena a tabela de membros por ordem alfabética
-//	 */
-//	public void ordenar() {
-//		transacoes.sort(null);
-//		fireTableDataChanged();
-//		Log.getInstance().printLog("Membros ordenados com sucesso!");
+	private int getNum_Entradas() {
+		int n = 0;
+		for (Transacao t : transacoes) {
+			if (t.getTipo() == Tipo_Transacao.ENTRADA)
+				n++;
+		}
+		return n;
+	}
 
-//	}
+	private int getNum_Saidas() {
+		int n = 0;
+		for (Transacao t : transacoes) {
+			if (t.getTipo() == Tipo_Transacao.SAIDA)
+				n++;
+		}
+		return n;
+	}
+
+	public int getNumEntradasPorPeriodo(LocalDate init, LocalDate end) {
+		if (init == null && end == null)
+			return getNum_Entradas();
+		else {
+			int n = 0;
+			if (init == null) {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.ENTRADA
+							&& (t.getData().isBefore(end) || t.getData().isEqual(end)))
+						n++;
+				}
+			} else if (end == null) {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.ENTRADA
+							&& (t.getData().isAfter(init) || t.getData().isEqual(init)))
+						n++;
+				}
+			} else {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.ENTRADA
+							&& (t.getData().isAfter(init) || t.getData().isEqual(init))
+							&& (t.getData().isBefore(end) || t.getData().isEqual(end)))
+						n++;
+				}
+			}
+			return n;
+		}
+	}
+
+	public int getNumSaidasPorPeriodo(LocalDate init, LocalDate end) {
+		if (init == null && end == null)
+			return getNum_Saidas();
+		else {
+			int n = 0;
+			if (init == null) {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.SAIDA && (t.getData().isBefore(end) || t.getData().isEqual(end)))
+						n++;
+				}
+			} else if (end == null) {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.SAIDA && (t.getData().isAfter(init) || t.getData().isEqual(init)))
+						n++;
+				}
+			} else {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.SAIDA && (t.getData().isAfter(init) || t.getData().isEqual(init))
+							&& (t.getData().isBefore(end) || t.getData().isEqual(end)))
+						n++;
+				}
+			}
+			return n;
+		}
+	}
+
+	/**
+	 * Ordena as transacoes por data
+	 */
+	public TableModelFinancas ordenar() {
+		transacoes.sort(null);
+		fireTableDataChanged();
+		Log.getInstance().printLog("Transações ordenadas com sucesso!");
+		return this;
+
+	}
 
 	@SuppressWarnings("unchecked")
 	public LocalDate getOldestDate() {

@@ -44,6 +44,7 @@ import dad.fam_com_cristo.table.cells.CellRenderer;
 import dad.fam_com_cristo.table.cells.CellRendererNoImage;
 import dad.fam_com_cristo.table.cells.CurrencyCell;
 import dad.fam_com_cristo.table.cells.DataCellEditor;
+import dad.recursos.EstatisticaPeriodos;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
 import dad.recursos.pdf.TableFinancasToPDF;
@@ -109,6 +110,9 @@ public class FinancasPanel extends JPanel {
 		tipo_transacao.setBounds(370, 255, 191, 25);
 		tipo_transacao.setModel(new DefaultComboBoxModel<Tipo_Transacao>(Tipo_Transacao.values()));
 
+		DefaultCellEditor tipoCell = new DefaultCellEditor(tipo_transacao);
+		tipoCell.setClickCountToStart(2);
+
 		panel_4 = new JPanel();
 		add(panel_4, BorderLayout.CENTER);
 		panel_4.setLayout(new BorderLayout(0, 0));
@@ -127,7 +131,7 @@ public class FinancasPanel extends JPanel {
 		financas.getColumnModel().getColumn(1).setCellEditor(new DataCellEditor());
 		financas.getColumnModel().getColumn(2).setCellEditor(new CurrencyCell());
 
-		financas.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(tipo_transacao));
+		financas.getColumnModel().getColumn(3).setCellEditor(tipoCell);
 
 		financas.getColumnModel().getColumn(0).setPreferredWidth(100);
 		financas.getColumnModel().getColumn(1).setPreferredWidth(160);
@@ -301,7 +305,7 @@ public class FinancasPanel extends JPanel {
 		panel_total = new JPanel();
 		both.add(panel_total);
 
-		JLabel lblTotal = new JLabel("Total: ");
+		JLabel lblTotal = new JLabel("Saldo: ");
 		panel_total.add(lblTotal);
 
 		jtfTotal = Utils.getInstance().getNewCurrencyTextField();
@@ -328,7 +332,7 @@ public class FinancasPanel extends JPanel {
 		jft_totalSaidas.setEditable(false);
 		panel_1.add(jft_totalSaidas);
 
-		btnExport = new JButton("Exportar");
+		btnExport = new JButton("Gerar relatório filtrado");
 		btnExport.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		btnExport.setToolTipText("Exporta o estado atual da tabela, com os filtros aplicados");
@@ -354,7 +358,8 @@ public class FinancasPanel extends JPanel {
 							entradaSaida = "Saídas - ";
 					}
 				}
-				TableFinancasToPDF.transacoesToPDF(financas, "Personalizado - " + filtro + entradaSaida + dataString);
+				TableFinancasToPDF.transacoesToPDF(financas, "Personalizado - " + filtro + entradaSaida + dataString,
+						EstatisticaPeriodos.PERSONALIZADO, init, fim, false);
 			}
 		});
 
@@ -449,7 +454,7 @@ public class FinancasPanel extends JPanel {
 	}
 
 	public JTable newTable(String descricao, LocalDate init, LocalDate fim) {
-		JTable table = new JTable(TableModelFinancas.getInstance()) {
+		JTable table = new JTable(TableModelFinancas.getInstance().ordenar()) {
 			/**
 			 * 
 			 */

@@ -3,17 +3,15 @@ package dad.fam_com_cristo;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.recursos.Log;
 
-public class Transacao {
-	
+public class Transacao implements Comparable<Transacao> {
+
 	/**
-	 * Variável usada para controle do próximo id a ser atribuído a um novo
-	 * item.
+	 * Variável usada para controle do próximo id a ser atribuído a um novo item.
 	 */
 	public static int countID = 0;
 	private int id;
@@ -24,7 +22,7 @@ public class Transacao {
 	private BigDecimal total;
 	private static Connection con;
 	private static PreparedStatement pst;
-	
+
 	public Transacao(BigDecimal value, Tipo_Transacao tipo, String descricao, LocalDate data, BigDecimal total) {
 		init(value, tipo, descricao, data, total);
 	}
@@ -77,11 +75,11 @@ public class Transacao {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
+
 	public LocalDate getData() {
 		return data;
 	}
-	
+
 	public void setData(LocalDate data) {
 		this.data = data;
 	}
@@ -93,17 +91,15 @@ public class Transacao {
 	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
-	
+
 	/**
 	 * Adiciona transacao na base de dados.
 	 */
 	public void adicionarNaBaseDeDados() {
 		try {
-			pst = con.prepareStatement(
-					"insert into financas(ID,Data,Valor,Tipo,Descricao,Total) values (?,?,?,?,?,?)");
+			pst = con.prepareStatement("insert into financas(ID,Data,Valor,Tipo,Descricao,Total) values (?,?,?,?,?,?)");
 			pst.setInt(1, getId());
-			String data = new SimpleDateFormat("yyyy-M-d").format(getData());
-			pst.setDate(2, java.sql.Date.valueOf(data));
+			pst.setDate(2, java.sql.Date.valueOf(getData()));
 			pst.setBigDecimal(3, getValue());
 			pst.setString(4, getTipo().getDescricao());
 			pst.setString(5, getDescricao());
@@ -114,7 +110,7 @@ public class Transacao {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Remove a transacao da base de dados.
 	 */
@@ -128,9 +124,17 @@ public class Transacao {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
+
+	/**
+	 * Compara de acordo com a data, para ordenar por data
+	 */
+	@Override
+	public int compareTo(Transacao o) {
+		int r = this.getData().compareTo(o.getData());
+		if (r == 0)
+			return new Integer(this.getId()).compareTo(new Integer(o.getId()));
+		else
+			return r;
+	}
 
 }

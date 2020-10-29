@@ -13,6 +13,7 @@ import com.qoppa.pdfWriter.PDFGraphics;
 import com.qoppa.pdfWriter.PDFPage;
 
 import dad.fam_com_cristo.gui.Main;
+import dad.recursos.Utils;
 
 /**
  * Classe para gerar um PDF da ficha de membro vazia.<br>
@@ -234,7 +235,7 @@ public class FichaMembro_VaziaToPDF {
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 1.5 / 15) - 5);
 
-		text = Main.PASTOR;
+		text = Utils.getInstance().getPastorName();
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 16) + 3, (int) (height - height * 1.5 / 15) + 15 - 5);
 

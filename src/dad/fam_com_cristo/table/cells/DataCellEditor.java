@@ -1,9 +1,16 @@
 package dad.fam_com_cristo.table.cells;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
@@ -23,6 +30,7 @@ public class DataCellEditor extends DateTableEditor {
 	public DataCellEditor() {
 		super(false, true, true);
 		getDatePicker().setSettings(Utils.getInstance().getDateSettings());
+		this.clickCountToEdit = 2;
 		DatePickerSettings settings = getDatePickerSettings();
 		settings.setGapBeforeButtonPixels(0);
 		settings.setSizeTextFieldMinimumWidthDefaultOverride(false);
@@ -32,6 +40,22 @@ public class DataCellEditor extends DateTableEditor {
 		getDatePicker().getComponentToggleCalendarButton().setText("");
 		getDatePicker().getComponentToggleCalendarButton().setIcon(MaterialImageFactory.getInstance()
 				.getImage(MaterialIconFont.DATE_RANGE, Utils.getInstance().getCurrentTheme().getColorIcons()));
+		
+		InputMap iMap2 = getDatePicker().getComponentDateTextField().getInputMap(JComponent.WHEN_FOCUSED);
+		iMap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
+		ActionMap aMap2 = getDatePicker().getComponentDateTextField().getActionMap();
+		aMap2.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				stopCellEditing();
+			}
+		});
+
 	}
 
 	@Override
