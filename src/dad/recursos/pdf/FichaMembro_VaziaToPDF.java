@@ -1,4 +1,4 @@
-package dad.recursos;
+package dad.recursos.pdf;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -21,7 +21,7 @@ import dad.fam_com_cristo.gui.Main;
  * @author Dário Pereira
  *
  */
-public class FichaMembro_Vazia {
+public class FichaMembro_VaziaToPDF {
 
 	public PDFDocument generatePDF() {
 		PDFDocument pdfDoc = new PDFDocument();

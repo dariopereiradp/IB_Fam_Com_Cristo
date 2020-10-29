@@ -4,6 +4,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Stack;
 
+import dad.fam_com_cristo.table.command.Command;
+
 /**
  * Classe que representa o gerenciador de Undo e Redo.
  * @author Dário Pereira

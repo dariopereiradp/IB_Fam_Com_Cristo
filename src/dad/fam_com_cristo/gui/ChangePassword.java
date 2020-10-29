@@ -27,7 +27,7 @@ import java.sql.ResultSet;
 import javax.swing.JCheckBox;
 import javax.swing.border.LineBorder;
 
-import dad.recursos.ConexaoLogin;
+import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 import dad.recursos.Utils;

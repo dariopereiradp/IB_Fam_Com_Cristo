@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
-import dad.recursos.ConexaoFinancas;
+import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.recursos.Log;
 
 public class Transacao {

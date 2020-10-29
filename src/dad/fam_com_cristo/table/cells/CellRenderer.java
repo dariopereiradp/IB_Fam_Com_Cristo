@@ -1,27 +1,32 @@
-package dad.recursos;
+package dad.fam_com_cristo.table.cells;
 
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.time.LocalDate;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import dad.fam_com_cristo.gui.DataGui;
+import dad.recursos.Utils;
 
-/** Classe para renderer das células de uma JTable que não são editáveis.
- * Também está adaptada para pesquisa e filtragem, desenhando um retângulo amarelo em volta do filtro.
+/**
+ * Classe para renderer das células de uma JTable que são editáveis, ou seja,
+ * vai aparecer o ícone de edição no lado esquerdo. Também está adaptada para
+ * pesquisa e filtragem, desenhando um retângulo amarelo em volta do filtro.
  * 
  * @author Dário Pereira
  *
  */
-public class CellRendererNoImage extends DefaultTableCellRenderer {
-
+public class CellRenderer extends DefaultTableCellRenderer {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1672778921016249533L;
+	private static final long serialVersionUID = 9064760396702211972L;
+	private final ImageIcon editIcon = new ImageIcon(getClass().getResource("/edit.png"));
 
 	@Override
 	public void paint(Graphics g) {
@@ -36,6 +41,7 @@ public class CellRendererNoImage extends DefaultTableCellRenderer {
 		if (index == -1) {
 			return;
 		}
+
 		String preMatch = getText().substring(0, index);
 		String match = getText().substring(preMatch.length(), preMatch.length() + filter.length());
 		int pmw = g.getFontMetrics().stringWidth(preMatch);
@@ -48,12 +54,14 @@ public class CellRendererNoImage extends DefaultTableCellRenderer {
 	}
 
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus,
 			int row, int column) {
-		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
+		this.setIcon(table.isCellEditable(row, column) ? editIcon : null);
 		setBorder(BorderFactory.createRaisedSoftBevelBorder());
+
+		if (value instanceof LocalDate)
+			this.setValue(((LocalDate) value).format(Utils.getInstance().getDateFormat()));
 		return this;
 	}
-	
-	
 }

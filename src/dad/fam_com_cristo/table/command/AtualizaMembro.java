@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.table;
+package dad.fam_com_cristo.table.command;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,8 +10,8 @@ import dad.fam_com_cristo.Membro;
 import dad.fam_com_cristo.Sexo;
 import dad.fam_com_cristo.Sim_Nao;
 import dad.fam_com_cristo.Tipo_Membro;
-import dad.recursos.Command;
-import dad.recursos.ConexaoMembro;
+import dad.fam_com_cristo.table.TableModelMembro;
+import dad.fam_com_cristo.table.conexao.ConexaoMembro;
 import dad.recursos.Log;
 
 /**

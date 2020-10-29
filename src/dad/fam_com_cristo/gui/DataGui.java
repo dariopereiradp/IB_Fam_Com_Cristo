@@ -54,13 +54,13 @@ import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelMembro;
-import dad.recursos.FichaMembro_Vazia;
 import dad.recursos.Log;
 import dad.recursos.MultiDatePicker;
 import dad.recursos.SairAction;
-import dad.recursos.TableFinancasToPDF;
-import dad.recursos.TableMembrosToPDF;
 import dad.recursos.Utils;
+import dad.recursos.pdf.FichaMembro_VaziaToPDF;
+import dad.recursos.pdf.TableFinancasToPDF;
+import dad.recursos.pdf.TableMembrosToPDF;
 
 /**
  * Classe que torna visível a 'data' das várias bases de dados.
@@ -391,7 +391,7 @@ public class DataGui extends JFrame {
 		});
 		mntmFichaDeMembro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				PDFDocument pdf = new FichaMembro_Vazia().generatePDF();
+				PDFDocument pdf = new FichaMembro_VaziaToPDF().generatePDF();
 				try {
 					pdf.saveDocument(Main.MEMBROS_PDF_PATH + "Ficha de Membro" + ".pdf");
 					String message = "A ficha de membro"
@@ -423,7 +423,7 @@ public class DataGui extends JFrame {
 				int year = now.getYear() - 1;
 				LocalDate init = LocalDate.of(year, Month.JANUARY, 1);
 				LocalDate fim = LocalDate.of(year, Month.DECEMBER, 31);
-				TableFinancasToPDF.membrosToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
+				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
 						String.valueOf(year));
 			}
 		});
@@ -436,21 +436,22 @@ public class DataGui extends JFrame {
 				LocalDate init = LocalDate.of(year, month, 1);
 				int lastDay = init.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
 				LocalDate fim = LocalDate.of(year, month, lastDay);
-				TableFinancasToPDF.membrosToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
+				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
 						month.getDisplayName(TextStyle.FULL, new Locale("pt")) + " " + year);
 			}
 		});
-		
+
 		mnRelatorioTotal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TableFinancasToPDF.membrosToPDF(FinancasPanel.getInstance().newTable("Todos", null, null),
-						"Completo");
+				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", null, null), "Completo");
 			}
 		});
-		
+
 		mnRelatorioPersonalizado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				// Abrir GUI (JDialog) para deixar escolher data inicial e final e marcar entradas/saídas
+				// e talvez mais opçoes
 			}
 		});
 
@@ -839,8 +840,16 @@ public class DataGui extends JFrame {
 		return pesquisa;
 	}
 
-	public JPanel getDatas() {
+	public MultiDatePicker getDatas() {
 		return datas;
+	}
+	
+	public JCheckBox getCheckEntradas() {
+		return checkEntradas;
+	}
+	
+	public JCheckBox getCheckSaidas() {
+		return checkSaidas;
 	}
 
 	public static DataGui getInstance() {

@@ -1,4 +1,4 @@
-package dad.recursos;
+package dad.recursos.pdf;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -30,6 +30,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.Main;
+import dad.recursos.Log;
+import dad.recursos.Utils;
 
 /**
  * Classe que gera um PDF da tabela de membros, com os filtros indicados.

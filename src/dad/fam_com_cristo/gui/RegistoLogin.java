@@ -30,7 +30,7 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 
 import dad.fam_com_cristo.Funcionario;
 import dad.fam_com_cristo.table.TableModelFuncionario;
-import dad.recursos.ConexaoLogin;
+import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.IconPasswordField;
 import dad.recursos.IconTextField;

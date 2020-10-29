@@ -1,6 +1,4 @@
-package dad.fam_com_cristo.table;
-
-import dad.recursos.Command;
+package dad.fam_com_cristo.table.command;
 
 /**
  * Classe que representa um comando composto por vários outros comandos.

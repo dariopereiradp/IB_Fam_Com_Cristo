@@ -5,15 +5,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.Transacao;
 import dad.fam_com_cristo.gui.DataGui;
-import dad.recursos.Command;
-import dad.recursos.ConexaoFinancas;
+import dad.fam_com_cristo.table.command.AtualizaTransacao;
+import dad.fam_com_cristo.table.command.Command;
+import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
 import dad.recursos.Utils;
@@ -360,7 +363,7 @@ public class TableModelFinancas extends AbstractTableModel {
 
 	/**
 	 * 
-	 * @return o número total de transações
+	 * @return o salto total (Entradas - Saidas)
 	 */
 	public BigDecimal getTotal() {
 		return getTotal_Entradas().subtract(getTotal_Saidas());
@@ -384,6 +387,95 @@ public class TableModelFinancas extends AbstractTableModel {
 		return n;
 	}
 
+	public BigDecimal getTotalEntradas(LocalDate init, LocalDate end) {
+		if (init == null && end == null)
+			return getTotal_Entradas();
+		else {
+			BigDecimal n = new BigDecimal("0.0");
+			if (init == null) {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.ENTRADA
+							&& (t.getData().isBefore(end) || t.getData().isEqual(end)))
+						n = n.add(t.getValue());
+				}
+			} else if (end == null) {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.ENTRADA
+							&& (t.getData().isAfter(init) || t.getData().isEqual(init)))
+						n = n.add(t.getValue());
+				}
+			} else {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.ENTRADA
+							&& (t.getData().isAfter(init) || t.getData().isEqual(init))
+							&& (t.getData().isBefore(end) || t.getData().isEqual(end)))
+						n = n.add(t.getValue());
+				}
+			}
+			return n;
+		}
+	}
+
+	public BigDecimal getTotalSaidas(LocalDate init, LocalDate end) {
+		if (init == null && end == null)
+			return getTotal_Saidas();
+		else {
+			BigDecimal n = new BigDecimal("0.0");
+			if (init == null) {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.SAIDA && (t.getData().isBefore(end) || t.getData().isEqual(end)))
+						n = n.add(t.getValue());
+				}
+			} else if (end == null) {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.SAIDA && (t.getData().isAfter(init) || t.getData().isEqual(init)))
+						n = n.add(t.getValue());
+				}
+			} else {
+				for (Transacao t : transacoes) {
+					if (t.getTipo() == Tipo_Transacao.SAIDA && (t.getData().isAfter(init) || t.getData().isEqual(init))
+							&& (t.getData().isBefore(end) || t.getData().isEqual(end)))
+						n = n.add(t.getValue());
+				}
+			}
+			return n;
+		}
+	}
+
+	public BigDecimal getTotalPeriod(LocalDate init, LocalDate end) {
+		return getTotalEntradas(init, end).subtract(getTotalSaidas(init, end));
+	}
+
+	public List<BigDecimal> getTotalEntradasPorMes(int ano){
+		List<BigDecimal> list = new ArrayList<>(12);
+		for(int i=1; i<=12; i++) {
+			LocalDate init = LocalDate.of(ano, i, 1);
+			LocalDate end = init.with(TemporalAdjusters.lastDayOfMonth());
+			list.add(getTotalEntradas(init, end));
+		}
+		return list;
+	}
+	
+	public List<BigDecimal> getTotalSaidasPorMes(int ano){
+		List<BigDecimal> list = new ArrayList<>(12);
+		for(int i=1; i<=12; i++) {
+			LocalDate init = LocalDate.of(ano, i, 1);
+			LocalDate end = init.with(TemporalAdjusters.lastDayOfMonth());
+			list.add(getTotalSaidas(init, end));
+		}
+		return list;
+	}
+	
+	public List<BigDecimal> getSubTotalPorMes(int ano){
+		List<BigDecimal> list = new ArrayList<>(12);
+		for(int i=1; i<=12; i++) {
+			LocalDate init = LocalDate.of(ano, i, 1);
+			LocalDate end = init.with(TemporalAdjusters.lastDayOfMonth());
+			list.add(getTotalPeriod(init, end));
+		}
+		return list;
+	}
+
 //	/**
 //	 * Ordena a tabela de membros por ordem alfabética
 //	 */
@@ -393,11 +485,11 @@ public class TableModelFinancas extends AbstractTableModel {
 //		Log.getInstance().printLog("Membros ordenados com sucesso!");
 
 //	}
-	
+
 	@SuppressWarnings("unchecked")
 	public LocalDate getOldestDate() {
 		ArrayList<Transacao> sorted = (ArrayList<Transacao>) transacoes.clone();
-		
+
 		sorted.sort((o1, o2) -> o1.getData().compareTo(o2.getData()));
 		return sorted.get(0).getData();
 	}

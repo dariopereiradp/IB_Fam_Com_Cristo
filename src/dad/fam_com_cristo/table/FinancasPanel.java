@@ -10,6 +10,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,13 +38,15 @@ import javax.swing.table.TableRowSorter;
 
 import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.Transacao;
+import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.themes.DateChooser;
-import dad.recursos.CellRenderer;
-import dad.recursos.CellRendererNoImage;
-import dad.recursos.CurrencyCell;
-import dad.recursos.DataCellEditor;
+import dad.fam_com_cristo.table.cells.CellRenderer;
+import dad.fam_com_cristo.table.cells.CellRendererNoImage;
+import dad.fam_com_cristo.table.cells.CurrencyCell;
+import dad.fam_com_cristo.table.cells.DataCellEditor;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
+import dad.recursos.pdf.TableFinancasToPDF;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 
@@ -85,6 +88,7 @@ public class FinancasPanel extends JPanel {
 	private JLabel lblData;
 	private DateChooser data;
 	private JButton btnAdd;
+	private JButton btnExport;
 
 	public FinancasPanel() {
 		super();
@@ -290,7 +294,7 @@ public class FinancasPanel extends JPanel {
 
 	private void inicializarPanelAdd() {
 
-		JPanel both = new JPanel(new GridLayout(0, 3));
+		JPanel both = new JPanel(new GridLayout(0, 4));
 
 		pInferior.add(both, BorderLayout.CENTER);
 
@@ -323,6 +327,36 @@ public class FinancasPanel extends JPanel {
 		jft_totalSaidas = Utils.getInstance().getNewCurrencyTextField();
 		jft_totalSaidas.setEditable(false);
 		panel_1.add(jft_totalSaidas);
+
+		btnExport = new JButton("Exportar");
+		btnExport.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		btnExport.setToolTipText("Exporta o estado atual da tabela, com os filtros aplicados");
+		Utils.personalizarBotao(btnExport);
+		both.add(btnExport);
+
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LocalDate init = DataGui.getInstance().getDatas().getInitDate();
+				LocalDate fim = DataGui.getInstance().getDatas().getFinalDate();
+				String dataInit = init != null ? DateTimeFormatter.ofPattern("d.MM.yyyy").format(init) : "-";
+				String dataFim = fim != null ? DateTimeFormatter.ofPattern("d.MM.yyyy").format(fim) : "-";
+				String dataString = (dataInit.equals("-") && dataFim.equals("-")) ? "" : dataInit + " a " + dataFim;
+				String filtroText = DataGui.getInstance().getPesquisa().getText();
+				String filtro = filtroText.equals("") ? "" : filtroText + " - ";
+				String entradaSaida = "";
+				if (DataGui.getInstance().getCheckEntradas().isSelected()) {
+					if (!DataGui.getInstance().getCheckSaidas().isSelected())
+						entradaSaida = "Entradas - ";
+				} else {
+					if (DataGui.getInstance().getCheckSaidas().isSelected()) {
+						if (!DataGui.getInstance().getCheckEntradas().isSelected())
+							entradaSaida = "Saídas - ";
+					}
+				}
+				TableFinancasToPDF.transacoesToPDF(financas, "Personalizado - " + filtro + entradaSaida + dataString);
+			}
+		});
 
 		GridLayout grid = new GridLayout(1, 9);
 		grid.setHgap(20);
@@ -455,10 +489,10 @@ public class FinancasPanel extends JPanel {
 				@Override
 				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
 					LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
-					if(data.isAfter(init) || data.isEqual(init))
+					if (data.isAfter(init) || data.isEqual(init))
 						return true;
-				else
-					return false;
+					else
+						return false;
 				}
 
 			});
@@ -469,10 +503,10 @@ public class FinancasPanel extends JPanel {
 				@Override
 				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
 					LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
-					if(data.isBefore(fim) || data.isEqual(fim))
+					if (data.isBefore(fim) || data.isEqual(fim))
 						return true;
-				else
-					return false;
+					else
+						return false;
 				}
 
 			});

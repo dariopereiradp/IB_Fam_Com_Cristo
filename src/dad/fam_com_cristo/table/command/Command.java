@@ -1,4 +1,4 @@
-package dad.recursos;
+package dad.fam_com_cristo.table.command;
 
 /**
  * Interface para representar um comando, com as funções de execute, undo e redo.

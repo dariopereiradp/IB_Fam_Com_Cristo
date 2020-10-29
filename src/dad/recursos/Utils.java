@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -35,6 +36,7 @@ import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.gui.themes.Theme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
+import dad.fam_com_cristo.table.TableModelFinancas;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.themes.MaterialTheme;
@@ -186,6 +188,36 @@ public class Utils {
 
 	public DateTimeFormatter getDateFormat() {
 		return DateTimeFormatter.ofPattern(DATE_FORMAT);
+	}
+
+	public String getMesAtualString() {
+		LocalDate init = EstatisticaPeriodos.MES_ATUAL.getInit();
+		LocalDate end = EstatisticaPeriodos.MES_ATUAL.getEnd();
+		return getDateFormat().format(init) + " - " + getDateFormat().format(end);
+	}
+
+	public String getMesAnteriorString() {
+		LocalDate init = EstatisticaPeriodos.MES_ANTERIOR.getInit();
+		LocalDate fim = EstatisticaPeriodos.MES_ANTERIOR.getEnd();
+		return getDateFormat().format(init) + " - " + getDateFormat().format(fim);
+	}
+
+	public String getAnoAtualString() {
+		LocalDate init = EstatisticaPeriodos.ANO_ATUAL.getInit();
+		LocalDate end = EstatisticaPeriodos.ANO_ATUAL.getEnd();
+		return getDateFormat().format(init) + " - " + getDateFormat().format(end);
+	}
+
+	public String getAnoAnteriorString() {
+		LocalDate init = EstatisticaPeriodos.ANO_ANTERIOR.getInit();
+		LocalDate fim = EstatisticaPeriodos.ANO_ANTERIOR.getEnd();
+		return getDateFormat().format(init) + " - " + getDateFormat().format(fim);
+	}
+
+	public String getDesdeSempreString() {
+		LocalDate now = LocalDate.now();
+		LocalDate init = TableModelFinancas.getInstance().getOldestDate();
+		return getDateFormat().format(init) + " - " + getDateFormat().format(now);
 	}
 
 	public DatePickerSettings getDateSettings() {

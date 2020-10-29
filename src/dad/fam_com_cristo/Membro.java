@@ -19,10 +19,10 @@ import com.qoppa.pdfWriter.PDFDocument;
 
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.Main;
-import dad.recursos.ConexaoMembro;
+import dad.fam_com_cristo.table.conexao.ConexaoMembro;
 import dad.recursos.ImageCompression;
 import dad.recursos.Log;
-import dad.recursos.MembroToPDF;
+import dad.recursos.pdf.MembroToPDF;
 
 /**
  * Classe que representa uma pessoa.

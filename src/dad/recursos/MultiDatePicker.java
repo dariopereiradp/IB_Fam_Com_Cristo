@@ -42,6 +42,12 @@ public class MultiDatePicker extends JPanel {
 
 	}
 
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		initDateChooser.setEnabled(enabled);
+		finalDateChooser.setEnabled(enabled);
+	};
+
 	private class Listener implements DateChangeListener {
 
 		@Override
@@ -60,19 +66,19 @@ public class MultiDatePicker extends JPanel {
 			DataGui.getInstance().newFilter(DataGui.getInstance().getPesquisa().getText().toLowerCase());
 		}
 	}
-	
+
 	public DateChooser getInitDateChooser() {
 		return initDateChooser;
 	}
-	
+
 	public DateChooser getFinalDateChooser() {
 		return finalDateChooser;
 	}
-	
+
 	public LocalDate getInitDate() {
 		return initDateChooser.getDate();
 	}
-	
+
 	public LocalDate getFinalDate() {
 		return finalDateChooser.getDate();
 	}

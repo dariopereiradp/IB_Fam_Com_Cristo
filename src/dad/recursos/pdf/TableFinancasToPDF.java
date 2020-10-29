@@ -1,4 +1,4 @@
-package dad.recursos;
+package dad.recursos.pdf;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -31,15 +31,18 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.Main;
+import dad.recursos.Log;
+import dad.recursos.Utils;
 
 public class TableFinancasToPDF {
 
 	private static String descricaoS;
 
-	public static String membrosToPDF(JTable table, String descricao) {
+	public static String transacoesToPDF(JTable table, String descricao) {
 
 		descricaoS = descricao;
-		String title = "IBFC_Relatório_Financeiro_" + descricao + ".pdf";
+		String title = "IBFC_Relatório_Financeiro_" + descricao + "_"
+				+ new SimpleDateFormat("ddMMMyyyy").format(new Date()) + ".pdf";
 		try {
 			Document doc = new Document(PageSize.A4, 10, 10, 50, 50);
 
@@ -67,7 +70,7 @@ public class TableFinancasToPDF {
 			doc.add(new Paragraph(" "));
 			doc.add(new Paragraph(" "));
 
-			doc.add(new Paragraph("O saldo atual é: ", FontFactory.getFont(FontFactory.TIMES, 12)));
+			doc.add(new Paragraph(new Phrase("O saldo atual é: ", FontFactory.getFont(FontFactory.TIMES, 12))));
 			doc.add(new Paragraph("Foram registadas x entradas e x saídas durante o período",
 					FontFactory.getFont(FontFactory.TIMES, 12)));
 			doc.add(new Paragraph("O total de entradas no período foi: ", FontFactory.getFont(FontFactory.TIMES, 12)));

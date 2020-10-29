@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.table;
+package dad.fam_com_cristo.table.command;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -10,8 +10,7 @@ import javax.swing.table.AbstractTableModel;
 
 import dad.fam_com_cristo.Tipo_Transacao;
 import dad.fam_com_cristo.Transacao;
-import dad.recursos.Command;
-import dad.recursos.ConexaoFinancas;
+import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.recursos.Log;
 
 /**

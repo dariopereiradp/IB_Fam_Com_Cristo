@@ -1,4 +1,4 @@
-package dad.recursos;
+package dad.recursos.pdf;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

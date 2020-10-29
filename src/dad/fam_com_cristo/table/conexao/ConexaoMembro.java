@@ -1,4 +1,4 @@
-package dad.recursos;
+package dad.fam_com_cristo.table.conexao;
 
 import java.io.File;
 import java.sql.Connection;
@@ -9,17 +9,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import dad.fam_com_cristo.gui.Main;
+import dad.recursos.Log;
 
 /**
- * Classe para fazer a conexão com a tabela Financas.
+ * Classe para fazer a conexão com a tabela Membros.
  * @author Dário Pereira
  *
  */
-public class ConexaoFinancas {
+public class ConexaoMembro {
 
 	public static Connection con;
 
-	public static String dbFile = Main.DATABASE_DIR + "financas.mdb";
+	public static String dbFile = Main.DATABASE_DIR + "membros.mdb";
 	public static String dbUrl = "jdbc:ucanaccess://" + dbFile + ";memory=true;immediatelyReleaseResources=true";
 
 	public static Connection getConnection() {
@@ -35,23 +36,26 @@ public class ConexaoFinancas {
 
 		return con;
 	}
-	
+
 	public static void createTable() throws SQLException {
-		File financas = new File(ConexaoFinancas.dbFile);
-		if (!financas.exists()) {
-			con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoFinancas.dbFile
+		File membros = new File(ConexaoMembro.dbFile);
+		if (!membros.exists()) {
+			con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoMembro.dbFile
 					+ ";newdatabaseversion=V2003;immediatelyReleaseResources=true");
 			DatabaseMetaData dmd = con.getMetaData();
-			try (ResultSet rs = dmd.getTables(null, null, "Financas", new String[] { "TABLE" })) {
+			try (ResultSet rs = dmd.getTables(null, null, "Membros", new String[] { "TABLE" })) {
 				try (Statement s = con.createStatement()) {
-					s.executeUpdate("CREATE TABLE Financas (ID int NOT NULL, Data date, Valor currency NOT NULL, Tipo varchar(255) NOT NULL,"
-							+ "Descricao memo, Total currency,"
-							+ "CONSTRAINT PK_Financas PRIMARY KEY (ID));");
-					Log.getInstance().printLog("Base de dados financas.mbd criada com sucesso");
+					s.executeUpdate("CREATE TABLE Membros (ID int NOT NULL, Nome varchar(255) NOT NULL,"
+							+ "Data_Nascimento date, Sexo varchar(10), Estado_Civil varchar(25), Profissao varchar(50),"
+							+ "Endereco memo, Telefone varchar(15), Email varchar(255), Igreja_Origem varchar(255),"
+							+ "Tipo_Membro varchar(127), Batizado varchar(5), Membro_Desde date, Data_Batismo date, Observacoes memo,"
+							+ "CONSTRAINT PK_Membros PRIMARY KEY (ID));");
+					Log.getInstance().printLog("Base de dados membros.mbd criada com sucesso");
 				}
 			}
 			con.close();
 		}
+		
 	}
 
 }

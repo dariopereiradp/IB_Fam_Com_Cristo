@@ -1,4 +1,4 @@
-package dad.recursos;
+package dad.fam_com_cristo.table.conexao;
 
 import java.io.File;
 import java.sql.Connection;
@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import dad.fam_com_cristo.gui.Main;
+import dad.recursos.CriptografiaAES;
+import dad.recursos.Log;
 
 /**
  * Classe para fazer a conexão com a tabela Logins.

@@ -1,4 +1,4 @@
-package dad.recursos;
+package dad.fam_com_cristo.table.cells;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -14,6 +14,8 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.TableCellEditor;
+
+import dad.recursos.Utils;
 
 public class CurrencyCell extends AbstractCellEditor implements TableCellEditor {
 
