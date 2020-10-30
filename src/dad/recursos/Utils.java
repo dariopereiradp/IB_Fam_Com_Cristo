@@ -37,6 +37,7 @@ import dad.fam_com_cristo.gui.themes.Theme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.TableModelFinancas;
+import dad.fam_com_cristo.types.EstatisticaPeriodos;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.themes.MaterialTheme;
@@ -77,8 +78,6 @@ public class Utils {
 		current_theme = theme;
 		MaterialLookAndFeel.changeTheme((MaterialTheme) theme);
 		UIManager.getLookAndFeelDefaults().put("TabbedPane[tab].height", 5);
-		
-//		UIManager.put("TextPane.foreground", theme.getColorIcons());
 
 		SwingUtilities.updateComponentTreeUI(DataGui.getInstance());
 		SwingUtilities.updateComponentTreeUI(Login.getInstance().getFrame());

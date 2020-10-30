@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dad.recursos;
+package dad.fam_com_cristo.types;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

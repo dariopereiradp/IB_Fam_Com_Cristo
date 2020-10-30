@@ -45,7 +45,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.TableModelFinancas;
-import dad.recursos.EstatisticaPeriodos;
+import dad.fam_com_cristo.types.EstatisticaPeriodos;
 import dad.recursos.GraficosFinancas;
 import dad.recursos.Log;
 import dad.recursos.Utils;
