@@ -3,6 +3,7 @@ package dad.fam_com_cristo.gui;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,21 +14,22 @@ import java.net.URISyntaxException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import dad.fam_com_cristo.Main;
+import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.recursos.ImageViewer;
 import dad.recursos.Utils;
+import mdlaf.utils.MaterialColors;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
-
-import javax.swing.JTextPane;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
 
 /**
  * Diálogo que apresenta as informações sobre o programa.
@@ -45,25 +47,26 @@ public class About extends JDialog {
 	/**
 	 * Informações a sserem mostradas no diálogo 'Sobre'.
 	 */
-	private String info = "\u00A9 DPSoft 2019 <br>Feito por D\u00E1rio Pereira\r\n<br>Email de Suporte: <a href=\"#\">"
+	private String info = "<div>\u00A9 DPSoft 2020 <br>Feito por D\u00E1rio Pereira\r\n<br>Email de Suporte: <a href=\"#\">"
 			+ Main.EMAIL_SUPORTE + "</a>"
 			+ "<br><br>Código Fonte (GitHub): <a href=\"https://github.com/dariopereiradp/IB_Fam_Com_Cristo\">IB_Fam_Com_Cristo</a><br><br>"
 			+ "Compat\u00EDvel com <a href=\"https://www.java.com/download\">Java 8</a><br><br>"
-			+ "Bibliotecas usadas:<br><br><a href=\"https://github.com/atarw/material-ui-swing\">Material UI Swing 0.9.6.1</a><br>"
-			+ "<a href=\"https://sourceforge.net/projects/ucanaccess\">UCanAccess 4.0.4</a><br>"
-			+ "<a href=\"https://github.com/srikanth-lingala/zip4j\">Zip4j 2.1.1</a><br>"
-			+ "<a href=\"http://hsqldb.org\">HyperSQL</a><br>"
-			+ "<a href=\"https://sourceforge.net/projects/jackcess\">Jackcess 2.1.11</a><br>"
-			+ "<a href=\"https://toedter.com/jcalendar\">JCalendar 1.4</a><br>"
+			+ "<br>Organizado com o <a href=\"https://maven.apache.org/\">Maven</a>"
+			+ ", usando o <a href=\"https://www.eclipse.org//\">Eclipse</a><br><br>"
+			+ "Bibliotecas usadas:<br><br><a href=\"https://github.com/vincenzopalazzo/material-ui-swing\">Material UI Swing v1.1.2-rc1</a><br>"
+			+ "<a href=\"http://ucanaccess.sourceforge.net/site.html\">UCanAccess 5.0.0</a><br>"
+			+ "<a href=\"https://github.com/srikanth-lingala/zip4j\">Zip4j 2.6.4</a><br>"
+			+ "<a href=\"https://github.com/LGoodDatePicker/LGoodDatePicker\">LGoodDatePicker 11.1.0</a><br>"
 			+ "<a href=\"https://www.qoppa.com/pdfwriter\">jPDFWriter v2016R1.04</a><br>"
-			+ "<a href=\"https://mvnrepository.com/artifact/com.itextpdf/itextpdf/5.4.2\">iTextPDF 5.4.2</a><br>"
-			+ "<a href=\"https://knowm.org/open-source/xchart\">xChart 3.5.4</a><br>"
-			+ "<a href=\"https://git.eclipse.org/r/plugins/gitiles/windowbuilder/org.eclipse.windowbuilder/+/9be47c5cd5decde80f45e7febe7af8698e02d498/org.eclipse.wb.swing.MigLayout.lib/miglayout15-swing.jar?autodive=0%2F\">MigLayout15</a><br>"
-			+ "<a href=\"https://mvnrepository.com/artifact/commons-codec/commons-codec/1.11\">Apache Commons Codec 1.11</a><br>"
-			+ "<a href=\"https://mvnrepository.com/artifact/commons-io/commons-io/2.6\">Apache Commons IO 2.6</a><br>"
-			+ "<a href=\"https://mvnrepository.com/artifact/commons-lang/commons-lang/2.6\">Commons Lang 2.6</a><br>"
-			+ "<a href=\"https://mvnrepository.com/artifact/commons-logging/commons-logging/1.1.3\">Apache Commons Logging 1.1.3</a><br>"
-			+ "<br><br><center>Soli Deo Gloria - A Deus toda a glória!<center><br>";
+			+ "<a href=\"https://itextpdf.com/en/products/itext-5-legacy\">iTextPDF 5.5.13.2</a><br>"
+			+ "<a href=\"https://knowm.org/open-source/xchart\">xChart 3.6.5</a><br>"
+			+ "<a href=\"http://miglayout.com/\">MigLayout-Swing 5.2</a><br>"
+			+ "<a href=\"https://commons.apache.org/proper/commons-csv\">Apache Commons CSV 1.8</a><br>"
+			+ "<a href=\"https://commons.apache.org/proper/commons-codec\">Apache Commons Codec 1.15</a><br>"
+			+ "<a href=\"https://commons.apache.org/proper/commons-io\">Apache Commons IO 2.8.0</a><br>"
+			+ "<a href=\"https://commons.apache.org/proper/commons-lang\">Commons Lang 2.6</a><br>"
+			+ "<a href=\"https://commons.apache.org/proper/commons-logging\">Apache Commons Logging 1.2</a><br>"
+			+ "<br><br><center>Soli Deo Gloria - A Deus toda a glória!<center><br><div>";
 
 	/**
 	 * Create the dialog.
@@ -81,6 +84,9 @@ public class About extends JDialog {
 			JTextPane sobre = new JTextPane();
 			sobre.setEditable(false);
 			sobre.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			if (Utils.getInstance().getCurrentTheme() instanceof DarkTheme)
+				sobre.setBackground(MaterialColors.GRAY_500);
+
 			sobre.setContentType("text/html");
 			sobre.setText(info);
 
@@ -130,9 +136,8 @@ public class About extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
-				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
-		                MaterialIconFont.CHECK,
-		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				okButton.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.CHECK,
+						Utils.getInstance().getCurrentTheme().getColorIcons()));
 				Utils.personalizarBotao(okButton);
 				okButton.addActionListener(new ActionListener() {
 

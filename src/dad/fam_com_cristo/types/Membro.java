@@ -1,4 +1,4 @@
-package dad.fam_com_cristo;
+package dad.fam_com_cristo.types;
 
 import java.awt.Desktop;
 import java.awt.FileDialog;
@@ -17,8 +17,8 @@ import org.apache.commons.lang.WordUtils;
 
 import com.qoppa.pdfWriter.PDFDocument;
 
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.DataGui;
-import dad.fam_com_cristo.gui.Main;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
 import dad.recursos.ImageCompression;
 import dad.recursos.Log;
@@ -55,31 +55,7 @@ public class Membro implements Comparable<Membro> {
 			String endereco, String telefone, String email, String igreja_origem, Tipo_Membro tipo_membro,
 			Sim_Nao batizado, LocalDate membro_desde, LocalDate data_batismo, String observacoes, ImageIcon img) {
 
-		init(nome, data_nascimento, sexo, estado_civil, profissao, endereco, telefone, email, igreja_origem,
-				tipo_membro, batizado, membro_desde, data_batismo, observacoes, img);
-	}
-
-	/**
-	 * @param nome
-	 * @param data_nascimento
-	 * @param sexo
-	 * @param estado_civil
-	 * @param profissao
-	 * @param endereco
-	 * @param telefone
-	 * @param email
-	 * @param igreja_origem
-	 * @param tipo_membro
-	 * @param batizado
-	 * @param membro_desde
-	 * @param data_batismo
-	 * @param observacoes
-	 * @param img
-	 */
-	public void init(String nome, LocalDate data_nascimento, Sexo sexo, Estado_Civil estado_civil, String profissao,
-			String endereco, String telefone, String email, String igreja_origem, Tipo_Membro tipo_membro,
-			Sim_Nao batizado, LocalDate membro_desde, LocalDate data_batismo, String observacoes, ImageIcon img) {
-		con = ConexaoMembro.getConnection();
+		con = new ConexaoMembro().getConnection();
 		setId(++countID);
 		this.nome = WordUtils.capitalize(nome);
 		this.data_nascimento = data_nascimento;

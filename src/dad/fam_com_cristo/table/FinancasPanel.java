@@ -36,14 +36,14 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableRowSorter;
 
-import dad.fam_com_cristo.Tipo_Transacao;
-import dad.fam_com_cristo.Transacao;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.themes.DateChooser;
 import dad.fam_com_cristo.table.cells.CellRenderer;
 import dad.fam_com_cristo.table.cells.CellRendererNoImage;
 import dad.fam_com_cristo.table.cells.CurrencyCell;
 import dad.fam_com_cristo.table.cells.DataCellEditor;
+import dad.fam_com_cristo.types.Tipo_Transacao;
+import dad.fam_com_cristo.types.Transacao;
 import dad.recursos.EstatisticaPeriodos;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;

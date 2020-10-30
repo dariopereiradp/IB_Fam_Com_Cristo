@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.GerirFuncionarios;
 import dad.recursos.Log;
 import dad.recursos.Utils;

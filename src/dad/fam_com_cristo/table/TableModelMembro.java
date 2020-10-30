@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
-import dad.fam_com_cristo.Estado_Civil;
-import dad.fam_com_cristo.Membro;
-import dad.fam_com_cristo.Sexo;
-import dad.fam_com_cristo.Sim_Nao;
-import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.command.AtualizaMembro;
 import dad.fam_com_cristo.table.command.Command;
 import dad.fam_com_cristo.table.command.CompositeCommand;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.types.Estado_Civil;
+import dad.fam_com_cristo.types.Membro;
+import dad.fam_com_cristo.types.Sexo;
+import dad.fam_com_cristo.types.Sim_Nao;
+import dad.fam_com_cristo.types.Tipo_Membro;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
 import dad.recursos.Utils;
@@ -57,7 +57,7 @@ public class TableModelMembro extends AbstractTableModel {
 		membros = new ArrayList<>();
 		int maior = 0;
 		try {
-			con = ConexaoMembro.getConnection();
+			con = new ConexaoMembro().getConnection();
 			pst = con.prepareStatement("select * from membros order by Nome");
 			rs = pst.executeQuery();
 			if (rs.next()) {

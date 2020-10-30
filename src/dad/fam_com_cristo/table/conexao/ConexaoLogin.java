@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import dad.fam_com_cristo.gui.Main;
+import dad.fam_com_cristo.Main;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 

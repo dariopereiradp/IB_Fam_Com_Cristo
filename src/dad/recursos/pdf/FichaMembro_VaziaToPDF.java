@@ -12,7 +12,7 @@ import com.qoppa.pdfWriter.PDFDocument;
 import com.qoppa.pdfWriter.PDFGraphics;
 import com.qoppa.pdfWriter.PDFPage;
 
-import dad.fam_com_cristo.gui.Main;
+import dad.fam_com_cristo.Main;
 import dad.recursos.Utils;
 
 /**

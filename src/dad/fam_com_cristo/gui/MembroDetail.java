@@ -38,15 +38,16 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.MaskFormatter;
 
-import dad.fam_com_cristo.Estado_Civil;
-import dad.fam_com_cristo.Membro;
-import dad.fam_com_cristo.Sexo;
-import dad.fam_com_cristo.Sim_Nao;
-import dad.fam_com_cristo.Tipo_Membro;
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.themes.DateChooser;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.command.AtualizaMembro;
 import dad.fam_com_cristo.table.command.CompositeCommand;
+import dad.fam_com_cristo.types.Estado_Civil;
+import dad.fam_com_cristo.types.Membro;
+import dad.fam_com_cristo.types.Sexo;
+import dad.fam_com_cristo.types.Sim_Nao;
+import dad.fam_com_cristo.types.Tipo_Membro;
 import dad.recursos.ImageViewer;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
@@ -262,6 +263,7 @@ public class MembroDetail extends JDialog {
 		infoPanelWithButtons.add(infoPanel, BorderLayout.CENTER);
 
 		observacoes = new JTextArea();
+		observacoes.setFont(new Font("Dialog", Font.PLAIN, 16));
 		observacoes.setLineWrap(true);
 		JScrollPane jsp = new JScrollPane(observacoes);
 		jsp.setBorder(new LineBorder(Color.BLACK, 1));

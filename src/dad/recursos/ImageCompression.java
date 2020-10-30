@@ -16,7 +16,7 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
 
-import dad.fam_com_cristo.Membro;
+import dad.fam_com_cristo.types.Membro;
 
 /**
  * Classe para realizar a compressão de uma imagem.

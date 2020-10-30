@@ -8,9 +8,9 @@ import java.time.LocalDate;
 
 import javax.swing.table.AbstractTableModel;
 
-import dad.fam_com_cristo.Tipo_Transacao;
-import dad.fam_com_cristo.Transacao;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
+import dad.fam_com_cristo.types.Tipo_Transacao;
+import dad.fam_com_cristo.types.Transacao;
 import dad.recursos.Log;
 
 /**
@@ -36,7 +36,7 @@ public class AtualizaTransacao implements Command {
 		this.coluna = coluna;
 		this.transacao = transacao;
 		this.valor = valor;
-		con = ConexaoFinancas.getConnection();
+		con = new ConexaoFinancas().getConnection();
 		inicializar();
 	}
 

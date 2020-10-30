@@ -26,6 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import dad.fam_com_cristo.Main;
 import dad.recursos.Log;
 import dad.recursos.Utils;
 import dad.recursos.ZipCompress;
@@ -71,6 +72,7 @@ public class BugReport extends JDialog{
 			contentPanel.add(panel, BorderLayout.CENTER);
 		{
 			text = new JTextArea();
+			text.setFont(new Font("Dialog", Font.PLAIN, 16));
 			text.setLineWrap(true);
 			text.setWrapStyleWord(true);
 			JScrollPane jsp = new JScrollPane(text);

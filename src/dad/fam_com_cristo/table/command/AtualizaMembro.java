@@ -5,13 +5,13 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 
-import dad.fam_com_cristo.Estado_Civil;
-import dad.fam_com_cristo.Membro;
-import dad.fam_com_cristo.Sexo;
-import dad.fam_com_cristo.Sim_Nao;
-import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.types.Estado_Civil;
+import dad.fam_com_cristo.types.Membro;
+import dad.fam_com_cristo.types.Sexo;
+import dad.fam_com_cristo.types.Sim_Nao;
+import dad.fam_com_cristo.types.Tipo_Membro;
 import dad.recursos.Log;
 
 /**
@@ -36,7 +36,7 @@ public class AtualizaMembro implements Command {
 		this.coluna = coluna;
 		this.membro = membro;
 		this.valor = valor;
-		con = ConexaoMembro.getConnection();
+		con = new ConexaoMembro().getConnection();
 		inicializar();
 	}
 

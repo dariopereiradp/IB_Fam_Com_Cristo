@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.IconPasswordField;

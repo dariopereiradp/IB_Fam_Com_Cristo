@@ -28,9 +28,10 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import dad.fam_com_cristo.Funcionario;
+
 import dad.fam_com_cristo.gui.ChangePassword;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
+import dad.fam_com_cristo.types.Funcionario;
 import dad.recursos.Log;
 
 /**

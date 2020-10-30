@@ -11,13 +11,13 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import dad.fam_com_cristo.Tipo_Transacao;
-import dad.fam_com_cristo.Transacao;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.command.AtualizaTransacao;
 import dad.fam_com_cristo.table.command.Command;
 import dad.fam_com_cristo.table.command.CompositeCommand;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
+import dad.fam_com_cristo.types.Tipo_Transacao;
+import dad.fam_com_cristo.types.Transacao;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
 import dad.recursos.Utils;
@@ -55,7 +55,7 @@ public class TableModelFinancas extends AbstractTableModel {
 		transacoes = new ArrayList<>();
 		int maior = 0;
 		try {
-			con = ConexaoFinancas.getConnection();
+			con = new ConexaoFinancas().getConnection();
 			pst = con.prepareStatement("select * from financas order by ID");
 			rs = pst.executeQuery();
 			if (rs.next()) {

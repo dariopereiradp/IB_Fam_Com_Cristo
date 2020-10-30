@@ -42,11 +42,11 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 
-import dad.fam_com_cristo.Membro;
-import dad.fam_com_cristo.Tipo_Membro;
 import dad.fam_com_cristo.gui.MembroDetail;
 import dad.fam_com_cristo.table.cells.CellRenderer;
 import dad.fam_com_cristo.table.cells.DataCellEditor;
+import dad.fam_com_cristo.types.Membro;
+import dad.fam_com_cristo.types.Tipo_Membro;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;

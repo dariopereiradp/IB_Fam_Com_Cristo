@@ -1,4 +1,4 @@
-package dad.fam_com_cristo;
+package dad.fam_com_cristo.types;
 
 /**
  * Enumerado que representa o tipo de membro que uma pessoa pode ser.

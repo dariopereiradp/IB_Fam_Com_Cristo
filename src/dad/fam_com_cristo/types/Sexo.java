@@ -1,4 +1,4 @@
-package dad.fam_com_cristo;
+package dad.fam_com_cristo.types;
 
 /**
  * Enumenrado que representa os tipos de sexo existentes (masculino ou feminino)

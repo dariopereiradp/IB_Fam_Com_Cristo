@@ -6,6 +6,9 @@ import javax.swing.JWindow;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+
+import dad.fam_com_cristo.Main;
+
 import java.awt.Font;
 
 /**
@@ -49,7 +52,7 @@ public class Splash extends JWindow {
 		JLabel lblVerso = new JLabel("Vers\u00E3o " + Main.VERSION);
 		lblVerso.setHorizontalAlignment(SwingConstants.CENTER);
 		lblVerso.setFont(new Font("Roboto Medium", Font.PLAIN, 13));
-		lblVerso.setBounds(180, 213, 90, 14);
+		lblVerso.setBounds(150, 213, 150, 20);
 		getContentPane().add(lblVerso);
 
 	}

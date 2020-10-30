@@ -1,4 +1,4 @@
-package dad.fam_com_cristo;
+package dad.fam_com_cristo.types;
 
 /**
  * Enumerado que representa os tipos de estado civil existentes.

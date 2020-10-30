@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import dad.fam_com_cristo.gui.Main;
+import dad.fam_com_cristo.Main;
 import dad.recursos.Log;
 
 /**
@@ -16,14 +16,15 @@ import dad.recursos.Log;
  * @author Dário Pereira
  *
  */
-public class ConexaoMembro {
+public class ConexaoMembro implements Conexao{
 
 	public static Connection con;
 
-	public static String dbFile = Main.DATABASE_DIR + "membros.mdb";
-	public static String dbUrl = "jdbc:ucanaccess://" + dbFile + ";memory=true;immediatelyReleaseResources=true";
+	public static final String csvFile = Main.BACKUP_DIR + "membros.csv";
+	public static final String dbFile = Main.DATABASE_DIR + "membros.mdb";
+	public static final String dbUrl = "jdbc:ucanaccess://" + dbFile + ";memory=true;immediatelyReleaseResources=true";
 
-	public static Connection getConnection() {
+	public Connection getConnection() {
 		try {
 			File dir = new File(Main.DATABASE_DIR);
 			if (!dir.exists())
@@ -56,6 +57,11 @@ public class ConexaoMembro {
 			con.close();
 		}
 		
+	}
+
+	@Override
+	public File getCsvFile() {
+		return new File(csvFile);
 	}
 
 }

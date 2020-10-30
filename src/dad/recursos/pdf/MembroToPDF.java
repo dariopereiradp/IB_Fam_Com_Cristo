@@ -7,16 +7,16 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.swing.ImageIcon;
 import com.qoppa.pdfWriter.PDFDocument;
 import com.qoppa.pdfWriter.PDFGraphics;
 import com.qoppa.pdfWriter.PDFPage;
 
-import dad.fam_com_cristo.Membro;
-import dad.fam_com_cristo.Tipo_Membro;
-import dad.fam_com_cristo.gui.Main;
+import dad.fam_com_cristo.Main;
+import dad.fam_com_cristo.types.Membro;
+import dad.fam_com_cristo.types.Tipo_Membro;
 import dad.recursos.Utils;
 
 /**
@@ -109,7 +109,7 @@ public class MembroToPDF {
 		g2d.drawString(text, (int) (width / 8) + 5, 220 + 45 + 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-		text = new SimpleDateFormat("dd/MM/yyyy").format(membro.getData_nascimento());
+		text = Utils.getInstance().getDateFormat().format(membro.getData_nascimento());
 		g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 45 + 5);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
 
@@ -209,7 +209,7 @@ public class MembroToPDF {
 
 		if (membro.getTipo_membro() != Tipo_Membro.CONGREGADO) {
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-			text = new SimpleDateFormat("dd/MM/yyyy").format(membro.getMembro_desde());
+			text = Utils.getInstance().getDateFormat().format(membro.getMembro_desde());
 			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3, 220 + 215 + 15 + 10 + 5 + 5);
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
 		} else {
@@ -234,7 +234,7 @@ public class MembroToPDF {
 			g2d.drawString(text, (int) (width / 8) + 5 + 250, 220 + 230 + 15 + 10 + 5 + 5);
 
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.ITALIC));
-			text = new SimpleDateFormat("dd/MM/yyyy").format(membro.getData_batismo());
+			text = Utils.getInstance().getDateFormat().format(membro.getData_batismo());
 			;
 			g2d.drawString(text, (int) (width / 8) + 5 + sWidth + 3 + 250, 220 + 230 + 15 + 10 + 5 + 5);
 			g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.BOLD));
@@ -283,7 +283,7 @@ public class MembroToPDF {
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 		
-		text = "Nazária, " + new SimpleDateFormat("dd 'de' MMMMM 'de' yyyy").format(new Date());
+		text = "Nazária, " + DateTimeFormatter.ofPattern("dd 'de' MMMMM 'de' yyyy").format(LocalDate.now());
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 2.5 / 15) - 10);
 
@@ -301,7 +301,7 @@ public class MembroToPDF {
 		g2d.drawString(text, (int) (width - sWidth - width * 3.4 / 14) + 3, (int) (height - height * 1.5 / 15) + 15);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(6f).deriveFont(Font.PLAIN));
-		text = "Gerado automaticamente em " + new SimpleDateFormat("dd/MMM/yyyy 'às' HH:mm:ss").format(new Date());
+		text = "Gerado automaticamente em " + DateTimeFormatter.ofPattern("dd/MMM/yyyy 'às' HH:mm:ss").format(LocalDate.now());
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(6f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height / 15) + 10);
 

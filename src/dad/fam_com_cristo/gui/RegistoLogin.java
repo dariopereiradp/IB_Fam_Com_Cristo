@@ -28,9 +28,10 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
-import dad.fam_com_cristo.Funcionario;
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.TableModelFuncionario;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
+import dad.fam_com_cristo.types.Funcionario;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.IconPasswordField;
 import dad.recursos.IconTextField;

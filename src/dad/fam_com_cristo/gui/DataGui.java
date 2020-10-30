@@ -32,6 +32,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -44,14 +45,18 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 
 import com.qoppa.pdfWriter.PDFDocument;
 
-import dad.fam_com_cristo.Tipo_Membro;
-import dad.fam_com_cristo.Tipo_Transacao;
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelMembro;
+import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
+import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.types.Tipo_Membro;
+import dad.fam_com_cristo.types.Tipo_Transacao;
+import dad.recursos.CSVExport;
 import dad.recursos.EstatisticaPeriodos;
 import dad.recursos.Log;
 import dad.recursos.MultiDatePicker;
@@ -60,6 +65,8 @@ import dad.recursos.Utils;
 import dad.recursos.pdf.FichaMembro_VaziaToPDF;
 import dad.recursos.pdf.TableFinancasToPDF;
 import dad.recursos.pdf.TableMembrosToPDF;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 /**
  * Classe que torna visível a 'data' das várias bases de dados.
@@ -99,14 +106,17 @@ public class DataGui extends JFrame {
 	private JMenuItem mntmListaDeLderes;
 	private JMenuItem mntmFichaDeMembro;
 	private JMenu mnConf;
-	private JMenuItem mnLight;
-	private JMenuItem mnDark;
+	private JRadioButtonMenuItem mnLight;
+	private JRadioButtonMenuItem mnDark;
 	private JMenu mnTema;
 	private JMenu mnMembros;
 	private JMenu mnFinancas;
 	private JMenuItem mnRelatorioAnual;
 	private JMenuItem mnMesAnterior;
 	private JMenuItem mnRelatorioTotal;
+	private JMenu mnExportar;
+	private JMenuItem mnExportMembros;
+	private JMenuItem mnExportTransacoes;
 
 	private DataGui() {
 		INSTANCE = this;
@@ -206,6 +216,9 @@ public class DataGui extends JFrame {
 		menuBar.add(mnArquivo);
 
 		menuEstatisticas = new JMenuItem("Estat\u00EDsticas");
+		menuEstatisticas.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.INSERT_CHART,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuEstatisticas.addActionListener(new ActionListener() {
 
 			@Override
@@ -216,6 +229,9 @@ public class DataGui extends JFrame {
 		mnArquivo.add(menuEstatisticas);
 
 		menuBackup = new JMenuItem("Cópia de segurança");
+		menuBackup.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.BACKUP,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuBackup.addActionListener(new ActionListener() {
 
 			@Override
@@ -226,6 +242,9 @@ public class DataGui extends JFrame {
 		mnArquivo.add(menuBackup);
 
 		menuImportar = new JMenuItem("Restaurar Cópia de Segurança");
+		menuImportar.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.RESTORE,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnArquivo.add(menuImportar);
 		menuImportar.addActionListener(new ActionListener() {
 
@@ -237,12 +256,21 @@ public class DataGui extends JFrame {
 		});
 
 		mnConf = new JMenu("Configura\u00E7\u00F5es");
+		mnConf.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.SETTINGS_APPLICATIONS,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnArquivo.add(mnConf);
 
 		mnTema = new JMenu("Tema");
+		mnTema.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.SETTINGS_BRIGHTNESS,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnConf.add(mnTema);
 
-		mnLight = new JMenuItem("Claro");
+		mnLight = new JRadioButtonMenuItem("Claro");
+		mnLight.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.WB_SUNNY,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnTema.add(mnLight);
 
 		mnLight.addActionListener(new ActionListener() {
@@ -254,7 +282,10 @@ public class DataGui extends JFrame {
 			}
 		});
 
-		mnDark = new JMenuItem("Escuro");
+		mnDark = new JRadioButtonMenuItem("Escuro");
+		mnDark.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.WB_CLOUDY,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnTema.add(mnDark);
 
 		mnDark.addActionListener(new ActionListener() {
@@ -264,8 +295,16 @@ public class DataGui extends JFrame {
 				Utils.getInstance().changeTheme(DarkTheme.getInstance());
 			}
 		});
+		
+		if(Utils.getInstance().getCurrentTheme() instanceof DarkTheme)
+			mnDark.setSelected(true);
+		else
+			mnLight.setSelected(true);
 
 		menuConfig = new JMenuItem("Outra configura\u00E7\u00F5es");
+		menuConfig.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.SETTINGS,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnConf.add(menuConfig);
 		menuConfig.addActionListener(new ActionListener() {
 
@@ -276,9 +315,15 @@ public class DataGui extends JFrame {
 		});
 
 		menuAtualizar = new JMenuItem("Atualizar Tabelas");
+		menuAtualizar.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.UPDATE,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnArquivo.add(menuAtualizar);
 
 		mnLimpar = new JMenuItem("Limpar espa\u00E7o");
+		mnLimpar.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.CLEAR_ALL,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnLimpar.setToolTipText("Apaga os arquivos de logs antigos, que são desnecessários");
 		mnLimpar.addActionListener(new ActionListener() {
 
@@ -290,12 +335,15 @@ public class DataGui extends JFrame {
 						"Limpar espaço", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
 						new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
 				if (ok == JOptionPane.YES_OPTION)
-					Log.getInstance().limpar();
+					Log.limpar();
 			}
 		});
 		mnArquivo.add(mnLimpar);
 
 		menuSair = new JMenuItem("Sair");
+		menuSair.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.EXIT_TO_APP,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuSair.addActionListener(new SairAction());
 		mnArquivo.add(menuSair);
 
@@ -303,53 +351,100 @@ public class DataGui extends JFrame {
 		menuBar.add(mnEditar);
 
 		menuAnular = new JMenuItem("Anular (Ctrl+Z) - ()");
+		menuAnular.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.UNDO,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		menuAnular.setDisabledIcon(menuAnular.getIcon());
 		menuAnular.setEnabled(false);
 		mnEditar.add(menuAnular);
 
 		menuRefazer = new JMenuItem("Refazer (Ctrl+Y) - ()");
+		menuRefazer.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.REDO,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		menuRefazer.setDisabledIcon(menuRefazer.getIcon());
 		menuRefazer.setEnabled(false);
 		mnEditar.add(menuRefazer);
 
 		menuOrdenar = new JMenuItem("Ordenar");
+		menuOrdenar.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.REORDER,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnEditar.add(menuOrdenar);
 
 		mnGerar = new JMenu("Gerar");
 		menuBar.add(mnGerar);
 
 		mnMembros = new JMenu("Membros");
+		mnMembros.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PEOPLE,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnGerar.add(mnMembros);
 
 		mntmFichaDeMembro = new JMenuItem("Ficha de Membro (para preencher)");
+		mntmFichaDeMembro.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnMembros.add(mntmFichaDeMembro);
 
 		mListaBatizados = new JMenuItem("Lista de Batizados (membros ativos e nominais)");
+		mListaBatizados.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnMembros.add(mListaBatizados);
 
 		mListaAtivos = new JMenuItem("Lista de Membros Ativos");
+		mListaAtivos.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnMembros.add(mListaAtivos);
 
 		mListaNom = new JMenuItem("Lista de Membros Nominais");
+		mListaNom.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnMembros.add(mListaNom);
 
 		mListaCong = new JMenuItem("Lista de Congregados");
+		mListaCong.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnMembros.add(mListaCong);
 
 		mntmListaDeLderes = new JMenuItem("Lista de L\u00EDderes");
+		mntmListaDeLderes.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnMembros.add(mntmListaDeLderes);
 
 		mListaTotal = new JMenuItem("Lista Total (todos, exceto ex-membros)");
+		mListaTotal.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnMembros.add(mListaTotal);
 
 		mnFinancas = new JMenu("Finan\u00E7as");
+		mnFinancas.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.MONETIZATION_ON,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnGerar.add(mnFinancas);
 
 		mnRelatorioAnual = new JMenuItem("Relat\u00F3rio do ano anterior");
+		mnRelatorioAnual.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnFinancas.add(mnRelatorioAnual);
 
 		mnMesAnterior = new JMenuItem("Relat\u00F3rio do m\u00EAs anterior");
+		mnMesAnterior.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnFinancas.add(mnMesAnterior);
 
 		mnRelatorioTotal = new JMenuItem("Relat\u00F3rio completo");
+		mnRelatorioTotal.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PICTURE_AS_PDF,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnFinancas.add(mnRelatorioTotal);
 		mListaTotal.addActionListener(new ActionListener() {
 
@@ -438,10 +533,40 @@ public class DataGui extends JFrame {
 			}
 		});
 
+		mnExportar = new JMenu("Exportar");
+		menuBar.add(mnExportar);
+
+		mnExportMembros = new JMenuItem("Membros (CSV)");
+		mnExportMembros.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.PEOPLE,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		mnExportar.add(mnExportMembros);
+
+		mnExportMembros.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CSVExport.exportToCsv(new ConexaoMembro());
+			}
+		});
+
+		mnExportTransacoes = new JMenuItem("Transa\u00E7\u00F5es (CSV)");
+		mnExportTransacoes.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.MONETIZATION_ON,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
+		mnExportar.add(mnExportTransacoes);
+
+		mnExportTransacoes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CSVExport.exportToCsv(new ConexaoFinancas());
+			}
+		});
+
 		mnAjuda = new JMenu("Ajuda");
 		menuBar.add(mnAjuda);
 
 		mntmRelatarErro = new JMenuItem("Relatar erro");
+		mntmRelatarErro.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.BUG_REPORT,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mntmRelatarErro.addActionListener(new ActionListener() {
 
 			@Override
@@ -451,6 +576,9 @@ public class DataGui extends JFrame {
 		});
 
 		menuManual = new JMenuItem("Manual de Instru\u00E7\u00F5es");
+		menuManual.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.BOOK,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuManual.addActionListener(new ActionListener() {
 
 			@Override
@@ -471,13 +599,16 @@ public class DataGui extends JFrame {
 
 			}
 		});
-		menuManual.setEnabled(false);
+//		menuManual.setEnabled(false);
 		menuManual.setToolTipText("Manual ainda não disponível!");
 
 		mnAjuda.add(menuManual);
 		mnAjuda.add(mntmRelatarErro);
 
 		menuSobre = new JMenuItem("Sobre");
+		menuSobre.setIcon(MaterialImageFactory.getInstance().getImage(
+                MaterialIconFont.HELP,
+                Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuSobre.addActionListener(new ActionListener() {
 
 			@Override

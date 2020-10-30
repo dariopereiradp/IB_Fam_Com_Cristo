@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.gui;
+package dad.fam_com_cristo;
 
 import java.awt.EventQueue;
 import java.io.File;
@@ -16,13 +16,15 @@ import javax.swing.UIManager;
 
 import org.apache.commons.io.FileUtils;
 
-import dad.fam_com_cristo.Membro;
+import dad.fam_com_cristo.gui.Login;
+import dad.fam_com_cristo.gui.Splash;
 import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelFuncionario;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.types.Membro;
 import dad.recursos.Log;
 import dad.recursos.Utils;
 import mdlaf.MaterialLookAndFeel;
@@ -39,8 +41,8 @@ public class Main {
 	public static final String TITLE = "IGREJA BATISTA FAMÍLIAS COM CRISTO";
 	public static final String TITLE_SMALL = "Igreja Batista Famílias com Cristo";
 	public static final String PASTOR = "PASTOR";
-	public static final String VERSION = "2.0";
-	public static final String DATA_PUBLICACAO = "31 de Agosto de 2019";
+	public static final String VERSION = "2.0 - Reforma";
+	public static final String DATA_PUBLICACAO = "31 de Outubro de 2020";
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String USER = "admin";
 	public static final String PASS = "dad";
@@ -67,6 +69,7 @@ public class Main {
 
 			UIManager.setLookAndFeel(materialTheme);
 			UIManager.getLookAndFeelDefaults().put("TabbedPane[tab].height", 5);
+//			UIManager.put("TextPane.foreground", Utils.getInstance().getCurrentTheme().getColorIcons());
 			Splash screen = new Splash();
 			EventQueue.invokeLater(new Runnable() {
 

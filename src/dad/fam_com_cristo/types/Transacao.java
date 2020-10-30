@@ -1,4 +1,4 @@
-package dad.fam_com_cristo;
+package dad.fam_com_cristo.types;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -35,7 +35,7 @@ public class Transacao implements Comparable<Transacao> {
 	 * @param total
 	 */
 	public void init(BigDecimal value, Tipo_Transacao tipo, String descricao, LocalDate data, BigDecimal total) {
-		con = ConexaoFinancas.getConnection();
+		con = new ConexaoFinancas().getConnection();
 		id = ++countID;
 		this.value = value;
 		this.tipo = tipo;

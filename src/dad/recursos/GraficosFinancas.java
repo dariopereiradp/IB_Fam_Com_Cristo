@@ -15,9 +15,9 @@ import org.knowm.xchart.PieChart;
 import org.knowm.xchart.PieChartBuilder;
 import org.knowm.xchart.style.Styler.ChartTheme;
 
-import dad.fam_com_cristo.Tipo_Transacao;
-import dad.fam_com_cristo.gui.Main;
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.TableModelFinancas;
+import dad.fam_com_cristo.types.Tipo_Transacao;
 import mdlaf.utils.MaterialColors;
 
 public class GraficosFinancas {

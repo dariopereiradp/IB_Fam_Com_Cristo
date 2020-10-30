@@ -28,9 +28,9 @@ import javax.swing.text.NumberFormatter;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
 
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.Login;
-import dad.fam_com_cristo.gui.Main;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.gui.themes.Theme;
@@ -77,10 +77,12 @@ public class Utils {
 		current_theme = theme;
 		MaterialLookAndFeel.changeTheme((MaterialTheme) theme);
 		UIManager.getLookAndFeelDefaults().put("TabbedPane[tab].height", 5);
+		
+//		UIManager.put("TextPane.foreground", theme.getColorIcons());
 
 		SwingUtilities.updateComponentTreeUI(DataGui.getInstance());
 		SwingUtilities.updateComponentTreeUI(Login.getInstance().getFrame());
-//		
+	
 		DataGui.getInstance().getContentPane().removeAll();
 		DataGui.getInstance().recreate();
 		MembroPanel.getInstance().removeAll();

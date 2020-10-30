@@ -7,12 +7,12 @@ import org.knowm.xchart.PieChartBuilder;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.Styler.ChartTheme;
 
-import dad.fam_com_cristo.Estado_Civil;
-import dad.fam_com_cristo.Sexo;
-import dad.fam_com_cristo.Tipo_Membro;
-import dad.fam_com_cristo.gui.Main;
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.fam_com_cristo.table.TableModelMembro;
+import dad.fam_com_cristo.types.Estado_Civil;
+import dad.fam_com_cristo.types.Sexo;
+import dad.fam_com_cristo.types.Tipo_Membro;
 import mdlaf.utils.MaterialColors;
 
 public class GraficosMembros {

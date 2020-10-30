@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.io.FileUtils;
 
-import dad.fam_com_cristo.gui.Main;
+import dad.fam_com_cristo.Main;
 
 /**
  * Classe para criar ficheiros de log do programa.
@@ -81,7 +81,7 @@ public class Log {
 	/**
 	 * Apaga os logs dos meses anteriores, para limpar espaço no sistema.
 	 */
-	public void limpar() {
+	public static void limpar() {
 		String logPath = Main.DATA_DIR + "Logs/";
 		String month_year = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMyyyy")).toUpperCase();
 		File logs = new File(logPath);
@@ -93,15 +93,17 @@ public class Log {
 			FileUtils.deleteDirectory(logs);
 		} catch (IOException e) {
 			try {
+				Log.getInstance().close();
+				INSTANCE = null;
 				FileUtils.copyDirectory(logMonthTmp, logMonth);
 				FileUtils.deleteDirectory(logMonthTmp);
 				JOptionPane.showMessageDialog(null, "Limpeza feita!", "Limpar espaço - Sucesso", JOptionPane.OK_OPTION,
-						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+						new ImageIcon(Log.class.getResource("/FC_SS.jpg")));
 			} catch (IOException e1) {
 				Log.getInstance().printLog("Erro ao limpar o espaço! - " + e.getMessage());
 				JOptionPane.showMessageDialog(null, "Erro ao fazer a limpeza! - " + e.getMessage(),
 						"Limpar espaço - Erro", JOptionPane.OK_OPTION,
-						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+						new ImageIcon(Log.class.getResource("/FC_SS.jpg")));
 				e1.printStackTrace();
 			}
 		}
