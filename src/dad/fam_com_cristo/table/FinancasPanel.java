@@ -343,9 +343,11 @@ public class FinancasPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				LocalDate init = DataGui.getInstance().getDatas().getInitDate();
 				LocalDate fim = DataGui.getInstance().getDatas().getFinalDate();
+				if (fim == null)
+					fim = LocalDate.now();
 				String dataInit = init != null ? DateTimeFormatter.ofPattern("d.MM.yyyy").format(init) : "-";
-				String dataFim = fim != null ? DateTimeFormatter.ofPattern("d.MM.yyyy").format(fim) : "-";
-				String dataString = (dataInit.equals("-") && dataFim.equals("-")) ? "" : dataInit + " a " + dataFim;
+				String dataFim = DateTimeFormatter.ofPattern("d.MM.yyyy").format(fim);
+				String dataString = dataInit + " a " + dataFim;
 				String filtroText = DataGui.getInstance().getPesquisa().getText();
 				String filtro = filtroText.equals("") ? "" : filtroText + " - ";
 				String entradaSaida = "";
