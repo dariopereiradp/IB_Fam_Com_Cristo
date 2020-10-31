@@ -495,7 +495,7 @@ public class FinancasPanel extends JPanel {
 
 				@Override
 				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-					LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
+					LocalDate data = (LocalDate) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1);
 					if (data.isAfter(init) || data.isEqual(init))
 						return true;
 					else
@@ -509,7 +509,7 @@ public class FinancasPanel extends JPanel {
 
 				@Override
 				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-					LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
+					LocalDate data = (LocalDate) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1);
 					if (data.isBefore(fim) || data.isEqual(fim))
 						return true;
 					else

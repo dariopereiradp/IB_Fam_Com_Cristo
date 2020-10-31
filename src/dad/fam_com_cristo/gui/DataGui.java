@@ -917,7 +917,7 @@ public class DataGui extends JFrame {
 
 					@Override
 					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-						LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
+						LocalDate data = (LocalDate) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1);
 						if (data.isAfter(datas.getInitDate()) || data.isEqual(datas.getInitDate()))
 							return true;
 						else
@@ -931,7 +931,7 @@ public class DataGui extends JFrame {
 
 					@Override
 					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-						LocalDate data = (LocalDate) entry.getModel().getValueAt((int) entry.getIdentifier(), 1);
+						LocalDate data = (LocalDate) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1);
 						if (data.isBefore(datas.getFinalDate()) || data.isEqual(datas.getFinalDate()))
 							return true;
 						else
