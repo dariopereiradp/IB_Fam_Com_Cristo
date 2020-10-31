@@ -45,6 +45,10 @@ public class GraficosFinancas {
 
 		if (!print)
 			GraficosMembros.customizeDarkMode(chart.getStyler());
+		else {
+			chart.getStyler().setSeriesColors(
+					new Color[] { MaterialColors.BLUE_900, MaterialColors.BLUE_300 });
+		}
 
 //		LocalDate initDate = periodo.equals(EstatisticaPeriodos.PERSONALIZADO) ? estatiscas.getDatas1().getInitDate()
 //				: periodo.getInit();
@@ -70,11 +74,15 @@ public class GraficosFinancas {
 		chart.getStyler().setLegendVisible(true).setToolTipsEnabled(true)
 				.setToolTipHighlightColor(new Color(175, 25, 125, 50))
 				.setSeriesColors(
-						new Color[] { MaterialColors.GREEN_500, MaterialColors.RED_500, MaterialColors.YELLOW_500 })
+						new Color[] { MaterialColors.GREEN_500, MaterialColors.RED_500 })
 				.setChartPadding(10).setChartTitlePadding(10).setDecimalPattern("R$ ###,###.###");
 
 		if (!print)
 			GraficosMembros.customizeDarkMode(chart.getStyler());
+		else {
+			chart.getStyler().setSeriesColors(
+					new Color[] { MaterialColors.BLUE_900, MaterialColors.BLUE_300 });
+		}
 
 		// chart.getStyler().setPlotContentSize(0.7);
 
