@@ -40,6 +40,7 @@ public class Main {
 
 	public static final String TITLE = "IGREJA BATISTA FAMÍLIAS COM CRISTO";
 	public static final String TITLE_SMALL = "Igreja Batista Famílias com Cristo";
+	public static final String SIGLA = "IBFC";
 	public static final String PASTOR = "PASTOR";
 	public static final String VERSION = "2.0 - Reforma";
 	public static final String DATA_PUBLICACAO = "31 de Outubro de 2020";
@@ -50,6 +51,9 @@ public class Main {
 			+ "Documents/IB_Fam_Com_Cristo/";
 	public static final String LISTAS_DIR = DOCUMENTS_DIR + "Listas/";
 	public static final String BACKUP_DIR = DOCUMENTS_DIR + "Backups/";
+	public static final String LOGO_DIR = DOCUMENTS_DIR + "Imagem de Logotipo/";
+	public static final String SAVED_IMAGES = DOCUMENTS_DIR + "Imagem Salvas/";
+	public static final String MODELOS_DIR = DOCUMENTS_DIR + "Modelos/";
 	public static final String BUG_REPORTS_DIR = DOCUMENTS_DIR + "BugReports/";
 	public static final String DATA_DIR = System.getenv("APPDATA") + "/IB_Fam_Com_Cristo/";
 	public static final String DATABASE_DIR = DATA_DIR + "Databases/";
@@ -69,7 +73,6 @@ public class Main {
 
 			UIManager.setLookAndFeel(materialTheme);
 			UIManager.getLookAndFeelDefaults().put("TabbedPane[tab].height", 5);
-//			UIManager.put("TextPane.foreground", Utils.getInstance().getCurrentTheme().getColorIcons());
 			Splash screen = new Splash();
 			EventQueue.invokeLater(new Runnable() {
 
@@ -83,7 +86,7 @@ public class Main {
 
 				@Override
 				public void run() {
-					createTables();
+					createFoldersAndTables();
 					TableModelMembro.getInstance().uploadDataBase();
 					TableModelFuncionario.getInstance().uploadDataBase();
 					TableModelFinancas.getInstance().uploadDataBase();
@@ -174,7 +177,7 @@ public class Main {
 	/**
 	 * Cria as pastas e tabelas das bases de dados, caso não existam.
 	 */
-	private void createTables() {
+	private void createFoldersAndTables() {
 		File dir = new File(DATABASE_DIR);
 		if (!dir.exists())
 			dir.mkdirs();
@@ -183,13 +186,25 @@ public class Main {
 		if (!membrosPDF.exists())
 			membrosPDF.mkdirs();
 
-		File Listdir = new File(Main.LISTAS_DIR);
-		if (!Listdir.exists())
-			Listdir.mkdirs();
+		File listDir = new File(Main.LISTAS_DIR);
+		if (!listDir.exists())
+			listDir.mkdirs();
 
 		File backdir = new File(Main.BACKUP_DIR);
 		if (!backdir.exists())
 			backdir.mkdirs();
+
+		File logoImg = new File(Main.LOGO_DIR);
+		if (!logoImg.exists())
+			logoImg.mkdirs();
+
+		File savedImg = new File(Main.SAVED_IMAGES);
+		if (!savedImg.exists())
+			savedImg.mkdirs();
+
+		File modelos = new File(Main.MODELOS_DIR);
+		if (!modelos.exists())
+			modelos.mkdirs();
 
 		File bugDir = new File(Main.BUG_REPORTS_DIR);
 		if (!bugDir.exists())
@@ -204,7 +219,7 @@ public class Main {
 
 			ConexaoFinancas.createTable();
 
-			File imgs = new File(Membro.imgPath);
+			File imgs = new File(Membro.IMG_PATH);
 			if (!imgs.exists())
 				imgs.mkdirs();
 

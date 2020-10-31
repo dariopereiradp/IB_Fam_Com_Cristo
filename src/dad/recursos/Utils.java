@@ -6,8 +6,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +41,7 @@ import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.types.EstatisticaPeriodos;
+import dad.fam_com_cristo.types.ImageFormats;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.themes.MaterialTheme;
@@ -81,7 +85,7 @@ public class Utils {
 
 		SwingUtilities.updateComponentTreeUI(DataGui.getInstance());
 		SwingUtilities.updateComponentTreeUI(Login.getInstance().getFrame());
-	
+
 		DataGui.getInstance().getContentPane().removeAll();
 		DataGui.getInstance().recreate();
 		MembroPanel.getInstance().removeAll();
@@ -266,6 +270,92 @@ public class Utils {
 			e2.printStackTrace();
 		}
 		return pastorName;
+	}
+
+	public static void exportLogo(ImageFormats format) {
+		try {
+			InputStream stream = null;
+			String name = Main.LOGO_DIR + Main.SIGLA;
+			switch (format) {
+			case JPG:
+				name += ImageFormats.JPG.getFormat();
+				stream = Utils.class.getResourceAsStream("/FC.jpg");
+				break;
+			case PNG:
+				name += ImageFormats.PNG.getFormat();
+				stream = Utils.class.getResourceAsStream("/FC-T-Big.png");
+				break;
+			case SVG:
+				name += ImageFormats.SVG.getFormat();
+				stream = Utils.class.getResourceAsStream("/FC.svg");
+				break;
+			case PDF:
+				name += ImageFormats.PDF.getFormat();
+				stream = Utils.class.getResourceAsStream("/FC.pdf");
+				break;
+			default:
+				break;
+			}
+			File img = new File(name);
+
+			if (stream != null) {
+				Files.copy(stream, img.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				String message = "O logotipo foi exportado com sucesso para a pasta:\n" + Main.LOGO_DIR
+						+ "\nVocê quer abrir a imagem agora?";
+				askMessage(message, Main.LOGO_DIR, name);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.getInstance().printLog(e.getMessage());
+		}
+	}
+
+	public static void exportImg(InputStream source, File target) throws IOException {
+		if (source != null) {
+			Files.copy(source, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			source.close();
+			String message = "A imagem foi salva com sucesso na pasta:\n" + Main.SAVED_IMAGES
+					+ "\nVocê quer abrir a imagem agora?";
+			askMessage(message, Main.SAVED_IMAGES, target.getPath());
+
+		}
+	}
+
+	public static void exportModelo() {
+		try {
+			String filename = Main.MODELOS_DIR + "IBFC_Modelo_Oficio.docx";
+			File modelo = new File(filename);
+			InputStream stream = Utils.class.getResourceAsStream("/IBFC_Modelo.docx");
+			Files.copy(stream, modelo.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			String message = "O modelo de ofício foi exportado com sucesso!\n"
+					+ "Foi salvo um documento do Word (que deve ser editado) na pasta:\n" + Main.MODELOS_DIR
+					+ "\nVocê quer abrir o documento agora?";
+			askMessage(message, Main.MODELOS_DIR, filename);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			Log.getInstance().printLog(e1.getMessage());
+		}
+	}
+
+	/**
+	 * Mostra JOptionPane informando que foi salvo com sucesso e perguntando se quer
+	 * abrir o ficheiro
+	 * 
+	 * @param message
+	 * @throws IOException
+	 */
+	public static void askMessage(String message, String dir, String filepath) throws IOException {
+
+		int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso",
+				JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+				new ImageIcon(DataGui.getInstance().getClass().getResource("/FC_SS.jpg")), Main.OPTIONS,
+				Main.OPTIONS[1]);
+		Log.getInstance().printLog(message);
+		if (ok == JOptionPane.YES_OPTION) {
+			Desktop.getDesktop().open(new File(dir));
+			Desktop.getDesktop().open(new File(filepath));
+		}
 	}
 
 	public static Utils getInstance() {

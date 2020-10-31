@@ -89,12 +89,6 @@
 			<version>1.15</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.qoppa.pdfwriter</groupId>
-			<artifactId>jpdfwriter</artifactId>
-			<version>v2016R1.04</version>
-		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
 		<dependency>
 			<groupId>com.itextpdf</groupId>
@@ -122,18 +116,6 @@
 			</resource>
 		</resources>
 		<plugins>
-			<!-- Eclipse shows an error on the execution, because of the initialize 
-				phase. However, this plugin only needs to run once in each computer. It installs 
-				the jPDFWritter local jar in my local maven repository. To do this, I only 
-				need to remove this commentary and to run 'mvn initialize', After that, comment 
-				this again and forget about it :) <plugin> <groupId>org.apache.maven.plugins</groupId> 
-				<artifactId>maven-install-plugin</artifactId> <version>2.5.2</version> <executions> 
-				<execution> <id>inst_1</id> <phase>initialize</phase> <goals> <goal>install-file</goal> 
-				</goals> <configuration> <file>${project.basedir}/libs/jpdfwriter-v2016R1.04.jar</file> 
-				<repositoryLayout>default</repositoryLayout> <groupId>com.qoppa.pdfwriter</groupId> 
-				<artifactId>jpdfwriter</artifactId> <version>v2016R1.04</version> <packaging>jar</packaging> 
-				</configuration> </execution> </executions> </plugin> -->
-
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.3.0</version>

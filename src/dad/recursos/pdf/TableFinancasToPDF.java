@@ -1,9 +1,7 @@
 package dad.recursos.pdf;
 
-import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,7 +41,6 @@ import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import dad.fam_com_cristo.Main;
-import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.types.EstatisticaPeriodos;
 import dad.recursos.GraficosFinancas;
@@ -60,8 +57,8 @@ public class TableFinancasToPDF {
 			LocalDate end, boolean anual) {
 
 		descricaoS = descricao;
-		
-		String title = "IBFC_Relatório_Financeiro_" + descricao + "_"
+
+		String title = Main.SIGLA + "_Relatório_Financeiro_" + descricao + "_"
 				+ new SimpleDateFormat("ddMMMyyyy").format(new Date()) + ".pdf";
 		try {
 			Document doc = new Document(PageSize.A4, 40, 40, 50, 50);
@@ -71,16 +68,18 @@ public class TableFinancasToPDF {
 			doc.open();
 
 			// Metadata
-			doc.addSubject("IBFC - Relatório Financeiro - " + descricao);
+			doc.addSubject(Main.SIGLA + " - Relatório Financeiro - " + descricao);
 			doc.addTitle(title);
 			doc.addAuthor(Main.TITLE_SMALL);
 
-			Font fonteTitle = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
-			Image logo = Image.getInstance(DataGui.getInstance().getClass().getResource("/FC.jpg"));
+			//Logo
+			Image logo = Image.getInstance(TableFinancasToPDF.class.getResource("/FC.jpg"));
 			logo.scalePercent(3.5f);
-
 			logo.setAlignment(Element.ALIGN_CENTER);
 			doc.add(logo);
+			
+			//Title
+			Font fonteTitle = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
 			doc.add(new Paragraph(" "));
 			Paragraph titleP = new Paragraph(Main.TITLE_SMALL, fonteTitle);
 			titleP.setAlignment(Element.ALIGN_CENTER);
@@ -192,7 +191,7 @@ public class TableFinancasToPDF {
 			pastorCell.setBorder(Rectangle.NO_BORDER);
 			assinatura.addCell(pastorCell);
 
-			Paragraph pastorF = new Paragraph(("(Pastor Principal)"), FontFactory.getFont(FontFactory.TIMES, 10));
+			Paragraph pastorF = new Paragraph(("(Pastor)"), FontFactory.getFont(FontFactory.TIMES, 10));
 			PdfPCell pastorFCell = new PdfPCell(pastorF);
 			pastorFCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			pastorFCell.setBorder(Rectangle.NO_BORDER);
@@ -200,21 +199,13 @@ public class TableFinancasToPDF {
 
 			assinatura.writeSelectedRows(0, -1, 315, assinatura.getTotalHeight() + doc.bottom(doc.bottomMargin()),
 					writer.getDirectContent());
+			
+			//Save
 			doc.close();
-			System.out.println("done");
-
 			String message = "O Relatório Financeiro - " + descricao
 					+ " foi criado com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"
 					+ Main.LISTAS_DIR + "\nVocê quer abrir o documento agora?";
-			int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso",
-					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon(DataGui.getInstance().getClass().getResource("/FC_SS.jpg")), Main.OPTIONS,
-					Main.OPTIONS[1]);
-			Log.getInstance().printLog(message);
-			if (ok == JOptionPane.YES_OPTION) {
-				Desktop.getDesktop().open(new File(Main.LISTAS_DIR));
-				Desktop.getDesktop().open(new File(Main.LISTAS_DIR + title));
-			}
+			Utils.askMessage(message, Main.LISTAS_DIR, Main.LISTAS_DIR + title);
 
 		} catch (DocumentException ex) {
 			ex.printStackTrace();
@@ -227,7 +218,7 @@ public class TableFinancasToPDF {
 					"Não foi possível criar o PDF do Relatório Financeiro!\n"
 							+ "Se tiver um relatório aberto, por favor feche e tente novamente!",
 					"Criar Relatório Financeiro - Erro", JOptionPane.OK_OPTION,
-					new ImageIcon(DataGui.getInstance().getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(TableFinancasToPDF.class.getResource("/DAD_SS.jpg")));
 			e.printStackTrace();
 		}
 
@@ -262,13 +253,13 @@ public class TableFinancasToPDF {
 		public void onEndPage(PdfWriter writer, Document document) {
 			Image image;
 			try {
-				image = Image.getInstance(DataGui.getInstance().getClass().getResource("/FC.jpg"));
+				image = Image.getInstance(TableFinancasToPDF.class.getResource("/FC.jpg"));
 				image.setAlignment(Element.ALIGN_CENTER);
 				image.setAbsolutePosition(296, 15);
 				image.scalePercent(0.8f);
 				writer.getDirectContent().addImage(image, true);
 			} catch (IOException | DocumentException e) {
-				// TODO Auto-generated catch block
+				Log.getInstance().printLog(e.getMessage());
 				e.printStackTrace();
 			}
 			Paragraph footerLeftP = new Paragraph(
@@ -281,7 +272,6 @@ public class TableFinancasToPDF {
 			Phrase footerRight = new Phrase(footerRightP);
 			ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT, footerRight, 550, 30, 0);
 		}
-
 	}
 
 }

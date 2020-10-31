@@ -1,6 +1,5 @@
 package dad.fam_com_cristo.types;
 
-import java.awt.Desktop;
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.IOException;
@@ -11,18 +10,15 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 import org.apache.commons.lang.WordUtils;
-
-import com.qoppa.pdfWriter.PDFDocument;
 
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
 import dad.recursos.ImageCompression;
 import dad.recursos.Log;
-import dad.recursos.pdf.MembroToPDF;
+import dad.recursos.pdf.FichaMembroToPDF;
 
 /**
  * Classe que representa uma pessoa.
@@ -35,7 +31,7 @@ public class Membro implements Comparable<Membro> {
 	/**
 	 * Caminho para a pasta das imagens dos livros.
 	 */
-	public static final String imgPath = Main.DATABASE_DIR + "Imagens/";
+	public static final String IMG_PATH = Main.DATABASE_DIR + "Imagens/";
 	/**
 	 * Variável usada para controle do próximo id a ser atribuído a um novo membro.
 	 */
@@ -350,42 +346,34 @@ public class Membro implements Comparable<Membro> {
 		batizado = sim_nao;
 	}
 
-	/**
-	 * Cria uma ficha PDF do membro.
-	 * 
-	 * @return
-	 */
-	public PDFDocument toPdf() {
-		return new MembroToPDF(this).generatePDF();
+	public String getPhoneString() {
+		String phone = getTelefone();
+		return "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
+				+ phone.substring(7);
+	}
+
+//	/**
+//	 * Cria uma ficha PDF do membro.
+//	 * 
+//	 * @return
+//	 */
+//	public PDFDocument toPdf() {
+//		return new MembroToPDF(this).generatePDF();
+//	}
+
+	public File getImageFile() {
+		if (img == null)
+			return null;
+		else
+			return new File(IMG_PATH + id + ".jpg");
+
 	}
 
 	/**
 	 * Salva a ficha PDF do membro e pergunta se quer abrir.
 	 */
 	public void savePdf() {
-		PDFDocument pdf = toPdf();
-		try {
-			pdf.saveDocument(Main.MEMBROS_PDF_PATH + toString() + ".pdf");
-			String message = "A ficha do membro " + getNome()
-					+ " foi criada com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"
-					+ Main.MEMBROS_PDF_PATH + "\nVocê quer abrir o documento agora?";
-			int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Criado com sucesso",
-					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
-			Log.getInstance().printLog(message);
-			if (ok == JOptionPane.YES_OPTION) {
-				Desktop.getDesktop().open(new File(Main.MEMBROS_PDF_PATH));
-				Desktop.getDesktop().open(new File(Main.MEMBROS_PDF_PATH + toString() + ".pdf"));
-			}
-		} catch (IOException e) {
-			Log.getInstance().printLog("Erro ao salvar PDF de ficha de membro - " + e.getMessage());
-			JOptionPane.showMessageDialog(null,
-					"Não foi possível criar o PDF da Ficha de Membro!\n"
-							+ "Se tiver uma ficha de membro aberta, por favor feche e tente novamente!",
-					"Criar ficha de membro - Erro", JOptionPane.OK_OPTION,
-					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
-			e.printStackTrace();
-		}
+		FichaMembroToPDF.membroToPdf(this);
 	}
 
 	/*

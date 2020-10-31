@@ -129,10 +129,10 @@ public class BugReport extends JDialog{
 		String data_hora = new SimpleDateFormat("dd/MM/yyyy 'às' HH'h'mm'm'ss").format(new Date());
 		String data = new SimpleDateFormat("ddMMMyyyy_HH'h'mm").format(new Date());
 		String info = Main.TITLE + " - " + Main.VERSION + "\n" + data_hora + "\n\nRelatório criado por: " + Login.NOME + "\n\n" + text.getText();
-		String path_temp = Main.DATA_DIR + "IBFC_Relatorio_v." + Main.VERSION + "_" + data + ".txt"; 
+		String path_temp = Main.DATA_DIR + Main.SIGLA + "_Relatorio_v." + Main.VERSION + "_" + data + ".txt"; 
 		File file_text = new File(path_temp);
 		String month_year = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMyyyy")).toUpperCase();
-		String name = "IBFC_Relatorio_v." + Main.VERSION + "_" + data + ".zip";
+		String name = Main.SIGLA + "_Relatorio_v." + Main.VERSION + "_" + data + ".zip";
 		try (FileWriter fw = new FileWriter(file_text, false);) {
 			fw.write(info);
 			

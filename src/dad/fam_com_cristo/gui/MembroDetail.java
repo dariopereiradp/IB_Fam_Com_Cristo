@@ -86,7 +86,6 @@ public class MembroDetail extends JDialog {
 	public MembroDetail(Membro membro) {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		this.membro = membro;
-		System.out.println(membro);
 		this.setTitle(membro.getNome());
 		inicializar();
 		preencher();
@@ -462,7 +461,7 @@ public class MembroDetail extends JDialog {
 				if (ok == JOptionPane.YES_OPTION) {
 					membro.setImg(null);
 					image.setIcon(null);
-					File f = new File(Membro.imgPath + membro.getId() + ".jpg");
+					File f = new File(Membro.IMG_PATH + membro.getId() + ".jpg");
 					f.delete();
 				}
 			}
@@ -520,7 +519,8 @@ public class MembroDetail extends JDialog {
 			public void mouseClicked(MouseEvent evt) {
 				int count = evt.getClickCount();
 				if (count == 2) {
-					ImageViewer.show(membro.getImg());
+					ImageViewer.show(membro.getImg(), membro.getImageFile(),
+							new File(Main.SAVED_IMAGES + membro.getId() + ".jpg"));
 				}
 			}
 
@@ -740,17 +740,14 @@ public class MembroDetail extends JDialog {
 				apagar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.DELETE,
 						Utils.getInstance().getCurrentTheme().getColorIcons()));
 			} else {
-				System.out.println("Aqui");
 				TableModelMembro.getInstance().getUndoManager().execute(new CompositeCommand(
-						"Atualizar detalhes do membro",
-						new AtualizaMembro("Nome", membro, nome),
+						"Atualizar detalhes do membro", new AtualizaMembro("Nome", membro, nome),
 						new AtualizaMembro("Data_Nascimento", membro, data_nascimento),
 						new AtualizaMembro("Sexo", membro, sexo),
 						new AtualizaMembro("Estado_Civil", membro, estado_civil),
 						new AtualizaMembro("Profissao", membro, profissao),
 						new AtualizaMembro("Endereco", membro, endereco),
-						new AtualizaMembro("Telefone", membro, telefone),
-						new AtualizaMembro("Email", membro, email),
+						new AtualizaMembro("Telefone", membro, telefone), new AtualizaMembro("Email", membro, email),
 						new AtualizaMembro("Igreja_Origem", membro, igreja_origem),
 						new AtualizaMembro("Tipo_Membro", membro, tipo_membro),
 						new AtualizaMembro("Batizado", membro, batizado),

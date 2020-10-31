@@ -27,7 +27,7 @@ public class ImageCompression {
 	
     @SuppressWarnings("resource")
 	public static void compress (File imageFile, Membro membro) throws FileNotFoundException, IOException{
-        File compressedImageFile = new File(Membro.imgPath + membro.getId() + ".jpg");
+        File compressedImageFile = new File(Membro.IMG_PATH + membro.getId() + ".jpg");
 
         InputStream inputStream = new FileInputStream(imageFile);
         OutputStream outputStream = new FileOutputStream(compressedImageFile);

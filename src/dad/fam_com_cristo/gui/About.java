@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -111,13 +112,15 @@ public class About extends JDialog {
 		{
 			JLabel lTitle = new JLabel(Main.TITLE);
 			lTitle.setHorizontalAlignment(SwingConstants.CENTER);
-			lTitle.setFont(new Font("Dialog", Font.PLAIN, 15));
-			lTitle.setIcon(new ImageIcon(getClass().getResource("/FC_S.jpg")));
+			lTitle.setFont(new Font("Dialog", Font.PLAIN, 14));
+			ImageIcon icon = new ImageIcon(new ImageIcon(getClass().getResource("/FC-T-Big.png")).getImage()
+					.getScaledInstance(290/2, 240/2, Image.SCALE_SMOOTH));
+			lTitle.setIcon(icon);
 			lTitle.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent evt) {
 					int count = evt.getClickCount();
 					if (count == 2) {
-						ImageViewer.show(new ImageIcon(getClass().getResource("/FC.jpg")));
+						ImageViewer.showLogo(new ImageIcon(getClass().getResource("/FC.jpg")));
 					}
 				}
 

@@ -78,7 +78,7 @@ public class TableModelMembro extends AbstractTableModel {
 					LocalDate data_batismo = rs.getDate(14).toLocalDate();
 					String observacoes = rs.getString(15);
 					ImageIcon img = null;
-					File f = new File(Membro.imgPath + id + ".jpg");
+					File f = new File(Membro.IMG_PATH + id + ".jpg");
 					if (f.exists())
 						img = new ImageIcon(f.getPath());
 					Membro membro = new Membro(nome, data_nascimento, sexo, estado_civil, profissao, endereco, telefone,
