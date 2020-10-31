@@ -7,9 +7,11 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.ImageIcon;
+
 import com.qoppa.pdfWriter.PDFDocument;
 import com.qoppa.pdfWriter.PDFGraphics;
 import com.qoppa.pdfWriter.PDFPage;
@@ -63,7 +65,7 @@ public class MembroToPDF {
 		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 160);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(15f).deriveFont(Font.BOLD));
-		text = "FICHA DE MEMBRESIA";
+		text = "FICHA DE MEMBRO";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(15f).deriveFont(Font.BOLD)).stringWidth(text);
 		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 200);
 
@@ -283,25 +285,25 @@ public class MembroToPDF {
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
 		
-		text = "Nazária, " + DateTimeFormatter.ofPattern("dd 'de' MMMMM 'de' yyyy").format(LocalDate.now());
+		text = "Nazária, " + new SimpleDateFormat("dd 'de' MMMMM 'de' yyyy").format(new Date());
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 2.5 / 15) - 10);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-		text = "_____________________________________________";
+		text = "_______________________________________";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 1.5 / 15) - 15);
 
 		text = Utils.getInstance().getPastorName();
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 16) + 3, (int) (height - height * 1.5 / 15));
+		g2d.drawString(text, (int) (width - sWidth - width * 2.7 / 14) + 3, (int) (height - height * 1.5 / 15));
 
 		text = "(Pastor Titular)";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width * 3.4 / 14) + 3, (int) (height - height * 1.5 / 15) + 15);
+		g2d.drawString(text, (int) (width - sWidth - width * 2.7 / 14), (int) (height - height * 1.5 / 15) + 15);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(6f).deriveFont(Font.PLAIN));
-		text = "Gerado automaticamente em " + DateTimeFormatter.ofPattern("dd/MMM/yyyy 'às' HH:mm:ss").format(LocalDate.now());
+		text = "Gerado automaticamente em " + new SimpleDateFormat("dd/MMM/yyyy 'às' HH:mm:ss").format(new Date());
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(6f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height / 15) + 10);
 

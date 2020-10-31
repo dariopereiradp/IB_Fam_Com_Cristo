@@ -53,7 +53,7 @@ public class FichaMembro_VaziaToPDF {
 		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 160);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(15f).deriveFont(Font.BOLD));
-		text = "FICHA DE MEMBRESIA";
+		text = "FICHA DE MEMBRO";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(15f).deriveFont(Font.BOLD)).stringWidth(text);
 		g2d.drawString(text, (int) (width / 2) - sWidth / 2, 200);
 
@@ -231,17 +231,17 @@ public class FichaMembro_VaziaToPDF {
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 2.5 / 15));
 		
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN));
-		text = "_____________________________________________";
+		text = "_______________________________________";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
 		g2d.drawString(text, (int) (width - sWidth - width / 10), (int) (height - height * 1.5 / 15) - 5);
 
 		text = Utils.getInstance().getPastorName();
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width * 3.5 / 16) + 3, (int) (height - height * 1.5 / 15) + 15 - 5);
+		g2d.drawString(text, (int) (width - sWidth - width * 2.7 / 14) + 3, (int) (height - height * 1.5 / 15) + 15 - 5);
 
 		text = "(Pastor Titular)";
 		sWidth = g2d.getFontMetrics(PDFGraphics.COURIER.deriveFont(10f).deriveFont(Font.PLAIN)).stringWidth(text);
-		g2d.drawString(text, (int) (width - sWidth - width * 3.4 / 14) + 3, (int) (height - height * 1.5 / 15) + 15 + 15 - 5);
+		g2d.drawString(text, (int) (width - sWidth - width * 2.7 / 14), (int) (height - height * 1.5 / 15) + 15 + 15 - 5);
 
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(6f).deriveFont(Font.PLAIN));
 		text = "Gerado automaticamente em " + new SimpleDateFormat("dd/MMM/yyyy 'às' HH:mm:ss").format(new Date());
