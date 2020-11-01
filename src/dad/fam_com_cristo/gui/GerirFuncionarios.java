@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.table;
+package dad.fam_com_cristo.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
-import dad.fam_com_cristo.gui.DataGui;
+import dad.fam_com_cristo.table.TableModelFuncionario;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
@@ -46,7 +46,7 @@ public class GerirFuncionarios extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			table = TableModelFuncionario.getInstance().getSmallTable();
+			table = TableModelFuncionario.getInstance().uploadDataBase().getSmallTable();
 			JScrollPane jsp = new JScrollPane(table);
 			contentPanel.add(jsp, BorderLayout.CENTER);
 		}
