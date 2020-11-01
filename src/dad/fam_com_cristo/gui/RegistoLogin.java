@@ -13,10 +13,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+
 import org.apache.commons.lang.time.DurationFormatUtils;
 
 import dad.fam_com_cristo.Main;
@@ -42,6 +44,7 @@ import mdlaf.utils.icons.MaterialIconFont;
 
 /**
  * Classe para fazer um registo de funcionário no programa.
+ * 
  * @author Dário Pereira
  *
  */
@@ -123,7 +126,6 @@ public class RegistoLogin {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					pass.setEchoChar((char) 0);
-
 				} else {
 					pass.setEchoChar('*');
 				}
@@ -132,11 +134,11 @@ public class RegistoLogin {
 
 		dialog.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				if(login){
-				long time = System.currentTimeMillis() - Main.inicialTime;
-				Log.getInstance().printLog("Tempo de Uso: " + DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's")
-						+ "\nPrograma Terminou");
-				System.exit(0);
+				if (login) {
+					long time = System.currentTimeMillis() - Main.inicialTime;
+					Log.getInstance().printLog("Tempo de Uso: "
+							+ DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's") + "\nPrograma Terminou");
+					System.exit(0);
 				} else
 					dialog.dispose();
 			}
@@ -172,9 +174,10 @@ public class RegistoLogin {
 
 		});
 	}
-	
+
 	/**
-	 * Verifica se os campos foram preenchidos corretamente e se o usuário ainda não existe e depois faz o registo
+	 * Verifica se os campos foram preenchidos corretamente e se o usuário ainda não
+	 * existe e depois faz o registo
 	 */
 	public void registo() {
 		String username = user.getText();
@@ -212,6 +215,7 @@ public class RegistoLogin {
 
 	/**
 	 * Insere o funcionário na base de dados.
+	 * 
 	 * @param username
 	 * @param password
 	 */
@@ -222,14 +226,16 @@ public class RegistoLogin {
 			password = CriptografiaAES.getEncryptedString();
 
 			con = ConexaoLogin.getConnection();
-			pst = con.prepareStatement("insert into logins(Nome,Pass,Num_acessos,Ultimo_Acesso,Data_Criacao) values (?,?,?,?,?)");
+			pst = con.prepareStatement(
+					"insert into logins(Nome,Pass,Num_acessos,Ultimo_Acesso,Data_Criacao) values (?,?,?,?,?)");
 			pst.setString(1, username);
 			pst.setString(2, password);
 			pst.setInt(3, 0);
-			pst.setDate(4, new Date(System.currentTimeMillis()));
-			pst.setDate(5, new Date(System.currentTimeMillis()));
+			pst.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+			pst.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 			pst.execute();
-			TableModelFuncionario.getInstance().addFuncionario(new Funcionario(username, 0, new java.util.Date(), new java.util.Date()));
+			TableModelFuncionario.getInstance()
+					.addFuncionario(new Funcionario(username, 0, LocalDateTime.now(), LocalDateTime.now()));
 			JOptionPane.showMessageDialog(dialog, "O funcionário '" + username + "' foi criado com sucesso!",
 					"FUNCIONÁRIO CRIADO", JOptionPane.INFORMATION_MESSAGE,
 					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
@@ -246,6 +252,7 @@ public class RegistoLogin {
 
 	/**
 	 * Torna o diálogo visível.
+	 * 
 	 * @param login
 	 */
 	public void open(boolean login) {
@@ -254,7 +261,7 @@ public class RegistoLogin {
 		user.setText("");
 		pass.setText("");
 	}
-	
+
 	public static RegistoLogin getInstance() {
 		if (INSTANCE == null) {
 			new RegistoLogin();

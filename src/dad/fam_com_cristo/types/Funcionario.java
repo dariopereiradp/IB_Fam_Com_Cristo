@@ -1,9 +1,11 @@
 package dad.fam_com_cristo.types;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
- * Classe que representa os funcionários (pessoas que têm login para entrar no programa).
+ * Classe que representa os funcionários (pessoas que têm login para entrar no
+ * programa).
+ * 
  * @author Dário Pereira
  *
  */
@@ -14,13 +16,13 @@ public class Funcionario {
 	 * Número de vezes que esse funcionário fez login.
 	 */
 	private int num_acessos;
-	private Date data_ultimo_acesso;
+	private LocalDateTime data_ultimo_acesso;
 	/**
 	 * Data em que o funcionário foi registrado no programa.
 	 */
-	private Date data_criacao;
+	private LocalDateTime data_criacao;
 
-	public Funcionario(String nome, int num_acessos, Date data_ultimo_acesso, Date data_criacao) {
+	public Funcionario(String nome, int num_acessos, LocalDateTime data_ultimo_acesso, LocalDateTime data_criacao) {
 		super();
 		this.nome = nome;
 		this.num_acessos = num_acessos;
@@ -44,28 +46,28 @@ public class Funcionario {
 		this.num_acessos = num_acessos;
 	}
 
-	public Date getData_ultimo_acesso() {
+	public LocalDateTime getData_ultimo_acesso() {
 		return data_ultimo_acesso;
 	}
 
-	public void setData_ultimo_acesso(Date data_ultimo_acesso) {
+	public void setData_ultimo_acesso(LocalDateTime data_ultimo_acesso) {
 		this.data_ultimo_acesso = data_ultimo_acesso;
 	}
 
-	public Date getData_criacao() {
+	public LocalDateTime getData_criacao() {
 		return data_criacao;
 	}
 
-	public void setData_criacao(Date data_criacao) {
+	public void setData_criacao(LocalDateTime data_criacao) {
 		this.data_criacao = data_criacao;
 	}
-	
+
 	/**
 	 * Regista um novo login feito por esse funcionário.
 	 */
 	public void novoAcesso() {
 		num_acessos++;
-		data_ultimo_acesso = new Date();
+		data_ultimo_acesso = LocalDateTime.now();
 	}
 
 }

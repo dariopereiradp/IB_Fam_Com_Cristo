@@ -1,5 +1,7 @@
 package dad.fam_com_cristo.gui;
 
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,12 +10,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 
@@ -27,15 +34,6 @@ import dad.recursos.RoundedBorder;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.Image;
-import javax.swing.SwingConstants;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 /**
  * Classe que permite que um funcionário possa fazer o login e entrar no
@@ -70,7 +68,7 @@ public class Login {
 	}
 
 	/**
-	 * 
+	 * Usado para controlar o tema (dark/light) para garantir que os botões e tudo o resto muda a cor
 	 */
 	public void recreate() {
 		JLabel image = new JLabel("");
@@ -105,11 +103,8 @@ public class Login {
 		entrar.setBorder(new RoundedBorder(10));
 		frame.getContentPane().add(entrar);
 		entrar.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				verify();
-
 			}
 		});
 		frame.addWindowListener(new WindowAdapter() {
@@ -122,33 +117,24 @@ public class Login {
 		});
 
 		frame.addKeyListener(new KeyAdapter() {
-
-			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER)
 					verify();
 			}
-
 		});
 
 		user.addKeyListener(new KeyAdapter() {
-
-			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER)
 					verify();
 			}
-
 		});
 
 		pass.addKeyListener(new KeyAdapter() {
-
-			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER)
 					verify();
 			}
-
 		});
 	}
 
@@ -214,7 +200,7 @@ public class Login {
 				Log.getInstance().printLog("Usuário: " + username + " - Conectado com sucesso!");
 				pst = con.prepareStatement(
 						"update logins set Num_acessos = Num_acessos + 1,Ultimo_Acesso=? where nome = ?");
-				pst.setDate(1, new Date(System.currentTimeMillis()));
+				pst.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
 				pst.setString(2, username);
 				pst.execute();
 				NOME = username;
@@ -270,6 +256,14 @@ public class Login {
 			}
 		}
 	}
+	
+	/**
+	 * Usado para controlar a mudança de tema (dark/light)
+	 * @return
+	 */
+	public JFrame getFrame() {
+		return frame;
+	}
 
 	/**
 	 * Torna o diálogo visível, verificando antes se é preciso fazer registro antes
@@ -292,10 +286,6 @@ public class Login {
 		frame.setVisible(true);
 		user.setText("");
 		pass.setText("");
-	}
-	
-	public JFrame getFrame() {
-		return frame;
 	}
 	
 	public static Login getInstance() {

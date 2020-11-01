@@ -13,9 +13,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -33,6 +33,7 @@ import dad.fam_com_cristo.gui.ChangePassword;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.fam_com_cristo.types.Funcionario;
 import dad.recursos.Log;
+import dad.recursos.Utils;
 
 /**
  * Classe que representa o TableModel para os funcionários.
@@ -54,15 +55,17 @@ public class TableModelFuncionario extends AbstractTableModel {
 	private PreparedStatement pst;
 	private ResultSet rs;
 
-	private TableModelFuncionario() {
+	public TableModelFuncionario() {
 		INSTANCE = this;
 	}
 
 	/**
 	 * Faz upload da base de dados e cria o ArrayList com os funcionários que
 	 * existirem na base de dados Logins.
+	 * 
+	 * @return
 	 */
-	public void uploadDataBase() {
+	public TableModelFuncionario uploadDataBase() {
 		funcionarios = new ArrayList<>();
 		try {
 			con = ConexaoLogin.getConnection();
@@ -72,8 +75,8 @@ public class TableModelFuncionario extends AbstractTableModel {
 				do {
 					String nome = rs.getString(1);
 					int num_acessos = rs.getInt(3);
-					Date data_ultimo_acesso = rs.getTimestamp(4);
-					Date data_criacao = rs.getTimestamp(5);
+					LocalDateTime data_ultimo_acesso = rs.getTimestamp(4).toLocalDateTime();
+					LocalDateTime data_criacao = rs.getTimestamp(5).toLocalDateTime();
 					Funcionario func = new Funcionario(nome, num_acessos, data_ultimo_acesso, data_criacao);
 					funcionarios.add(func);
 				} while (rs.next());
@@ -85,6 +88,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 					"Erro ao carregar a base de dados dos Funcionários: " + e.getMessage() + "\n" + getClass());
 			e.printStackTrace();
 		}
+		return this;
 	}
 
 	@Override
@@ -101,7 +105,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		return colunas[columnIndex];
 	}
-	
+
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
@@ -112,11 +116,9 @@ public class TableModelFuncionario extends AbstractTableModel {
 		case 2:
 			return funcionarios.get(rowIndex).getNum_acessos();
 		case 3:
-			return new SimpleDateFormat("dd/MM/yyyy 'às' HH'h'mm'm'ss's'")
-					.format(funcionarios.get(rowIndex).getData_ultimo_acesso());
+			return funcionarios.get(rowIndex).getData_ultimo_acesso();
 		case 4:
-			return new SimpleDateFormat("dd/MM/yyyy 'às' HH'h'mm'm'ss's'")
-					.format(funcionarios.get(rowIndex).getData_criacao());
+			return funcionarios.get(rowIndex).getData_criacao();
 		default:
 			return funcionarios.get(rowIndex);
 		}
@@ -125,10 +127,16 @@ public class TableModelFuncionario extends AbstractTableModel {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Class getColumnClass(int column) {
-		if (column == 2) {
+		switch (column) {
+		case 2:
 			return Integer.class;
+		case 3:
+			return LocalDateTime.class;
+		case 4:
+			return LocalDateTime.class;
+		default:
+			return String.class;
 		}
-		return String.class;
 	}
 
 	public ArrayList<Funcionario> getFuncionarios() {
@@ -137,6 +145,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 	/**
 	 * Adiciona um funcionário.
+	 * 
 	 * @param func - funcionário a adicionar
 	 */
 	public void addFuncionario(Funcionario func) {
@@ -149,6 +158,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 	/**
 	 * Remove os funcionários que estão nas posições indicadas pelo array rows.
+	 * 
 	 * @param rows - array que contém as posições dos funcionários a remover.
 	 */
 	public void removeFuncionarios(int[] rows) {
@@ -163,7 +173,8 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 	/**
 	 * Remove um funcionário da base de dados.
-	 * @param func - funcionários a remover
+	 * 
+	 * @param func     - funcionários a remover
 	 * @param toDelete
 	 */
 	private void apagar(Funcionario func, ArrayList<Funcionario> toDelete) {
@@ -222,6 +233,9 @@ public class TableModelFuncionario extends AbstractTableModel {
 			}
 		});
 
+		small.getColumnModel().getColumn(3).setCellRenderer(new Renderer());
+		small.getColumnModel().getColumn(4).setCellRenderer(new Renderer());
+
 		small.addComponentListener(new ComponentAdapter() {
 
 			@Override
@@ -241,8 +255,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 					int row = table.convertRowIndexToModel(rowAtPoint);
 					if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 						if (!getFuncionario(row).getNome().equals("admin") && column == 1)
-							new ChangePassword(getFuncionario(row).getNome(), true)
-									.open();
+							new ChangePassword(getFuncionario(row).getNome(), true).open();
 						;
 
 					}
@@ -256,8 +269,8 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ChangePassword(TableModelFuncionario.getInstance()
-						.getFuncionario(small.convertRowIndexToModel(small.getSelectedRow())).getNome(), true).open();
+				new ChangePassword(getFuncionario(small.convertRowIndexToModel(small.getSelectedRow())).getNome(), true)
+						.open();
 			}
 		});
 
@@ -266,14 +279,14 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int[] rows = TableModelFuncionario.getInstance().convertRowsIndextoModel(small);
+				int[] rows = convertRowsIndextoModel(small);
 				if (rows.length > 0) {
 					int ok = JOptionPane.showConfirmDialog(small,
 							"Tem certeza que quer apagar o(s) funcionário(s) selecionado(s)?\nATENÇÃO: ESSA AÇÃO NÃO PODE SER ANULADA!",
 							"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 							new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 					if (ok == JOptionPane.OK_OPTION) {
-						TableModelFuncionario.getInstance().removeFuncionarios(rows);
+						removeFuncionarios(rows);
 					}
 				}
 			}
@@ -293,7 +306,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 							int rowAtPoint = small.convertRowIndexToModel(rowAtPointOriginal);
 							if (rowAtPoint > 0) {
 								popupMenu.setVisible(true);
-								int[] rows = TableModelFuncionario.getInstance().convertRowsIndextoModel(small);
+								int[] rows = convertRowsIndextoModel(small);
 								if (rows.length == 1) {
 									mudarPassword.setVisible(true);
 									small.setRowSelectionInterval(rowAtPointOriginal, rowAtPointOriginal);
@@ -337,7 +350,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int[] rows = TableModelFuncionario.getInstance().convertRowsIndextoModel(small);
+				int[] rows = convertRowsIndextoModel(small);
 				if (rows.length > 0) {
 					if (!(rows.length == 1 && rows[0] == 0)) {
 						int ok = JOptionPane.showConfirmDialog(small,
@@ -345,7 +358,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 								"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 								new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
 						if (ok == JOptionPane.OK_OPTION) {
-							TableModelFuncionario.getInstance().removeFuncionarios(rows);
+							removeFuncionarios(rows);
 						}
 					}
 				}
@@ -354,11 +367,26 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 		return small;
 	}
-	
+
 	public static TableModelFuncionario getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new TableModelFuncionario();
-		}
+		if (INSTANCE == null)
+			new TableModelFuncionario();
 		return INSTANCE;
+	}
+	
+	private static class Renderer extends DefaultTableCellRenderer{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5676060958212154710L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected,
+				boolean hasFocus, int row, int column) {
+			super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
+			if (value instanceof LocalDateTime)
+				this.setValue(Utils.getInstance().getDateTimeFormat().format((LocalDateTime) value));
+			return this;
+		}
 	}
 }
