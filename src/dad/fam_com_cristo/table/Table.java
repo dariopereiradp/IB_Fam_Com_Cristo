@@ -12,6 +12,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 /**
+ * Extensão da JTable com algumas configurações, para evitar repetiçao de código
+ * 
  * @author dariopereiradp
  *
  */
@@ -25,6 +27,12 @@ public class Table extends JTable {
 	private String[] columnToolTips;
 	private boolean[] cellEditable;
 
+	/**
+	 * 
+	 * @param model
+	 * @param columnToolTips
+	 * @param cellEditable   - valor padrão para todas as colunas
+	 */
 	public Table(AbstractTableModel model, String[] columnToolTips, boolean cellEditable) {
 		super(model);
 		boolean[] cellEditableValues = new boolean[columnToolTips.length];
@@ -34,6 +42,13 @@ public class Table extends JTable {
 		init(model, columnToolTips, cellEditableValues);
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @param columnToolTips
+	 * @param cellEditable   - array com cada posição correspondente a uma coluna da
+	 *                       JTable, para dizer se é editável ou não
+	 */
 	public Table(AbstractTableModel model, String[] columnToolTips, boolean[] cellEditable) {
 		super(model);
 		init(model, columnToolTips, cellEditable);
@@ -94,7 +109,7 @@ public class Table extends JTable {
 	public void personalizarHeader() {
 		TableCellRenderer tcr = getTableHeader().getDefaultRenderer();
 		setTableHeader(new JTableHeader(columnModel) {
-			
+
 			/**
 			 * 
 			 */
@@ -104,7 +119,7 @@ public class Table extends JTable {
 			public void setDefaultRenderer(TableCellRenderer defaultRenderer) {
 				super.setDefaultRenderer(new TableHeaderWithSortIcons(tcr));
 			}
-			
+
 		});
 	}
 }

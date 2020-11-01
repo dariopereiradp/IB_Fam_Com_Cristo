@@ -56,6 +56,7 @@ import dad.fam_com_cristo.types.ImageFormats;
 import dad.fam_com_cristo.types.Tipo_Membro;
 import dad.fam_com_cristo.types.Tipo_Transacao;
 import dad.recursos.CSVExport;
+import dad.recursos.DataPesquisavel;
 import dad.recursos.Log;
 import dad.recursos.MultiDatePicker;
 import dad.recursos.SairAction;
@@ -84,43 +85,25 @@ public class DataGui extends JFrame {
 	private static final int DELAY = 1500;
 	private static DataGui INSTANCE;
 	private JTabbedPane tabbedPane;
-	private JMenu mnArquivo, mnAjuda, mnEditar;
-	private JMenuItem menuSobre, menuEstatisticas, menuSair, menuAnular, menuRefazer, menuImportar, menuBackup,
-			menuOrdenar, menuAtualizar, menuConfig;
 	private JTextField pesquisa;
 	private JPanel filtrosPanel;
 	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca, check_ex_membros,
 			checkEntradas, checkSaidas;
 	private MultiDatePicker datas;
-	private JMenuItem mntmRelatarErro;
-	private JMenuItem mnLimpar;
-	private JMenuItem menuManual;
+	private JMenuBar menuBar;
+	private JMenu mnArquivo, mnAjuda, mnEditar;
+	private JMenuItem menuSobre, menuEstatisticas, menuSair, menuAnular, menuRefazer, menuImportar, menuBackup,
+			menuOrdenar, menuAtualizar, menuConfig;
+	private JMenuItem mntmRelatarErro, mnLimpar, menuManual;
 	private JMenu mnGerar;
-	private JMenuItem mListaBatizados;
-	private JMenuItem mListaAtivos;
-	private JMenuItem mListaTotal;
-	private JMenuItem mListaNom;
-	private JMenuItem mListaCong;
-	private JMenuItem mntmListaDeLderes;
-	private JMenuItem mntmFichaDeMembro;
-	private JMenu mnConf;
-	private JRadioButtonMenuItem mnLight;
-	private JRadioButtonMenuItem mnDark;
-	private JMenu mnTema;
-	private JMenu mnMembros;
-	private JMenu mnFinancas;
-	private JMenuItem mnRelatorioAnual;
-	private JMenuItem mnMesAnterior;
-	private JMenuItem mnRelatorioTotal;
-	private JMenu mnExportar;
-	private JMenuItem mnExportMembros;
-	private JMenuItem mnExportTransacoes;
-	private JMenu mnExportLogo;
-	private JMenuItem mnExportLogoPng;
-	private JMenuItem mnExportJpg;
-	private JMenuItem mnExportLogoSvg;
-	private JMenuItem mnExportarLogoPdf;
-	private JMenuItem mnModeloOficio;
+	private JMenuItem mListaBatizados, mListaAtivos, mListaTotal, mListaNom, mListaCong, mListaDeLideres,
+			mFichaDeMembro;
+	private JMenu mnConf, mnTema, mnMembros, mnFinancas;
+	private JRadioButtonMenuItem mnLight, mnDark;
+	private JMenuItem mnRelatorioAnual, mnMesAnterior, mnRelatorioTotal;
+	private JMenu mnExportar, mnExportLogo;
+	private JMenuItem mnExportMembros, mnExportTransacoes;
+	private JMenuItem mnExportLogoPng, mnExportJpg, mnExportLogoSvg, mnExportarLogoPdf, mnModeloOficio;
 
 	private DataGui() {
 		INSTANCE = this;
@@ -163,40 +146,7 @@ public class DataGui extends JFrame {
 		filtrosPanel = new JPanel();
 		pesquisaPanel.add(filtrosPanel, BorderLayout.EAST);
 
-		checkMembroAtivo = new JCheckBox("Membro Ativo");
-		checkMembroAtivo.setSelected(true);
-		filtrosPanel.add(checkMembroAtivo);
-		checkMembroAtivo.setToolTipText("Pessoas batizadas que participam ativamente na igreja");
-
-		checkMembroNominal = new JCheckBox("Membro Nominal");
-		checkMembroNominal.setSelected(true);
-		filtrosPanel.add(checkMembroNominal);
-		checkMembroNominal.setToolTipText("Pessoas que já foram batizadas mas não são muito envolvidas na igreja");
-
-		checkCongregados = new JCheckBox("Congregados");
-		checkCongregados.setSelected(true);
-		filtrosPanel.add(checkCongregados);
-		checkCongregados.setToolTipText("Pessoas que vão à igreja com regularidade mas não são batizadas");
-
-		checkLideranca = new JCheckBox("Liderança");
-		checkLideranca.setSelected(true);
-		filtrosPanel.add(checkLideranca);
-		checkLideranca.setToolTipText("Líderes da igreja e dos ministérios da igreja. São também membros ativos");
-
-		check_ex_membros = new JCheckBox("Ex-Membros");
-		check_ex_membros.setSelected(false);
-		filtrosPanel.add(check_ex_membros);
-		check_ex_membros.setToolTipText("Pessoas que já foram membros mas saíram por transferência ou abandono");
-
-		checkEntradas = new JCheckBox("Entradas");
-		checkEntradas.setSelected(true);
-		filtrosPanel.add(checkEntradas);
-		checkEntradas.setVisible(false);
-
-		checkSaidas = new JCheckBox("Saídas");
-		checkSaidas.setSelected(true);
-		filtrosPanel.add(checkSaidas);
-		checkSaidas.setVisible(false);
+		createCheckBoxes();
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -209,11 +159,42 @@ public class DataGui extends JFrame {
 
 		tabbedPane.setToolTipTextAt(1, "Registrar entradas e saídas financeiras da igreja");
 
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				visibleBoxes();
+				newFilter("");
+				updateItems();
+				if (tabbedPane.getSelectedIndex() == 1)
+					getRootPane().setDefaultButton(FinancasPanel.getInstance().getBtnAdd());
+				else
+					getRootPane().setDefaultButton(null);
+			}
+		});
+
 		datas = new MultiDatePicker();
 		filtrosPanel.add(datas);
 		datas.setVisible(false);
 
-		JMenuBar menuBar = new JMenuBar();
+		createMenus();
+
+		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		manager.addKeyEventDispatcher(new MyDispatcher());
+
+		pesquisa.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				newFilter(pesquisa.getText().toLowerCase());
+			}
+		});
+
+		TableModelMembro.getInstance().addListeners();
+		TableModelFinancas.getInstance().addListeners();
+	}
+
+	/**
+	 * 
+	 */
+	public void createMenus() {
+		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
 		mnArquivo = new JMenu("Arquivo");
@@ -223,8 +204,6 @@ public class DataGui extends JFrame {
 		menuEstatisticas.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.INSERT_CHART,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuEstatisticas.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				new Estatisticas().open();
 			}
@@ -235,8 +214,6 @@ public class DataGui extends JFrame {
 		menuBackup.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.BACKUP,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuBackup.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				Utils.getInstance().backup();
 			}
@@ -248,11 +225,8 @@ public class DataGui extends JFrame {
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnArquivo.add(menuImportar);
 		menuImportar.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				new Restauro().open();
-
 			}
 		});
 
@@ -272,11 +246,8 @@ public class DataGui extends JFrame {
 		mnTema.add(mnLight);
 
 		mnLight.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				Utils.getInstance().changeTheme(new LiteTheme());
-
 			}
 		});
 
@@ -286,8 +257,6 @@ public class DataGui extends JFrame {
 		mnTema.add(mnDark);
 
 		mnDark.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				Utils.getInstance().changeTheme(DarkTheme.getInstance());
 			}
@@ -303,8 +272,6 @@ public class DataGui extends JFrame {
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnConf.add(menuConfig);
 		menuConfig.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				new Config().open();
 			}
@@ -320,8 +287,6 @@ public class DataGui extends JFrame {
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnLimpar.setToolTipText("Apaga os arquivos de logs antigos, que são desnecessários");
 		mnLimpar.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				int ok = JOptionPane.showOptionDialog(null,
 						"Os arquivos de logs antigos serão apagados. Isso não influencia o funcionamento do programa.\n"
@@ -370,10 +335,10 @@ public class DataGui extends JFrame {
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnGerar.add(mnMembros);
 
-		mntmFichaDeMembro = new JMenuItem("Ficha de Membro (para preencher)");
-		mntmFichaDeMembro.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
+		mFichaDeMembro = new JMenuItem("Ficha de Membro (para preencher)");
+		mFichaDeMembro.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
-		mnMembros.add(mntmFichaDeMembro);
+		mnMembros.add(mFichaDeMembro);
 
 		mListaBatizados = new JMenuItem("Lista de Batizados (membros ativos e nominais)");
 		mListaBatizados.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
@@ -395,10 +360,10 @@ public class DataGui extends JFrame {
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnMembros.add(mListaCong);
 
-		mntmListaDeLderes = new JMenuItem("Lista de L\u00EDderes");
-		mntmListaDeLderes.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
+		mListaDeLideres = new JMenuItem("Lista de L\u00EDderes");
+		mListaDeLideres.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
-		mnMembros.add(mntmListaDeLderes);
+		mnMembros.add(mListaDeLideres);
 
 		mListaTotal = new JMenuItem("Lista Total (todos, exceto ex-membros)");
 		mListaTotal.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PICTURE_AS_PDF,
@@ -432,7 +397,7 @@ public class DataGui extends JFrame {
 
 			}
 		});
-		mntmListaDeLderes.addActionListener(new ActionListener() {
+		mListaDeLideres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				TableMembrosToPDF.membrosToPDF(MembroPanel.getInstance().newTable("Líderes"), "Líderes");
 			}
@@ -457,7 +422,7 @@ public class DataGui extends JFrame {
 				TableMembrosToPDF.membrosToPDF(MembroPanel.getInstance().newTable("Batizados"), "Batizados");
 			}
 		});
-		mntmFichaDeMembro.addActionListener(new ActionListener() {
+		mFichaDeMembro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				FichaMembroToPDF.membroToPdf(null);
 			}
@@ -543,7 +508,7 @@ public class DataGui extends JFrame {
 		});
 		mnExportLogo.add(mnExportJpg);
 
-		mnExportLogoSvg = new JMenuItem("SVG (para editar)");
+		mnExportLogoSvg = new JMenuItem("SVG (vetores)");
 		mnExportLogoSvg.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.IMAGE_ASPECT_RATIO,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnExportLogoSvg.addActionListener(new ActionListener() {
@@ -576,8 +541,6 @@ public class DataGui extends JFrame {
 		mntmRelatarErro.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.BUG_REPORT,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mntmRelatarErro.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				new BugReport().open();
 			}
@@ -587,8 +550,6 @@ public class DataGui extends JFrame {
 		menuManual.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.BOOK,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuManual.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				String path = System.getenv("ProgramFiles(X86)") + System.getProperty("file.separator")
 						+ "Igreja Batista Famílias com Cristo/" + "Manual_Instrucoes_" + Main.SIGLA + "_v"
@@ -604,10 +565,8 @@ public class DataGui extends JFrame {
 							new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 					e1.printStackTrace();
 				}
-
 			}
 		});
-//		menuManual.setEnabled(false);
 		menuManual.setToolTipText("Manual ainda não disponível!");
 
 		mnAjuda.add(menuManual);
@@ -617,128 +576,121 @@ public class DataGui extends JFrame {
 		menuSobre.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.HELP,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuSobre.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				new About().open();
-
 			}
 		});
 		mnAjuda.add(menuSobre);
 
-		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-		manager.addKeyEventDispatcher(new MyDispatcher());
-
 		menuAnular.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				anular();
 			}
 		});
 
 		menuRefazer.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				refazer();
 			}
 		});
 
 		menuOrdenar.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				ordenar();
 			}
 		});
 
 		menuAtualizar.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				TableModelMembro.getInstance().fireTableDataChanged();
 			}
 		});
+	}
 
-		pesquisa.addKeyListener(new KeyAdapter() {
+	/**
+	 * Cria as checkboxes
+	 */
+	public void createCheckBoxes() {
+		checkMembroAtivo = new JCheckBox("Membro Ativo");
+		checkMembroAtivo.setSelected(true);
+		filtrosPanel.add(checkMembroAtivo);
+		checkMembroAtivo.setToolTipText("Pessoas batizadas que participam ativamente na igreja");
 
-			@Override
-			public void keyReleased(KeyEvent e) {
-				newFilter(pesquisa.getText().toLowerCase());
-			}
+		checkMembroNominal = new JCheckBox("Membro Nominal");
+		checkMembroNominal.setSelected(true);
+		filtrosPanel.add(checkMembroNominal);
+		checkMembroNominal.setToolTipText("Pessoas que já foram batizadas mas não são muito envolvidas na igreja");
 
-		});
+		checkCongregados = new JCheckBox("Congregados");
+		checkCongregados.setSelected(true);
+		filtrosPanel.add(checkCongregados);
+		checkCongregados.setToolTipText("Pessoas que vão à igreja com regularidade mas não são batizadas");
 
+		checkLideranca = new JCheckBox("Liderança");
+		checkLideranca.setSelected(true);
+		filtrosPanel.add(checkLideranca);
+		checkLideranca.setToolTipText("Líderes da igreja e dos ministérios da igreja. São também membros ativos");
+
+		check_ex_membros = new JCheckBox("Ex-Membros");
+		check_ex_membros.setSelected(false);
+		filtrosPanel.add(check_ex_membros);
+		check_ex_membros.setToolTipText("Pessoas que já foram membros mas saíram por transferência ou abandono");
+
+		checkEntradas = new JCheckBox("Entradas");
+		checkEntradas.setSelected(true);
+		filtrosPanel.add(checkEntradas);
+		checkEntradas.setVisible(false);
+
+		checkSaidas = new JCheckBox("Saídas");
+		checkSaidas.setSelected(true);
+		filtrosPanel.add(checkSaidas);
+		checkSaidas.setVisible(false);
+
+		addCheckBoxListeners();
+
+	}
+
+	/**
+	 * Adiciona os changeListeners às checkboxes
+	 */
+	public void addCheckBoxListeners() {
 		checkMembroAtivo.addChangeListener(new ChangeListener() {
-
-			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
 		checkMembroNominal.addChangeListener(new ChangeListener() {
-
-			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
 		checkCongregados.addChangeListener(new ChangeListener() {
-
-			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
 
 		checkLideranca.addChangeListener(new ChangeListener() {
-
-			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
 
 		check_ex_membros.addChangeListener(new ChangeListener() {
-
-			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
 
 		checkEntradas.addChangeListener(new ChangeListener() {
-
-			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				newFilter(pesquisa.getText().toLowerCase());
 			}
 		});
 
 		checkSaidas.addChangeListener(new ChangeListener() {
-
-			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				newFilter(pesquisa.getText().toLowerCase());
-			}
-		});
-
-		TableModelMembro.getInstance().addListeners();
-		TableModelFinancas.getInstance().addListeners();
-
-		tabbedPane.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				visibleBoxes();
-				newFilter("");
-				updateItems();
-
-				if (tabbedPane.getSelectedIndex() == 1)
-					getRootPane().setDefaultButton(FinancasPanel.getInstance().getBtnAdd());
-				else
-					getRootPane().setDefaultButton(null);
 			}
 		});
 	}
@@ -767,26 +719,6 @@ public class DataGui extends JFrame {
 			checkSaidas.setVisible(true);
 			datas.setVisible(true);
 		}
-	}
-
-	/**
-	 * Abre a DataGui e um diálogo de boas vindas
-	 */
-	public void open() {
-		setVisible(true);
-		JOptionPane pane = new JOptionPane("Bem vindo " + Login.NOME + "!", JOptionPane.INFORMATION_MESSAGE,
-				JOptionPane.DEFAULT_OPTION, new ImageIcon(getClass().getResource("/FC_SS.jpg")), new Object[] {}, null);
-		final JDialog dialog = pane.createDialog("Boas vindas");
-		dialog.setModal(true);
-		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
-		Timer timer = new Timer(DELAY, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dialog.dispose();
-			}
-		});
-		timer.setRepeats(false);
-		timer.start();
-		dialog.setVisible(true);
 	}
 
 	/**
@@ -899,10 +831,8 @@ public class DataGui extends JFrame {
 			RowFilter<TableModelFinancas, Object> rowFilter = null;
 			TableRowSorter<TableModelFinancas> sorter = new TableRowSorter<TableModelFinancas>(
 					TableModelFinancas.getInstance());
-			List<RowFilter<TableModelFinancas, Object>> filters = new ArrayList<RowFilter<TableModelFinancas, Object>>(
-					5);
-			List<RowFilter<TableModelFinancas, Object>> andFilters = new ArrayList<RowFilter<TableModelFinancas, Object>>(
-					3);
+			List<RowFilter<TableModelFinancas, Object>> filters = new ArrayList<RowFilter<TableModelFinancas, Object>>();
+			List<RowFilter<TableModelFinancas, Object>> andFilters = new ArrayList<RowFilter<TableModelFinancas, Object>>();
 			FinancasPanel.getInstance().getTransacoes().setRowSorter(sorter);
 			andFilters.add(
 					RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString())));
@@ -917,13 +847,13 @@ public class DataGui extends JFrame {
 
 					@Override
 					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-						LocalDate data = (LocalDate) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1);
+						LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(),
+								1)).getData();
 						if (data.isAfter(datas.getInitDate()) || data.isEqual(datas.getInitDate()))
 							return true;
 						else
 							return false;
 					}
-
 				});
 			}
 			if (datas.getFinalDate() != null)
@@ -931,13 +861,13 @@ public class DataGui extends JFrame {
 
 					@Override
 					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-						LocalDate data = (LocalDate) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1);
+						LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(),
+								1)).getData();
 						if (data.isBefore(datas.getFinalDate()) || data.isEqual(datas.getFinalDate()))
 							return true;
 						else
 							return false;
 					}
-
 				});
 			try {
 				rf = RowFilter.orFilter(filters);
@@ -948,7 +878,6 @@ public class DataGui extends JFrame {
 			}
 			sorter.setRowFilter(rowFilter);
 		}
-
 	}
 
 	public JMenuItem getMenuAnular() {
@@ -975,9 +904,29 @@ public class DataGui extends JFrame {
 		return checkSaidas;
 	}
 
+	/**
+	 * Abre a DataGui e um diálogo de boas vindas
+	 */
+	public void open() {
+		setVisible(true);
+		JOptionPane pane = new JOptionPane("Bem vindo " + Login.NOME + "!", JOptionPane.INFORMATION_MESSAGE,
+				JOptionPane.DEFAULT_OPTION, new ImageIcon(getClass().getResource("/FC_SS.jpg")), new Object[] {}, null);
+		final JDialog dialog = pane.createDialog("Boas vindas");
+		dialog.setModal(true);
+		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
+		Timer timer = new Timer(DELAY, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialog.dispose();
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+		dialog.setVisible(true);
+	}
+
 	public static DataGui getInstance() {
 		if (INSTANCE == null)
-			INSTANCE = new DataGui();
+			new DataGui();
 		return INSTANCE;
 	}
 }

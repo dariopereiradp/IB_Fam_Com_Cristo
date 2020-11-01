@@ -61,7 +61,7 @@ public class CellRenderer extends DefaultTableCellRenderer {
 		setBorder(BorderFactory.createRaisedSoftBevelBorder());
 
 		if (value instanceof LocalDate)
-			this.setValue(((LocalDate) value).format(Utils.getInstance().getDateFormat()));
+			this.setValue(Utils.getInstance().getDateFormat().format((LocalDate) value));
 		return this;
 	}
 }

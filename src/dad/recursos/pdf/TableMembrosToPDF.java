@@ -3,8 +3,8 @@ package dad.recursos.pdf;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -55,7 +55,7 @@ public class TableMembrosToPDF {
 	public static String membrosToPDF(JTable table, String descricao) {
 		descricaoS = descricao;
 		String title = Main.SIGLA + "_Lista de Membros_" + descricao + "_"
-				+ new SimpleDateFormat("ddMMMyyyy").format(new Date()) + ".pdf";
+				+ DateTimeFormatter.ofPattern("ddMMMyyyy").format(LocalDate.now()) + ".pdf";
 		try {
 			Document doc = new Document(PageSize.A4, 10, 10, 50, 50);
 
@@ -123,7 +123,7 @@ public class TableMembrosToPDF {
 			PdfPCell cellOne = new PdfPCell(assinatura);
 			cellOne.setBorder(Rectangle.NO_BORDER);
 			assin.addCell(cellOne);
-			
+
 			Paragraph pastor = new Paragraph(Utils.getInstance().getPastorName(),
 					FontFactory.getFont(FontFactory.TIMES, 10));
 			PdfPCell pastorCell = new PdfPCell(pastor);
@@ -189,7 +189,8 @@ public class TableMembrosToPDF {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Paragraph footerLeftP = new Paragraph(new SimpleDateFormat("dd 'de' MMMM 'de' yyyy").format(new Date()),
+			Paragraph footerLeftP = new Paragraph(
+					DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy").format(LocalDate.now()),
 					FontFactory.getFont(FontFactory.TIMES, 8));
 			Phrase footerLeft = new Phrase(footerLeftP);
 			ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footerLeft, 30, 30, 0);

@@ -18,9 +18,10 @@ import dad.fam_com_cristo.table.command.CompositeCommand;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.fam_com_cristo.types.Tipo_Transacao;
 import dad.fam_com_cristo.types.Transacao;
+import dad.recursos.DataPesquisavel;
 import dad.recursos.Log;
+import dad.recursos.Money;
 import dad.recursos.UndoManager;
-import dad.recursos.Utils;
 
 /**
  * Classe que representa o TableModel para as financas
@@ -167,15 +168,15 @@ public class TableModelFinancas extends AbstractTableModel {
 		case 0:
 			return transacoes.get(rowIndex).getId();
 		case 1:
-			return transacoes.get(rowIndex).getData();
+			return transacoes.get(rowIndex).getDataPesquisavel();
 		case 2:
-			return Utils.getInstance().getNumberFormatCurrency().format(transacoes.get(rowIndex).getValue());
+			return transacoes.get(rowIndex).getValueMoney();
 		case 3:
 			return transacoes.get(rowIndex).getTipo();
 		case 4:
 			return transacoes.get(rowIndex).getDescricao();
 		case 5:
-			return Utils.getInstance().getNumberFormatCurrency().format(transacoes.get(rowIndex).getTotal());
+			return transacoes.get(rowIndex).getTotalMoney();
 		default:
 			return transacoes.get(rowIndex);
 		}
@@ -188,13 +189,13 @@ public class TableModelFinancas extends AbstractTableModel {
 		case 0:
 			return Integer.class;
 		case 1:
-			return LocalDate.class;
+			return DataPesquisavel.class;
 		case 2:
-			return BigDecimal.class;
+			return Money.class;
 		case 3:
 			return Tipo_Transacao.class;
 		case 5:
-			return BigDecimal.class;
+			return Money.class;
 		default:
 			return String.class;
 		}
@@ -354,7 +355,7 @@ public class TableModelFinancas extends AbstractTableModel {
 
 		@Override
 		public String getName() {
-			return "Adicionar Membro";
+			return "Adicionar Transação";
 		}
 	}
 
@@ -375,6 +376,10 @@ public class TableModelFinancas extends AbstractTableModel {
 		return getTotal_Entradas().subtract(getTotal_Saidas());
 	}
 
+	/**
+	 * 
+	 * @return o total de entradas
+	 */
 	public BigDecimal getTotal_Entradas() {
 		BigDecimal n = new BigDecimal("0.0");
 		for (Transacao t : transacoes) {
@@ -384,6 +389,10 @@ public class TableModelFinancas extends AbstractTableModel {
 		return n;
 	}
 
+	/**
+	 * 
+	 * @return o total de saídas
+	 */
 	public BigDecimal getTotal_Saidas() {
 		BigDecimal n = new BigDecimal("0.0");
 		for (Transacao t : transacoes) {
@@ -393,6 +402,12 @@ public class TableModelFinancas extends AbstractTableModel {
 		return n;
 	}
 
+	/**
+	 * 
+	 * @param init
+	 * @param end
+	 * @return o total de entradas no entre o período indicado (inclusive)
+	 */
 	public BigDecimal getTotalEntradas(LocalDate init, LocalDate end) {
 		if (init == null && end == null)
 			return getTotal_Entradas();
@@ -422,6 +437,12 @@ public class TableModelFinancas extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * 
+	 * @param init
+	 * @param end
+	 * @return o total de saídas no período indicado (inclusive)
+	 */
 	public BigDecimal getTotalSaidas(LocalDate init, LocalDate end) {
 		if (init == null && end == null)
 			return getTotal_Saidas();
@@ -448,10 +469,21 @@ public class TableModelFinancas extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * 
+	 * @param init
+	 * @param end
+	 * @return o balanço do período indicado (entradas - saídas)
+	 */
 	public BigDecimal getTotalPeriod(LocalDate init, LocalDate end) {
 		return getTotalEntradas(init, end).subtract(getTotalSaidas(init, end));
 	}
 
+	/**
+	 * 
+	 * @param ano
+	 * @return lista com o total de entradas para cada mes do ano indicado
+	 */
 	public List<BigDecimal> getTotalEntradasPorMes(int ano) {
 		List<BigDecimal> list = new ArrayList<>(12);
 		for (int i = 1; i <= 12; i++) {
@@ -462,6 +494,11 @@ public class TableModelFinancas extends AbstractTableModel {
 		return list;
 	}
 
+	/**
+	 * 
+	 * @param ano
+	 * @return lista com o total de saídas por mes do ano indicado
+	 */
 	public List<BigDecimal> getTotalSaidasPorMes(int ano) {
 		List<BigDecimal> list = new ArrayList<>(12);
 		for (int i = 1; i <= 12; i++) {
@@ -472,6 +509,11 @@ public class TableModelFinancas extends AbstractTableModel {
 		return list;
 	}
 
+	/**
+	 * 
+	 * @param ano
+	 * @return lista com o balanço de cada mes do ano indicado (entradas-saidas)
+	 */
 	public List<BigDecimal> getSubTotalPorMes(int ano) {
 		List<BigDecimal> list = new ArrayList<>(12);
 		for (int i = 1; i <= 12; i++) {
@@ -482,6 +524,10 @@ public class TableModelFinancas extends AbstractTableModel {
 		return list;
 	}
 
+	/**
+	 * 
+	 * @return o número de transações de entradas realizado
+	 */
 	private int getNum_Entradas() {
 		int n = 0;
 		for (Transacao t : transacoes) {
@@ -491,6 +537,10 @@ public class TableModelFinancas extends AbstractTableModel {
 		return n;
 	}
 
+	/**
+	 * 
+	 * @return o número de transações de saída realizado
+	 */
 	private int getNum_Saidas() {
 		int n = 0;
 		for (Transacao t : transacoes) {
@@ -500,6 +550,12 @@ public class TableModelFinancas extends AbstractTableModel {
 		return n;
 	}
 
+	/**
+	 * 
+	 * @param init
+	 * @param end
+	 * @return número de transações de entrada no período indicado
+	 */
 	public int getNumEntradasPorPeriodo(LocalDate init, LocalDate end) {
 		if (init == null && end == null)
 			return getNum_Entradas();
@@ -529,6 +585,12 @@ public class TableModelFinancas extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * 
+	 * @param init
+	 * @param end
+	 * @return número de transações de saída no período indicado
+	 */
 	public int getNumSaidasPorPeriodo(LocalDate init, LocalDate end) {
 		if (init == null && end == null)
 			return getNum_Saidas();
@@ -563,9 +625,12 @@ public class TableModelFinancas extends AbstractTableModel {
 		fireTableDataChanged();
 		Log.getInstance().printLog("Transações ordenadas com sucesso!");
 		return this;
-
 	}
 
+	/**
+	 * 
+	 * @return a data da transação mais antiga
+	 */
 	@SuppressWarnings("unchecked")
 	public LocalDate getOldestDate() {
 		ArrayList<Transacao> sorted = (ArrayList<Transacao>) transacoes.clone();

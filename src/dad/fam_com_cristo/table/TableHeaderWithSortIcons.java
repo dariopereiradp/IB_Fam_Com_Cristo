@@ -16,6 +16,11 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
+/**
+ * Classe para desenha os sort icons nos cabeçalhos das tabelas, para poupar código
+ * @author dariopereiradp
+ *
+ */
 public class TableHeaderWithSortIcons implements TableCellRenderer {
 	
 	private TableCellRenderer tcr;

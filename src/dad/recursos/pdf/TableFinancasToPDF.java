@@ -5,10 +5,8 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
@@ -59,7 +57,7 @@ public class TableFinancasToPDF {
 		descricaoS = descricao;
 
 		String title = Main.SIGLA + "_Relatório_Financeiro_" + descricao + "_"
-				+ new SimpleDateFormat("ddMMMyyyy").format(new Date()) + ".pdf";
+				+ DateTimeFormatter.ofPattern("ddMMMyyyy").format(LocalDate.now()) + ".pdf";
 		try {
 			Document doc = new Document(PageSize.A4, 40, 40, 50, 50);
 
@@ -72,13 +70,13 @@ public class TableFinancasToPDF {
 			doc.addTitle(title);
 			doc.addAuthor(Main.TITLE_SMALL);
 
-			//Logo
+			// Logo
 			Image logo = Image.getInstance(TableFinancasToPDF.class.getResource("/FC.jpg"));
 			logo.scalePercent(3.5f);
 			logo.setAlignment(Element.ALIGN_CENTER);
 			doc.add(logo);
-			
-			//Title
+
+			// Title
 			Font fonteTitle = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
 			doc.add(new Paragraph(" "));
 			Paragraph titleP = new Paragraph(Main.TITLE_SMALL, fonteTitle);
@@ -156,16 +154,8 @@ public class TableFinancasToPDF {
 			for (int rows = 0; rows < table.getRowCount(); rows++) {
 				for (int cols = 1; cols < table.getColumnCount(); cols++) {
 					Paragraph p = null;
-					if (cols == 1)
-						p = new Paragraph(
-								utils.getDateFormat()
-										.format((LocalDate) table.getModel()
-												.getValueAt(table.convertRowIndexToModel(rows), cols)),
-								FontFactory.getFont(FontFactory.COURIER, 9));
-					else
-						p = new Paragraph(
-								table.getModel().getValueAt(table.convertRowIndexToModel(rows), cols).toString(),
-								FontFactory.getFont(FontFactory.COURIER, 9));
+					p = new Paragraph(table.getModel().getValueAt(table.convertRowIndexToModel(rows), cols).toString(),
+							FontFactory.getFont(FontFactory.COURIER, 9));
 					PdfPCell cell = new PdfPCell(p);
 					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 					pdfTable.addCell(cell);
@@ -199,8 +189,8 @@ public class TableFinancasToPDF {
 
 			assinatura.writeSelectedRows(0, -1, 315, assinatura.getTotalHeight() + doc.bottom(doc.bottomMargin()),
 					writer.getDirectContent());
-			
-			//Save
+
+			// Save
 			doc.close();
 			String message = "O Relatório Financeiro - " + descricao
 					+ " foi criado com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"

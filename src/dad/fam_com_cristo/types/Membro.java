@@ -16,6 +16,7 @@ import org.apache.commons.lang.WordUtils;
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.recursos.DataPesquisavel;
 import dad.recursos.ImageCompression;
 import dad.recursos.Log;
 import dad.recursos.pdf.FichaMembroToPDF;
@@ -43,7 +44,8 @@ public class Membro implements Comparable<Membro> {
 	private Sexo sexo;
 	private Estado_Civil estado_civil;
 	private String nome, profissao, endereco, igreja_origem, email, telefone, observacoes;
-	private LocalDate data_nascimento, data_batismo, membro_desde;
+	private DataPesquisavel data_nascimento;
+	private LocalDate data_batismo, membro_desde;
 	private Sim_Nao batizado;
 	private ImageIcon img;
 
@@ -54,7 +56,7 @@ public class Membro implements Comparable<Membro> {
 		con = new ConexaoMembro().getConnection();
 		setId(++countID);
 		this.nome = WordUtils.capitalize(nome);
-		this.data_nascimento = data_nascimento;
+		this.data_nascimento = new DataPesquisavel(data_nascimento);
 		this.setSexo(sexo);
 		this.setEstado_civil(estado_civil);
 		this.profissao = profissao;
@@ -123,11 +125,15 @@ public class Membro implements Comparable<Membro> {
 	}
 
 	public LocalDate getData_nascimento() {
+		return data_nascimento.getData();
+	}
+	
+	public DataPesquisavel getData_nascimentoPesquisavel() {
 		return data_nascimento;
 	}
 
 	public void setData_nascimento(LocalDate data_nascimento) {
-		this.data_nascimento = data_nascimento;
+		this.data_nascimento.setData(data_nascimento);
 	}
 
 	/**
@@ -136,7 +142,7 @@ public class Membro implements Comparable<Membro> {
 	 * @return a idade calculada do membro.
 	 */
 	public int getIdade() {
-		return Math.toIntExact(ChronoUnit.YEARS.between(data_nascimento, LocalDate.now()));
+		return Math.toIntExact(ChronoUnit.YEARS.between(data_nascimento.getData(), LocalDate.now()));
 	}
 
 	public String getTelefone() {

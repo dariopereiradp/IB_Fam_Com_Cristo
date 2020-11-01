@@ -2,6 +2,11 @@ package dad.fam_com_cristo.gui.themes;
 
 import javax.swing.plaf.ColorUIResource;
 
+/**
+ * Proporciona alguns métodos para configurar facilmente as cores ao longo do programa
+ * @author dariopereiradp
+ *
+ */
 public interface Theme {
 	
 	String getThemeName();
@@ -36,7 +41,15 @@ public interface Theme {
 	 */
 	ColorUIResource getColorHint();
 
+	/**
+	 * Cor de fundo do calendário
+	 * @return
+	 */
 	ColorUIResource getColorBackgroundCalendar();
 
+	/**
+	 * Cor dos campos
+	 * @return
+	 */
 	ColorUIResource getColorFields();
 }

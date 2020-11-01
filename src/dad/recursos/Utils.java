@@ -54,6 +54,7 @@ import mdlaf.utils.MaterialColors;
 public class Utils {
 
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
+	public static final String DATETIME_FORMAT = "dd/MM/yyyy 'às' HH'h'mm'm'ss's'";
 	private Theme current_theme;
 	private static Utils INSTANCE;
 	public static final String APP_THEME = "APP_THEME";
@@ -193,6 +194,10 @@ public class Utils {
 
 	public DateTimeFormatter getDateFormat() {
 		return DateTimeFormatter.ofPattern(DATE_FORMAT);
+	}
+	
+	public DateTimeFormatter getDateTimeFormat() {
+		return DateTimeFormatter.ofPattern(DATETIME_FORMAT);
 	}
 
 	public String getMesAtualString() {

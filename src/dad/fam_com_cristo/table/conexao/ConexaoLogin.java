@@ -15,7 +15,7 @@ import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 
 /**
- * Classe para fazer a conexão com a tabela Logins.
+ * Classe para fazer a conexão com a tabela Logins e criar a tabela.
  * @author Dário Pereira
  *
  */
@@ -52,11 +52,11 @@ public class ConexaoLogin {
 							+ "Pass varchar(50) NOT NULL, Num_acessos int, Ultimo_Acesso date,Data_Criacao date, CONSTRAINT PK_Logins PRIMARY KEY (Nome));");
 					Log.getInstance().printLog("Base de dados logins.mbd criada com sucesso");
 				}
-				CriptografiaAES.setKey(Main.PASS);
-				CriptografiaAES.encrypt(Main.PASS);
+				CriptografiaAES.setKey(Main.DEFAULT_PASS);
+				CriptografiaAES.encrypt(Main.DEFAULT_PASS);
 				PreparedStatement pst = con.prepareStatement(
 						"insert into logins(Nome,Pass,Num_acessos,Ultimo_Acesso,Data_Criacao) values (?,?,?,?,?)");
-				pst.setString(1, Main.USER);
+				pst.setString(1, Main.DEFAULT_USER);
 				pst.setString(2, CriptografiaAES.getEncryptedString());
 				pst.setInt(3, 0);
 				pst.setDate(4, new Date(System.currentTimeMillis()));

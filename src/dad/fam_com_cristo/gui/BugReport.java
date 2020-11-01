@@ -1,7 +1,6 @@
 package dad.fam_com_cristo.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -63,7 +62,9 @@ public class BugReport extends JDialog{
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			JLabel lblReportarErro = new JLabel("REPORTAR ERRO");
-			lblReportarErro.setBackground(new Color(255, 51, 51));
+			lblReportarErro.setIcon(MaterialImageFactory.getInstance().getImage(
+	                MaterialIconFont.BUG_REPORT,
+	                Utils.getInstance().getCurrentTheme().getColorIcons()));
 			lblReportarErro.setFont(new Font("Dialog", Font.PLAIN, 17));
 			lblReportarErro.setHorizontalAlignment(SwingConstants.CENTER);
 			contentPanel.add(lblReportarErro, BorderLayout.NORTH);

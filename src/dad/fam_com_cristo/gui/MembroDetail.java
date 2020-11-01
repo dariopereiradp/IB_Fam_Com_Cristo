@@ -95,12 +95,8 @@ public class MembroDetail extends JDialog {
 	public MembroDetail() {
 		super(DataGui.getInstance(), "Novo Membro", ModalityType.DOCUMENT_MODAL);
 		addWindowListener(new WindowAdapter() {
-
-			@Override
 			public void windowClosing(WindowEvent e) {
-
 			}
-
 		});
 		inicializar();
 		editState();
@@ -504,12 +500,10 @@ public class MembroDetail extends JDialog {
 
 			@Override
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-
 			}
 
 			@Override
 			public void popupMenuCanceled(PopupMenuEvent e) {
-
 			}
 		});
 
@@ -621,7 +615,6 @@ public class MembroDetail extends JDialog {
 		});
 
 		addImage.addActionListener(new Add_Image());
-
 	}
 
 	/**

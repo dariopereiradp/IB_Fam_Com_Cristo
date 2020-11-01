@@ -2,11 +2,14 @@ package dad.fam_com_cristo.types;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
+import dad.recursos.DataPesquisavel;
 import dad.recursos.Log;
+import dad.recursos.Money;
 
 public class Transacao implements Comparable<Transacao> {
 
@@ -15,11 +18,11 @@ public class Transacao implements Comparable<Transacao> {
 	 */
 	public static int countID = 0;
 	private int id;
-	private BigDecimal value;
+	private Money value;
 	private Tipo_Transacao tipo;
 	private String descricao;
-	private LocalDate data;
-	private BigDecimal total;
+	private DataPesquisavel data;
+	private Money total;
 	private static Connection con;
 	private static PreparedStatement pst;
 
@@ -37,11 +40,11 @@ public class Transacao implements Comparable<Transacao> {
 	public void init(BigDecimal value, Tipo_Transacao tipo, String descricao, LocalDate data, BigDecimal total) {
 		con = new ConexaoFinancas().getConnection();
 		id = ++countID;
-		this.value = value;
+		this.value = new Money(value);
 		this.tipo = tipo;
 		this.descricao = descricao;
-		this.data = data;
-		this.total = total;
+		this.data = new DataPesquisavel(data);
+		this.total = new Money(total);
 	}
 
 	public int getId() {
@@ -53,11 +56,15 @@ public class Transacao implements Comparable<Transacao> {
 	}
 
 	public BigDecimal getValue() {
+		return value.getValue();
+	}
+	
+	public Money getValueMoney() {
 		return value;
 	}
 
 	public void setValue(BigDecimal value) {
-		this.value = value;
+		this.value.setValue(value);
 	}
 
 	public Tipo_Transacao getTipo() {
@@ -77,19 +84,27 @@ public class Transacao implements Comparable<Transacao> {
 	}
 
 	public LocalDate getData() {
+		return data.getData();
+	}
+	
+	public DataPesquisavel getDataPesquisavel() {
 		return data;
 	}
 
 	public void setData(LocalDate data) {
-		this.data = data;
+		this.data.setData(data);;
 	}
 
 	public BigDecimal getTotal() {
+		return total.getValue();
+	}
+	
+	public Money getTotalMoney() {
 		return total;
 	}
 
 	public void setTotal(BigDecimal total) {
-		this.total = total;
+		this.total.setValue(total);
 	}
 
 	/**
@@ -99,7 +114,7 @@ public class Transacao implements Comparable<Transacao> {
 		try {
 			pst = con.prepareStatement("insert into financas(ID,Data,Valor,Tipo,Descricao,Total) values (?,?,?,?,?,?)");
 			pst.setInt(1, getId());
-			pst.setDate(2, java.sql.Date.valueOf(getData()));
+			pst.setDate(2, Date.valueOf(getData()));
 			pst.setBigDecimal(3, getValue());
 			pst.setString(4, getTipo().getDescricao());
 			pst.setString(5, getDescricao());
@@ -120,7 +135,7 @@ public class Transacao implements Comparable<Transacao> {
 			pst.setInt(1, getId());
 			pst.execute();
 		} catch (Exception e) {
-			Log.getInstance().printLog("Erro ao adicionar membro na base de dados! - " + e.getMessage());
+			Log.getInstance().printLog("Erro ao adicionar transacao na base de dados! - " + e.getMessage());
 			e.printStackTrace();
 		}
 	}

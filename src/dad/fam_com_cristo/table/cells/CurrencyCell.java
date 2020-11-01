@@ -17,8 +17,14 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.TableCellEditor;
 
+import dad.recursos.Money;
 import dad.recursos.Utils;
 
+/**
+ * Editor de célula com o prefixo da moeda e formato aceito predefinido
+ * @author dariopereiradp
+ *
+ */
 public class CurrencyCell extends AbstractCellEditor implements TableCellEditor {
 
 	private static final long serialVersionUID = 1L;
@@ -46,7 +52,7 @@ public class CurrencyCell extends AbstractCellEditor implements TableCellEditor 
 
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		editor.setValue(Utils.getInstance().getNumberFromFormat(value));
+		editor.setValue(((Money)value).getValue());
 		return editor;
 	}
 

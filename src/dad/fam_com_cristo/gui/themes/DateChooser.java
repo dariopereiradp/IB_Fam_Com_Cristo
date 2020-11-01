@@ -7,6 +7,11 @@ import mdlaf.utils.MaterialColors;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 
+/**
+ * DatePicker com algumas configurações, para evitar repetição de código
+ * @author dariopereiradp
+ *
+ */
 public class DateChooser extends DatePicker {
 
 	/**

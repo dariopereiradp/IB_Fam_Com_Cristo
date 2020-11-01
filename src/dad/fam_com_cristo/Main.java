@@ -45,8 +45,8 @@ public class Main {
 	public static final String VERSION = "2.0 - Reforma";
 	public static final String DATA_PUBLICACAO = "31 de Outubro de 2020";
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
-	public static final String USER = "admin";
-	public static final String PASS = "dad";
+	public static final String DEFAULT_USER = "admin";
+	public static final String DEFAULT_PASS = "dad";
 	public static final String DOCUMENTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
 			+ "Documents/IB_Fam_Com_Cristo/";
 	public static final String LISTAS_DIR = DOCUMENTS_DIR + "Listas/";
@@ -132,6 +132,10 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Cria o ficheiro de configurações, se ainda não existir
+	 * @return
+	 */
 	public File createConfFile() {
 		File conf = null;
 		try {

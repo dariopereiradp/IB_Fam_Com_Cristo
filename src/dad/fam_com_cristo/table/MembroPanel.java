@@ -117,7 +117,7 @@ public class MembroPanel extends JPanel {
 	}
 
 	/**
-	 * 
+	 *  Usado para garantir que tudo muda ao mudar o tema (Dark/Light)
 	 */
 	public void recreate() {
 		membros = new Table(modelMembro, columnToolTips, true);
@@ -166,9 +166,10 @@ public class MembroPanel extends JPanel {
 		DefaultCellEditor tipoCell = new DefaultCellEditor(tipo_membro);
 		tipoCell.setClickCountToStart(2);
 		
-		membros.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
 		membros.getColumnModel().getColumn(1).setCellEditor(new DataCellEditor());
+		membros.getColumnModel().getColumn(2).setCellEditor(phoneEditor);
 		membros.getColumnModel().getColumn(3).setCellEditor(tipoCell);
+		
 		JScrollPane jsMembros = new JScrollPane(membros);
 		add(jsMembros, BorderLayout.CENTER);
 
@@ -629,7 +630,7 @@ public class MembroPanel extends JPanel {
 
 	public static MembroPanel getInstance() {
 		if (INSTANCE == null)
-			INSTANCE = new MembroPanel();
+			new MembroPanel();
 		return INSTANCE;
 	}
 }

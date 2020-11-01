@@ -2,9 +2,9 @@ package dad.recursos.pdf;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -121,7 +121,7 @@ public class FichaMembroToPDF {
 					membro == null ? "____________________________________________________" : membro.getNome()));
 			infoT.addCell(getCellBoldWithSpace("Data de nascimento:"));
 			infoT.addCell(getCellWithSpace(
-					membro == null ? "_____/______/_________" : dateFormat.format(membro.getData_nascimento())));
+					membro == null ? "_____/______/_________" : membro.getData_nascimentoPesquisavel().toString()));
 			infoT.addCell(getCellBoldWithSpace("Sexo: "));
 			infoT.addCell(getCellWithSpace(
 					membro == null ? "(   ) Masculino      (   ) Feminino" : membro.getSexo().getDescricao()));
@@ -204,7 +204,8 @@ public class FichaMembroToPDF {
 				dataT.setTotalWidth(220);
 			Paragraph data_line = new Paragraph(
 					membro == null ? "Nazária, " + "______ de " + "_____________________ de" + "_________"
-							: "Nazária, " + new SimpleDateFormat("dd 'de' MMMMM 'de' yyyy").format(new Date()),
+							: "Nazária, "
+									+ DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy").format(LocalDate.now()),
 					FontFactory.getFont(FontFactory.COURIER, 10));
 			PdfPCell cellData = new PdfPCell(data_line);
 			cellData.setBorder(Rectangle.NO_BORDER);
@@ -291,7 +292,7 @@ public class FichaMembroToPDF {
 				e.printStackTrace();
 			}
 			Paragraph footerLeftP = new Paragraph(
-					"Gerado automaticamente em " + new SimpleDateFormat("dd/MMM/yyyy 'às' HH:mm:ss").format(new Date()),
+					"Gerado automaticamente em " + Utils.getInstance().getDateTimeFormat().format(LocalDateTime.now()),
 					FontFactory.getFont(FontFactory.TIMES, 8));
 			Phrase footerLeft = new Phrase(footerLeftP);
 			ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footerLeft, 30, 30, 0);

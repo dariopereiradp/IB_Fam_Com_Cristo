@@ -20,6 +20,13 @@ import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 
+/**
+ * Classe para representar uma célula com input de data. É uma extensão do
+ * DataTableEditor, com algumas configurações predefinidas, para poupar código.
+ * 
+ * @author dariopereiradp
+ *
+ */
 public class DataCellEditor extends DateTableEditor {
 
 	/**
@@ -40,7 +47,7 @@ public class DataCellEditor extends DateTableEditor {
 		getDatePicker().getComponentToggleCalendarButton().setText("");
 		getDatePicker().getComponentToggleCalendarButton().setIcon(MaterialImageFactory.getInstance()
 				.getImage(MaterialIconFont.DATE_RANGE, Utils.getInstance().getCurrentTheme().getColorIcons()));
-		
+
 		InputMap iMap2 = getDatePicker().getComponentDateTextField().getInputMap(JComponent.WHEN_FOCUSED);
 		iMap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
 		ActionMap aMap2 = getDatePicker().getComponentDateTextField().getActionMap();
@@ -62,8 +69,6 @@ public class DataCellEditor extends DateTableEditor {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus,
 			int row, int column) {
 		DatePicker c = (DatePicker) super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
-
 		return c;
 	}
-
 }

@@ -42,10 +42,10 @@ public class CellRendererNoImage extends DefaultTableCellRenderer {
 		int pmw = g.getFontMetrics().stringWidth(preMatch);
 		int w = g.getFontMetrics().stringWidth(match);
 		g.setColor(Utils.getInstance().getCurrentTheme().getColorHighlight());
-		g.fillRect(pmw + 23, 8, w, getHeight() - 10);
+		g.fillRect(pmw + 3, 8, w, getHeight() - 10);
 		g.setColor(getForeground());
 		Rectangle r = g.getFontMetrics().getStringBounds(match, g).getBounds();
-		g.drawString(match, pmw + 23, -r.y + 8);
+		g.drawString(match, pmw + 3, -r.y + 8);
 	}
 
 	@Override

@@ -64,11 +64,6 @@ public class DarkTheme extends JMarsDarkTheme implements Theme {
 	}
 
 	@Override
-	public String getThemeName() {
-		return Utils.THEME_DARK;
-	}
-
-	@Override
 	public ColorUIResource getColorIcons() {
 		return MaterialColors.WHITE;
 	}
@@ -86,6 +81,11 @@ public class DarkTheme extends JMarsDarkTheme implements Theme {
 	@Override
 	public ColorUIResource getColorFields() {
 		return MaterialColors.GRAY_800;
+	}
+	
+	@Override
+	public String getThemeName() {
+		return Utils.THEME_DARK;
 	}
 
 }

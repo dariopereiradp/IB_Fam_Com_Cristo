@@ -20,9 +20,9 @@ import dad.fam_com_cristo.types.Membro;
 import dad.fam_com_cristo.types.Sexo;
 import dad.fam_com_cristo.types.Sim_Nao;
 import dad.fam_com_cristo.types.Tipo_Membro;
+import dad.recursos.DataPesquisavel;
 import dad.recursos.Log;
 import dad.recursos.UndoManager;
-import dad.recursos.Utils;
 
 /**
  * Classe que representa o TableModel para os membros.
@@ -50,8 +50,8 @@ public class TableModelMembro extends AbstractTableModel {
 	}
 
 	/**
-	 * Faz upload da base de dados e cria o ArrayList com os clientes que
-	 * existirem na base de dados Users.
+	 * Faz upload da base de dados e cria o ArrayList com os clientes que existirem
+	 * na base de dados Users.
 	 */
 	public void uploadDataBase() {
 		membros = new ArrayList<>();
@@ -142,6 +142,7 @@ public class TableModelMembro extends AbstractTableModel {
 
 	/**
 	 * Adiciona um membro à base de dados.
+	 * 
 	 * @param membro - membro que se pretende adicionar.
 	 */
 	public void addMembro(Membro membro) {
@@ -157,7 +158,7 @@ public class TableModelMembro extends AbstractTableModel {
 	 * 
 	 * @param membro membro que se pretende descobrir em que linha está
 	 * @return a linha em que o membro está, se ele existir na tabela. <br>
-	 * -1 se o membro não existir na tabela.
+	 *         -1 se o membro não existir na tabela.
 	 */
 	public int getRow(Membro membro) {
 		for (int i = 0; i < membros.size(); i++) {
@@ -170,8 +171,7 @@ public class TableModelMembro extends AbstractTableModel {
 	/**
 	 * Remove os membros que têm os indexes passados no array rows.
 	 * 
-	 * @param rows
-	 *            - array que contém os indexes dos membros para apagar.
+	 * @param rows - array que contém os indexes dos membros para apagar.
 	 */
 	public void removerMembro(int[] rows) {
 		undoManager.execute(new RemoverMembro(rows));
@@ -183,7 +183,7 @@ public class TableModelMembro extends AbstractTableModel {
 		case 0:
 			return membros.get(rowIndex).getNome();
 		case 1:
-			return membros.get(rowIndex).getData_nascimento().format(Utils.getInstance().getDateFormat());
+			return membros.get(rowIndex).getData_nascimentoPesquisavel();
 		case 2:
 			String phone = membros.get(rowIndex).getTelefone();
 			if (phone.length() == 11)
@@ -203,7 +203,7 @@ public class TableModelMembro extends AbstractTableModel {
 	public Class getColumnClass(int column) {
 		switch (column) {
 		case 1:
-			return LocalDate.class;
+			return DataPesquisavel.class;
 		case 3:
 			return Tipo_Membro.class;
 		default:
@@ -226,7 +226,7 @@ public class TableModelMembro extends AbstractTableModel {
 					break;
 				case 1:
 					LocalDate data = (LocalDate) valor;
-					if(!data.isEqual(membro.getData_nascimento()))
+					if (!data.isEqual(membro.getData_nascimento()))
 						undoManager.execute(new AtualizaMembro("Data_Nascimento", membro, valor));
 					break;
 				case 2:
@@ -239,17 +239,16 @@ public class TableModelMembro extends AbstractTableModel {
 				case 3:
 					if (membro.getTipo_membro() != (Tipo_Membro) valor) {
 						Sim_Nao valor_batismo;
-						if((Tipo_Membro) valor == Tipo_Membro.CONGREGADO)
+						if ((Tipo_Membro) valor == Tipo_Membro.CONGREGADO)
 							valor_batismo = Sim_Nao.NAO;
 						else if ((Tipo_Membro) valor == Tipo_Membro.EX_MEMBRO)
 							valor_batismo = membro.eBatizado();
 						else
 							valor_batismo = Sim_Nao.SIM;
-						
-							
-						undoManager.execute(new CompositeCommand("Tipo de Membro",
-								new AtualizaMembro("Tipo_Membro", membro, valor),
-								new AtualizaMembro("Batizado", membro, valor_batismo)));
+
+						undoManager.execute(
+								new CompositeCommand("Tipo de Membro", new AtualizaMembro("Tipo_Membro", membro, valor),
+										new AtualizaMembro("Batizado", membro, valor_batismo)));
 					}
 
 					break;
@@ -269,8 +268,9 @@ public class TableModelMembro extends AbstractTableModel {
 	/**
 	 * Método para inserir um membro na base de dados, na posição pretendida. <br>
 	 * Útil para o redo
+	 * 
 	 * @param membro - membro que se pretende inserir.
-	 * @param row - linha em que se pretende inserir o membro.
+	 * @param row    - linha em que se pretende inserir o membro.
 	 */
 	public void insertMembro(Membro membro, int row) {
 		membro.adicionarNaBaseDeDados();

@@ -125,6 +125,104 @@ public class Estatisticas extends JDialog {
 				new XChartPanel<PieChart>(GraficosMembros.getMulheres_Batizadas_Chart()));
 		graficosPane.addTab("Líderes - Sexo", new XChartPanel<PieChart>(GraficosMembros.getSexo_Lideranca_Chart()));
 
+		JPanel panel_detalhesFinancas = setUpDetalhesFinancas();
+
+		// Graficos
+		JTabbedPane financasPane = new JTabbedPane(JTabbedPane.LEFT);
+		financasPane.addTab("Detalhes", panel_detalhesFinancas);
+
+		panelGraficosFinancas = new JPanel(new BorderLayout());
+		financasPane.addTab("Entradas / Saídas", panelGraficosFinancas);
+
+		JPanel graficosFinancasChooser = new JPanel(new GridLayout(1, 3));
+		panelGraficosFinancas.add(graficosFinancasChooser, BorderLayout.NORTH);
+
+		panelGraficosFinancas.add(
+				new XChartPanel<PieChart>(GraficosFinancas.getEntrada_Saida_Chart(EstatisticaPeriodos.DESDE_SEMPRE,
+						EstatisticaPeriodos.DESDE_SEMPRE.getInit(), EstatisticaPeriodos.DESDE_SEMPRE.getEnd(), false)),
+				BorderLayout.CENTER);
+
+		graficosFinancasChooser.add(new JLabel("Escolha o período: "));
+
+		datas1 = new MultiDatePicker();
+		datas1.getInitDateChooser().addDateChangeListener(new Listener1());
+		datas1.getFinalDateChooser().addDateChangeListener(new Listener1());
+		datas1.setEnabled(false);
+
+		JComboBox<EstatisticaPeriodos> opcoes = new JComboBox<>();
+		opcoes.setModel(new DefaultComboBoxModel<>(EstatisticaPeriodos.values()));
+		opcoes.setSelectedIndex(0);
+
+		opcoes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (opcoes.getSelectedIndex() == 5) {
+					datas1.setEnabled(true);
+				} else {
+					datas1.setEnabled(false);
+					panelGraficosFinancas.remove(1);
+					EstatisticaPeriodos periodo = (EstatisticaPeriodos) opcoes.getSelectedItem();
+					panelGraficosFinancas.add(new XChartPanel<PieChart>(GraficosFinancas.getEntrada_Saida_Chart(periodo,
+							periodo.getInit(), periodo.getEnd(), false)), BorderLayout.CENTER);
+					datas1.getInitDateChooser().setDate(periodo.getInit());
+					datas1.getFinalDateChooser().setDate(periodo.getEnd());
+				}
+				panelGraficosFinancas.repaint();
+
+			}
+		});
+
+		graficosFinancasChooser.add(opcoes);
+
+		graficosFinancasChooser.add(datas1);
+
+		JPanel painelGraficosPorMes = new JPanel(new BorderLayout());
+
+		JPanel painelGraficosPorMesChooser = new JPanel(new GridLayout(1, 6));
+		painelGraficosPorMesChooser.add(new JLabel(""));
+		painelGraficosPorMesChooser.add(new JLabel(""));
+		painelGraficosPorMesChooser.add(new JLabel("Escolha o ano: "));
+
+		Integer[] anosList = new Integer[250];
+		for (int i = 2000; i < 2250; i++)
+			anosList[i - 2000] = i;
+
+		JComboBox<Integer> anos = new JComboBox<Integer>();
+		anos.setModel(new DefaultComboBoxModel<Integer>(anosList));
+		anos.setSelectedItem(LocalDate.now().getYear());
+
+		anos.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				painelGraficosPorMes.remove(1);
+				painelGraficosPorMes.add(
+						new XChartPanel<CategoryChart>(
+								GraficosFinancas.getEntrada_Saida_BarChart((int) anos.getSelectedItem(), false)),
+						BorderLayout.CENTER);
+				painelGraficosPorMes.repaint();
+			}
+		});
+		painelGraficosPorMesChooser.add(anos);
+		painelGraficosPorMesChooser.add(new JLabel(""));
+		painelGraficosPorMesChooser.add(new JLabel(""));
+		painelGraficosPorMes.add(painelGraficosPorMesChooser, BorderLayout.NORTH);
+
+		painelGraficosPorMes.add(
+				new XChartPanel<CategoryChart>(
+						GraficosFinancas.getEntrada_Saida_BarChart(LocalDate.now().getYear(), false)),
+				BorderLayout.CENTER);
+
+		financasPane.addTab("Por meses", painelGraficosPorMes);
+
+		setUpMembrosNumerosPanel();
+
+		tabbedPane.addTab("Finanças", financasPane);
+	}
+
+	/**
+	 * @return o painel dos detalhes das financas, configurado
+	 */
+	public JPanel setUpDetalhesFinancas() {
 		JPanel panel = new JPanel(null);
 
 		// Painel do mes atual
@@ -406,101 +504,11 @@ public class Estatisticas extends JDialog {
 		subTotalPers.setBounds(160, 180, 120, 25);
 		subTotalPers.setValue(0);
 		panelPersonal.add(subTotalPers);
-
-		// Graficos
-		JTabbedPane financasPane = new JTabbedPane(JTabbedPane.LEFT);
-		financasPane.addTab("Detalhes", panel);
-
-		panelGraficosFinancas = new JPanel(new BorderLayout());
-		financasPane.addTab("Entradas / Saídas", panelGraficosFinancas);
-
-		JPanel graficosFinancasChooser = new JPanel(new GridLayout(1, 3));
-		panelGraficosFinancas.add(graficosFinancasChooser, BorderLayout.NORTH);
-
-		panelGraficosFinancas.add(
-				new XChartPanel<PieChart>(GraficosFinancas.getEntrada_Saida_Chart(EstatisticaPeriodos.DESDE_SEMPRE,
-						EstatisticaPeriodos.DESDE_SEMPRE.getInit(), EstatisticaPeriodos.DESDE_SEMPRE.getEnd(), false)),
-				BorderLayout.CENTER);
-
-		graficosFinancasChooser.add(new JLabel("Escolha o período: "));
-
-		datas1 = new MultiDatePicker();
-		datas1.getInitDateChooser().addDateChangeListener(new Listener1());
-		datas1.getFinalDateChooser().addDateChangeListener(new Listener1());
-		datas1.setEnabled(false);
-
-		JComboBox<EstatisticaPeriodos> opcoes = new JComboBox<>();
-		opcoes.setModel(new DefaultComboBoxModel<>(EstatisticaPeriodos.values()));
-		opcoes.setSelectedIndex(0);
-
-		opcoes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (opcoes.getSelectedIndex() == 5) {
-					datas1.setEnabled(true);
-				} else {
-					datas1.setEnabled(false);
-					panelGraficosFinancas.remove(1);
-					EstatisticaPeriodos periodo = (EstatisticaPeriodos) opcoes.getSelectedItem();
-					panelGraficosFinancas.add(new XChartPanel<PieChart>(GraficosFinancas.getEntrada_Saida_Chart(periodo,
-							periodo.getInit(), periodo.getEnd(), false)), BorderLayout.CENTER);
-					datas1.getInitDateChooser().setDate(periodo.getInit());
-					datas1.getFinalDateChooser().setDate(periodo.getEnd());
-				}
-				panelGraficosFinancas.repaint();
-
-			}
-		});
-
-		graficosFinancasChooser.add(opcoes);
-
-		graficosFinancasChooser.add(datas1);
-
-		JPanel painelGraficosPorMes = new JPanel(new BorderLayout());
-
-		JPanel painelGraficosPorMesChooser = new JPanel(new GridLayout(1, 6));
-		painelGraficosPorMesChooser.add(new JLabel(""));
-		painelGraficosPorMesChooser.add(new JLabel(""));
-		painelGraficosPorMesChooser.add(new JLabel("Escolha o ano: "));
-
-		Integer[] anosList = new Integer[250];
-		for (int i = 2000; i < 2250; i++)
-			anosList[i - 2000] = i;
-
-		JComboBox<Integer> anos = new JComboBox<Integer>();
-		anos.setModel(new DefaultComboBoxModel<Integer>(anosList));
-		anos.setSelectedItem(LocalDate.now().getYear());
-
-		anos.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				painelGraficosPorMes.remove(1);
-				painelGraficosPorMes.add(
-						new XChartPanel<CategoryChart>(
-								GraficosFinancas.getEntrada_Saida_BarChart((int) anos.getSelectedItem(), false)),
-						BorderLayout.CENTER);
-				painelGraficosPorMes.repaint();
-			}
-		});
-		painelGraficosPorMesChooser.add(anos);
-		painelGraficosPorMesChooser.add(new JLabel(""));
-		painelGraficosPorMesChooser.add(new JLabel(""));
-		painelGraficosPorMes.add(painelGraficosPorMesChooser, BorderLayout.NORTH);
-
-		painelGraficosPorMes.add(
-				new XChartPanel<CategoryChart>(
-						GraficosFinancas.getEntrada_Saida_BarChart(LocalDate.now().getYear(), false)),
-				BorderLayout.CENTER);
-
-		financasPane.addTab("Por meses", painelGraficosPorMes);
-
-		setUpMembrosNumerosPanel();
-
-		tabbedPane.addTab("Finanças", financasPane);
+		return panel;
 	}
 
 	/**
-	 * 
+	 * SetUp do painel dos numeros de membros
 	 */
 	public void setUpMembrosNumerosPanel() {
 		JPanel numeros = new JPanel();
@@ -829,6 +837,11 @@ public class Estatisticas extends JDialog {
 		setVisible(true);
 	}
 
+	/**
+	 * Listener para atualizar os valores de acordo com as datas escolhidas
+	 * @author dariopereiradp
+	 *
+	 */
 	private class Listener implements DateChangeListener {
 
 		@Override
@@ -847,6 +860,11 @@ public class Estatisticas extends JDialog {
 		}
 	}
 
+	/**
+	 * Listener para atualizar o gráfico de acordo com as datas escolhidas
+	 * @author dariopereiradp
+	 *
+	 */
 	private class Listener1 implements DateChangeListener {
 
 		@Override

@@ -12,7 +12,7 @@ import dad.fam_com_cristo.Main;
 import dad.recursos.Log;
 
 /**
- * Classe para fazer a conexão com a tabela Membros.
+ * Classe para fazer a conexão com a tabela Membros e criar a tabela.
  * @author Dário Pereira
  *
  */
