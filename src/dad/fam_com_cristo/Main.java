@@ -97,7 +97,7 @@ public class Main {
 			try {
 				Thread.sleep(500);
 				for (int i = 0; i <= 100; i++) {
-					Thread.sleep(30);
+					Thread.sleep(35);
 					EventQueue.invokeLater(new Incrementar(i, screen));
 				}
 			} catch (InterruptedException e) {

@@ -28,31 +28,31 @@ public class Splash extends JWindow {
 	 * Create the frame.
 	 */
 	public Splash() {
-		setMinimumSize(new Dimension(450, 300));
+		setMinimumSize(new Dimension(675, 420));
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		
 		progressBar = new JProgressBar();
-		progressBar.setBounds(50, 238, 350, 35);
+		progressBar.setBounds(50, 360, 575, 35);
 		progressBar.setStringPainted(true);
 		getContentPane().add(progressBar);
 		
 		JLabel lblNewLabel = new JLabel(Main.TITLE);
-		lblNewLabel.setFont(new Font("Roboto Medium", Font.PLAIN, 15));
+		lblNewLabel.setFont(new Font("Dialog", Font.PLAIN, 15));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(50, 172, 350, 35);
+		lblNewLabel.setBounds(50, 290, 575, 35);
 		getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setIcon(new ImageIcon(Splash.class.getResource("/splash_gif.gif")));
-		lblNewLabel_1.setBounds(0, 0, 450, 181);
+		lblNewLabel_1.setIcon(new ImageIcon(Splash.class.getResource("/splash.gif")));
+		lblNewLabel_1.setBounds(0, 0, 675, 280);
 		getContentPane().add(lblNewLabel_1);
 		
 		JLabel lblVerso = new JLabel("Vers\u00E3o " + Main.VERSION);
 		lblVerso.setHorizontalAlignment(SwingConstants.CENTER);
 		lblVerso.setFont(new Font("Roboto Medium", Font.PLAIN, 13));
-		lblVerso.setBounds(150, 213, 150, 20);
+		lblVerso.setBounds(250, 330, 175, 20);
 		getContentPane().add(lblVerso);
 
 	}
