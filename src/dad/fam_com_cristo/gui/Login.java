@@ -15,12 +15,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 
@@ -63,6 +65,7 @@ public class Login {
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
+		frame.getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 
 		recreate();
 	}

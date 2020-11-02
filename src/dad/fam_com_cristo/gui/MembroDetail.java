@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -37,6 +38,9 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.MaskFormatter;
+
+import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.themes.DateChooser;
@@ -200,6 +204,15 @@ public class MembroDetail extends JDialog {
 		data_nascimento = new DateChooser();
 		data_nascimento.getSettings().setDateRangeLimits(null, LocalDate.now());
 		data_nascimento.setBounds(164, 80, 166, 37);
+
+		data_nascimento.addDateChangeListener(new DateChangeListener() {
+
+			@Override
+			public void dateChanged(DateChangeEvent event) {
+				idade.setText(String.valueOf(
+						Math.toIntExact(ChronoUnit.YEARS.between(data_nascimento.getDate(), LocalDate.now()))));
+			}
+		});
 
 		profissao = new JTextField("");
 		profissao.setBounds(603, 45, 191, 25);
@@ -512,7 +525,7 @@ public class MembroDetail extends JDialog {
 		image.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				int count = evt.getClickCount();
-				if (membro.getImg()!=null && count == 2) {
+				if (membro.getImg() != null && count == 2) {
 					ImageViewer.show(MembroDetail.this, membro.getImg(), membro.getImageFile(),
 							new File(Main.SAVED_IMAGES + membro.getId() + ".jpg"));
 				}

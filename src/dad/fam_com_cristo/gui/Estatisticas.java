@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -73,6 +74,7 @@ public class Estatisticas extends JDialog {
 		setTitle("Estatísticas");
 		setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
 		getContentPane().setLayout(new BorderLayout());
+		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 		{

@@ -3,11 +3,13 @@ package dad.fam_com_cristo.gui;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 
 import dad.fam_com_cristo.Main;
 
@@ -31,6 +33,7 @@ public class Splash extends JWindow {
 		setMinimumSize(new Dimension(675, 420));
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
+		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		
 		progressBar = new JProgressBar();
 		progressBar.setBounds(50, 360, 575, 35);

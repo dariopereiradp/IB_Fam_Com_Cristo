@@ -5,10 +5,12 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import dad.fam_com_cristo.table.models.TableModelFuncionario;
@@ -42,6 +44,7 @@ public class GerirFuncionarios extends JDialog {
 		setTitle("Gerir Funcionários");
 		setBounds(100, 100, 1100, 350);
 		getContentPane().setLayout(new BorderLayout());
+		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		contentPanel.setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

@@ -3,11 +3,13 @@ package dad.fam_com_cristo.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import dad.fam_com_cristo.Main;
@@ -54,6 +56,7 @@ public class Config extends JDialog {
 		setTitle("Configurações");
 		setBounds(100, 100, 450, 350);
 		setResizable(false);
+		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

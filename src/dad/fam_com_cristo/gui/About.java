@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -85,6 +87,7 @@ public class About extends JDialog {
 	public About() {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		setBounds(350, 100, 600, 500);
 		setMinimumSize(new Dimension(600, 500));
 		setTitle("Sobre");
@@ -96,7 +99,7 @@ public class About extends JDialog {
 			JTextPane sobre = new JTextPane();
 			sobre.setEditable(false);
 			if (Utils.getInstance().getCurrentTheme() instanceof DarkTheme)
-				sobre.setBackground(MaterialColors.GRAY_500);
+				sobre.setBackground(MaterialColors.GRAY_400);
 
 			sobre.setContentType("text/html");
 			sobre.setText(info);

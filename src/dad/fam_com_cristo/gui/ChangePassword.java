@@ -3,10 +3,12 @@ package dad.fam_com_cristo.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -60,6 +62,7 @@ public class ChangePassword extends JDialog {
 		setBounds(100, 100, 450, 220);
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);
+		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

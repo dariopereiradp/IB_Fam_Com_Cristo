@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -27,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 
@@ -69,6 +71,7 @@ public class RegistoLogin {
 		dialog.setLocationRelativeTo(null);
 		dialog.setResizable(false);
 		dialog.getContentPane().setLayout(null);
+		dialog.getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 
 		JLabel image = new JLabel("");
 		image.setHorizontalAlignment(SwingConstants.CENTER);
