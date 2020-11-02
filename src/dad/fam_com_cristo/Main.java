@@ -146,6 +146,7 @@ public class Main {
 				prop.setProperty(Utils.APP_THEME, Utils.THEME_DARK);
 				prop.setProperty(PASTOR, "");
 				prop.store(output, AVISO_INI);
+				output.close();
 			}
 			return conf;
 

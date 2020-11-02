@@ -43,11 +43,11 @@ import dad.fam_com_cristo.gui.themes.DateChooser;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.command.AtualizaMembro;
 import dad.fam_com_cristo.table.command.CompositeCommand;
-import dad.fam_com_cristo.types.Estado_Civil;
 import dad.fam_com_cristo.types.Membro;
-import dad.fam_com_cristo.types.Sexo;
-import dad.fam_com_cristo.types.Sim_Nao;
-import dad.fam_com_cristo.types.Tipo_Membro;
+import dad.fam_com_cristo.types.enumerados.Estado_Civil;
+import dad.fam_com_cristo.types.enumerados.Sexo;
+import dad.fam_com_cristo.types.enumerados.Sim_Nao;
+import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
 import dad.recursos.ImageViewer;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
@@ -512,8 +512,8 @@ public class MembroDetail extends JDialog {
 		image.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				int count = evt.getClickCount();
-				if (count == 2) {
-					ImageViewer.show(membro.getImg(), membro.getImageFile(),
+				if (membro.getImg()!=null && count == 2) {
+					ImageViewer.show(MembroDetail.this, membro.getImg(), membro.getImageFile(),
 							new File(Main.SAVED_IMAGES + membro.getId() + ".jpg"));
 				}
 			}

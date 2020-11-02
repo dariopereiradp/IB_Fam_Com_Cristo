@@ -1,6 +1,7 @@
 package dad.recursos;
 
 import java.awt.Color;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -10,7 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -31,39 +32,51 @@ public class ImageViewer {
 	 * 
 	 * @param img - imagem a ser visualizada
 	 */
-	public static void show(ImageIcon img, File source, File target) {
-		JFrame frame = new JFrame();
-		frame.getContentPane().setLayout(new MigLayout("al center center, wrap, gapy 15"));
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage((ImageViewer.class.getResource("/FC.jpg"))));
-		frame.setMinimumSize(new Dimension(177 * 2, 263 * 2));
-		frame.setResizable(false);
+	public static void show(JDialog dialog, ImageIcon img, File source, File target) {
+		JDialog jdialog = new JDialog(dialog, ModalityType.DOCUMENT_MODAL);
+		jdialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		jdialog.getContentPane().setLayout(new MigLayout("al center center, wrap, gapy 15"));
+		jdialog.setIconImage(Toolkit.getDefaultToolkit().getImage((ImageViewer.class.getResource("/FC.jpg"))));
+		jdialog.setMinimumSize(new Dimension(177 * 2, 263 * 2));
+		jdialog.setResizable(false);
 		JLabel imageView = new JLabel("");
 		imageView.setMinimumSize(new Dimension(177 * 2, 263 * 2));
 		imageView.setBorder(new LineBorder(Color.BLACK, 2));
 		imageView
 				.setIcon(new ImageIcon(img.getImage().getScaledInstance(177 * 2, 236 * 2, Image.SCALE_AREA_AVERAGING)));
-		frame.getContentPane().add(imageView, "center");
+		jdialog.getContentPane().add(imageView, "center");
 
 		imageView.setComponentPopupMenu(getPopupMenu(source, target));
-		frame.setVisible(true);
+		jdialog.setVisible(true);
 	}
 
-	public static void showLogo(ImageIcon img) {
-		JFrame frame = new JFrame();
-		frame.getContentPane().setLayout(new MigLayout("al center center, wrap, gapy 15"));
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage((ImageViewer.class.getResource("/FC.jpg"))));
-		frame.setMinimumSize(new Dimension(2873 / 4, 2420 / 4));
-		frame.setResizable(false);
+	/**
+	 * Visualiza a imagem com o tamanho do logotipo
+	 * @param img
+	 */
+	public static void showLogo(JDialog dialog, ImageIcon img) {
+		JDialog jdialog = new JDialog(dialog, ModalityType.DOCUMENT_MODAL);
+		jdialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		jdialog.getContentPane().setLayout(new MigLayout("al center center, wrap, gapy 15"));
+		jdialog.setIconImage(Toolkit.getDefaultToolkit().getImage((ImageViewer.class.getResource("/FC.jpg"))));
+		jdialog.setMinimumSize(new Dimension(2873 / 4, 2420 / 4));
+		jdialog.setResizable(false);
 		JLabel imageView = new JLabel("");
 		imageView.setMinimumSize(new Dimension(2873 / 4, 2362 / 4));
 		imageView.setBorder(new LineBorder(Color.BLACK, 2));
 		imageView.setIcon(
 				new ImageIcon(img.getImage().getScaledInstance(2873 / 4, 2362 / 4, Image.SCALE_AREA_AVERAGING)));
-		frame.getContentPane().add(imageView, "center");
-		frame.setVisible(true);
+		jdialog.getContentPane().add(imageView, "center");
+		jdialog.setVisible(true);
 
 	}
 
+	/**
+	 * PopoupMenu com a funcionalidade de salvar a imagem
+	 * @param source
+	 * @param target
+	 * @return
+	 */
 	private static JPopupMenu getPopupMenu(File source, File target) {
 		JPopupMenu menu = new JPopupMenu();
 

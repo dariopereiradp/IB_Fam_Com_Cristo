@@ -12,6 +12,11 @@ import javax.swing.Icon;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
+/**
+ * Classe para ajudar os componentes de texto a agruparem um ícone e texto de placeholder
+ * @author dariopereiradp
+ *
+ */
 public class IconTextComponentHelper {
     private static final int ICON_SPACING = 4;
 

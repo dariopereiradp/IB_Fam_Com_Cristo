@@ -40,26 +40,27 @@ import dad.fam_com_cristo.gui.themes.Theme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.TableModelFinancas;
-import dad.fam_com_cristo.types.EstatisticaPeriodos;
-import dad.fam_com_cristo.types.ImageFormats;
+import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
+import dad.fam_com_cristo.types.enumerados.ImageFormats;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.themes.MaterialTheme;
 import mdlaf.utils.MaterialColors;
 
 /**
+ * Classe que agrupa diversas funções que são de utilidade em diferentes classes do programa
  * @author dariopereiradp
  *
  */
 public class Utils {
 
+	private static Utils INSTANCE;
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DATETIME_FORMAT = "dd/MM/yyyy 'às' HH'h'mm'm'ss's'";
-	private Theme current_theme;
-	private static Utils INSTANCE;
 	public static final String APP_THEME = "APP_THEME";
 	public static final String THEME_LITE = "Lite";
 	public static final String THEME_DARK = "Dark";
+	private Theme current_theme;
 
 	public Utils() {
 		FileInputStream inputStream;
@@ -68,6 +69,7 @@ public class Utils {
 			Properties prop = new Properties();
 			prop.load(inputStream);
 			String theme = prop.getProperty(APP_THEME);
+			inputStream.close();
 			if (theme.equals(THEME_LITE))
 				current_theme = LiteTheme.getInstance();
 			else
@@ -79,6 +81,11 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * Altera o tema do programa, garantindo que todos os componentes são devidamente recriados (incluindo as
+	 * cores dos ícones dos botões
+	 * @param theme
+	 */
 	public void changeTheme(Theme theme) {
 		current_theme = theme;
 		MaterialLookAndFeel.changeTheme((MaterialTheme) theme);
@@ -110,10 +117,18 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * 
+	 * @return o ficheiro de configurações
+	 */
 	public File getPropertiesFile() {
 		return new File(Main.DATABASE_DIR + "conf.dad");
 	}
 
+	/**
+	 * 
+	 * @return o tema atual em uso no programa (Light ou Dark)
+	 */
 	public Theme getCurrentTheme() {
 		return current_theme;
 	}
@@ -166,6 +181,10 @@ public class Utils {
 		MaterialUIMovement.getMovement(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
 	}
 
+	/**
+	 * 
+	 * @return o formato de moeda do Brasil
+	 */
 	public NumberFormat getNumberFormatCurrency() {
 		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "br"));
 		format.setMinimumFractionDigits(2);
@@ -174,6 +193,10 @@ public class Utils {
 		return format;
 	}
 
+	/**
+	 * 
+	 * @return um novo JFormattedTextField com a máscara da moeda brasileira
+	 */
 	public JFormattedTextField getNewCurrencyTextField() {
 		NumberFormatter formatter = new NumberFormatter(getNumberFormatCurrency());
 		formatter.setAllowsInvalid(false);
@@ -181,6 +204,11 @@ public class Utils {
 		return new JFormattedTextField(formatter);
 	}
 
+	/**
+	 * 
+	 * @param valor - String com a máscara da moeda e o valor
+	 * @return um valor BigDecimal correspondente à String passada como parametro
+	 */
 	public BigDecimal getNumberFromFormat(Object valor) {
 		BigDecimal value = new BigDecimal("0.0");
 		try {
@@ -192,10 +220,18 @@ public class Utils {
 		return value;
 	}
 
+	/**
+	 * 
+	 * @return o formatador de Data no formato dd/MM/yyyy
+	 */
 	public DateTimeFormatter getDateFormat() {
 		return DateTimeFormatter.ofPattern(DATE_FORMAT);
 	}
 	
+	/**
+	 * 
+	 * @return o formatador de Data e Hora no formato "dd/MM/yyyy 'às' HH'h'mm'm'ss's'"
+	 */
 	public DateTimeFormatter getDateTimeFormat() {
 		return DateTimeFormatter.ofPattern(DATETIME_FORMAT);
 	}
@@ -224,12 +260,20 @@ public class Utils {
 		return getDateFormat().format(init) + " - " + getDateFormat().format(fim);
 	}
 
+	/**
+	 * 
+	 * @return uma String com a data da primeira transação e a data de hoje
+	 */
 	public String getDesdeSempreString() {
 		LocalDate now = LocalDate.now();
 		LocalDate init = TableModelFinancas.getInstance().getOldestDate();
 		return getDateFormat().format(init) + " - " + getDateFormat().format(now);
 	}
 
+	/**
+	 * Configura com o DatePicker padrão do programa (com cores para o tema, local, formato e outros)
+	 * @return
+	 */
 	public DatePickerSettings getDateSettings() {
 		DatePickerSettings dateSettings = new DatePickerSettings(new Locale("pt", "br"));
 		dateSettings.setFormatForDatesBeforeCommonEra(DATE_FORMAT);
@@ -261,6 +305,10 @@ public class Utils {
 		return dateSettings;
 	}
 
+	/**
+	 * 
+	 * @return o nome do pastor, presente no ficheiro de configurações
+	 */
 	public String getPastorName() {
 		FileInputStream input;
 		String pastorName = "";
@@ -277,6 +325,10 @@ public class Utils {
 		return pastorName;
 	}
 
+	/**
+	 * Exporta o logotipo da igreja de acordo com o formato indicado
+	 * @param format
+	 */
 	public static void exportLogo(ImageFormats format) {
 		try {
 			InputStream stream = null;
@@ -305,6 +357,7 @@ public class Utils {
 
 			if (stream != null) {
 				Files.copy(stream, img.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				stream.close();
 				String message = "O logotipo foi exportado com sucesso para a pasta:\n" + Main.LOGO_DIR
 						+ "\nVocê quer abrir a imagem agora?";
 				askMessage(message, Main.LOGO_DIR, name);
@@ -316,6 +369,12 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * Exporta uma imagem para a localização indicada
+	 * @param source
+	 * @param target
+	 * @throws IOException
+	 */
 	public static void exportImg(InputStream source, File target) throws IOException {
 		if (source != null) {
 			Files.copy(source, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -327,12 +386,16 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * Exporta um modelo de ofício (em .docx) para a localização indicada
+	 */
 	public static void exportModelo() {
 		try {
 			String filename = Main.MODELOS_DIR + "IBFC_Modelo_Oficio.docx";
 			File modelo = new File(filename);
 			InputStream stream = Utils.class.getResourceAsStream("/IBFC_Modelo.docx");
 			Files.copy(stream, modelo.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			stream.close();
 			String message = "O modelo de ofício foi exportado com sucesso!\n"
 					+ "Foi salvo um documento do Word (que deve ser editado) na pasta:\n" + Main.MODELOS_DIR
 					+ "\nVocê quer abrir o documento agora?";

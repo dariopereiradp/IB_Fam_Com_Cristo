@@ -2,6 +2,7 @@ package dad.fam_com_cristo.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
@@ -48,17 +49,18 @@ public class About extends JDialog {
 	/**
 	 * Informações a sserem mostradas no diálogo 'Sobre'.
 	 */
-	private String info = "<div>\u00A9 DPSoft 2020 <br>Feito por D\u00E1rio Pereira\r\n<br>Email de Suporte: <a href=\"#\">"
-			+ Main.EMAIL_SUPORTE + "</a>"
-			+ "<br><br>Código Fonte (GitHub): <a href=\"https://github.com/dariopereiradp/IB_Fam_Com_Cristo\">IB_Fam_Com_Cristo</a><br><br>"
-			+ "Compat\u00EDvel com <a href=\"https://www.java.com/download\">Java 8</a><br><br>"
-			+ "<br>Organizado com o <a href=\"https://maven.apache.org/\">Maven</a>"
+	private String info = "<html><div><center><img src=\"" + getClass().getResource("/dp.png").toString() + "\" "
+			+ "width=\"125\" height=\"125\" align=\"middle\"/></center>"
+			+ "<h2 style=\"text-align:center\">\u00A9 DPSoft 2020</h2>"
+			+ "<br>Feito por D\u00E1rio Pereira\r\n<br>Email de Suporte: <a href=\"#\">" + Main.EMAIL_SUPORTE + "</a>"
+			+ "<br><br>Código Fonte (GitHub): <a href=\"https://github.com/dariopereiradp/IB_Fam_Com_Cristo\">IB_Fam_Com_Cristo</a><br>"
+			+ "Compat\u00EDvel com <a href=\"https://www.java.com/download\">Java 8</a><br>"
+			+ "Organizado com o <a href=\"https://maven.apache.org/\">Maven</a>"
 			+ ", usando o <a href=\"https://www.eclipse.org//\">Eclipse</a><br><br>"
-			+ "Bibliotecas usadas:<br><br><a href=\"https://github.com/vincenzopalazzo/material-ui-swing\">Material UI Swing v1.1.2-rc1</a><br>"
+			+ "<h3>Bibliotecas usadas:</h3><a href=\"https://github.com/vincenzopalazzo/material-ui-swing\">Material UI Swing v1.1.2-rc1</a><br>"
 			+ "<a href=\"http://ucanaccess.sourceforge.net/site.html\">UCanAccess 5.0.0</a><br>"
 			+ "<a href=\"https://github.com/srikanth-lingala/zip4j\">Zip4j 2.6.4</a><br>"
 			+ "<a href=\"https://github.com/LGoodDatePicker/LGoodDatePicker\">LGoodDatePicker 11.1.0</a><br>"
-			+ "<a href=\"https://www.qoppa.com/pdfwriter\">jPDFWriter v2016R1.04</a><br>"
 			+ "<a href=\"https://itextpdf.com/en/products/itext-5-legacy\">iTextPDF 5.5.13.2</a><br>"
 			+ "<a href=\"https://knowm.org/open-source/xchart\">xChart 3.6.5</a><br>"
 			+ "<a href=\"http://miglayout.com/\">MigLayout-Swing 5.2</a><br>"
@@ -67,7 +69,15 @@ public class About extends JDialog {
 			+ "<a href=\"https://commons.apache.org/proper/commons-io\">Apache Commons IO 2.8.0</a><br>"
 			+ "<a href=\"https://commons.apache.org/proper/commons-lang\">Commons Lang 2.6</a><br>"
 			+ "<a href=\"https://commons.apache.org/proper/commons-logging\">Apache Commons Logging 1.2</a><br>"
-			+ "<br><br><center>Soli Deo Gloria - A Deus toda a glória!<center><br><div>";
+			+ "<br><h3>Curiosidade sobre a versão</h3>A versão 2.0 acrescentou diversas funcionalidades "
+			+ "ao programa e trouxe uma grande reestruturação do código base usado na programação, tornando o "
+			+ "programa mais rápido, bonito e eficaz. Como a programação de funcionalidades foi concluída no"
+			+ " dia 31/10/2020, resolvemos chamar essa versão: \"v2.0 - Reforma\" tanto em homenagem ao dia da "
+			+ "<a href=\"https://pt.wikipedia.org/wiki/Reforma_Protestante\">Reforma Protestante</a>"
+			+ " como por causa da grande reforma no código e estrutura do projeto!<br>"
+			+ "Para ler a lista completa das mudanças nessa versão ou para tirar eventuais dúvidas de como usar"
+			+ " o programa, consulte o manual de instruções!"
+			+ "<br><br><center>Soli Deo Gloria - A Deus toda a glória!<center><br></div></html>";
 
 	/**
 	 * Create the dialog.
@@ -75,7 +85,8 @@ public class About extends JDialog {
 	public About() {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(350, 100, 480, 400);
+		setBounds(350, 100, 600, 500);
+		setMinimumSize(new Dimension(600, 500));
 		setTitle("Sobre");
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -84,7 +95,6 @@ public class About extends JDialog {
 		{
 			JTextPane sobre = new JTextPane();
 			sobre.setEditable(false);
-			sobre.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			if (Utils.getInstance().getCurrentTheme() instanceof DarkTheme)
 				sobre.setBackground(MaterialColors.GRAY_500);
 
@@ -106,21 +116,22 @@ public class About extends JDialog {
 					}
 				}
 			});
+			sobre.setCaretPosition(0);
 			JScrollPane jsp = new JScrollPane(sobre);
 			contentPanel.add(jsp, BorderLayout.CENTER);
 		}
 		{
 			JLabel lTitle = new JLabel(Main.TITLE);
 			lTitle.setHorizontalAlignment(SwingConstants.CENTER);
-			lTitle.setFont(new Font("Dialog", Font.PLAIN, 14));
+			lTitle.setFont(new Font("Dialog", Font.PLAIN, 15));
 			ImageIcon icon = new ImageIcon(new ImageIcon(getClass().getResource("/FC-T-Big.png")).getImage()
-					.getScaledInstance(290/2, 240/2, Image.SCALE_SMOOTH));
+					.getScaledInstance(290 / 2, 240 / 2, Image.SCALE_SMOOTH));
 			lTitle.setIcon(icon);
 			lTitle.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent evt) {
 					int count = evt.getClickCount();
 					if (count == 2) {
-						ImageViewer.showLogo(new ImageIcon(getClass().getResource("/FC.jpg")));
+						ImageViewer.showLogo(About.this, new ImageIcon(getClass().getResource("/FC.jpg")));
 					}
 				}
 

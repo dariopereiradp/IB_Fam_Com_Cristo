@@ -9,8 +9,8 @@ import java.time.LocalDate;
 import javax.swing.table.AbstractTableModel;
 
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
-import dad.fam_com_cristo.types.Tipo_Transacao;
 import dad.fam_com_cristo.types.Transacao;
+import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
 import dad.recursos.Log;
 
 /**

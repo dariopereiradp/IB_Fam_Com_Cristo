@@ -1,15 +1,15 @@
 package dad.fam_com_cristo.gui;
 
 import java.awt.Dimension;
+import java.awt.Font;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
 import dad.fam_com_cristo.Main;
-
-import java.awt.Font;
 
 /**
  * Classe que representa a SplashScreen de abertura do programa.
@@ -43,15 +43,15 @@ public class Splash extends JWindow {
 		lblNewLabel.setBounds(50, 290, 575, 35);
 		getContentPane().add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setIcon(new ImageIcon(Splash.class.getResource("/splash.gif")));
-		lblNewLabel_1.setBounds(0, 0, 675, 280);
-		getContentPane().add(lblNewLabel_1);
+		JLabel splash = new JLabel("");
+		splash.setHorizontalAlignment(SwingConstants.CENTER);
+		splash.setIcon(new ImageIcon(Splash.class.getResource("/splash.gif")));
+		splash.setBounds(0, 0, 675, 280);
+		getContentPane().add(splash);
 		
 		JLabel lblVerso = new JLabel("Vers\u00E3o " + Main.VERSION);
 		lblVerso.setHorizontalAlignment(SwingConstants.CENTER);
-		lblVerso.setFont(new Font("Roboto Medium", Font.PLAIN, 13));
+		lblVerso.setFont(new Font("Dialog", Font.PLAIN, 13));
 		lblVerso.setBounds(250, 330, 175, 20);
 		getContentPane().add(lblVerso);
 

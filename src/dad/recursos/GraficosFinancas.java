@@ -17,17 +17,26 @@ import org.knowm.xchart.style.Styler.ChartTheme;
 
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.TableModelFinancas;
-import dad.fam_com_cristo.types.EstatisticaPeriodos;
-import dad.fam_com_cristo.types.Tipo_Transacao;
+import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
+import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
 import mdlaf.utils.MaterialColors;
 
+/**
+ * Classe que agrupa os gráficos das finanças
+ * @author dariopereiradp
+ *
+ */
 public class GraficosFinancas {
 	private static TableModelFinancas financas = TableModelFinancas.getInstance();
 	private static Utils utils = Utils.getInstance();
 
 	/**
-	 * 
-	 * @return o gráfico das finanças (entradas/saídas)
+	 * Gera um gráfico PieChart de Entradas/Saídas para o período indicado
+	 * @param periodo
+	 * @param initDate - pode ser null (sem data de inicio)
+	 * @param finalDate - pode ser null (sem data de fim)
+	 * @param print - indica se o gráfico gerado vai ser impresso ou não (usada para controlar as cores)
+	 * @return
 	 */
 	public static PieChart getEntrada_Saida_Chart(EstatisticaPeriodos periodo, LocalDate initDate, LocalDate finalDate, boolean print) {
 		PieChart chart = new PieChartBuilder().width(800).height(500)
@@ -50,11 +59,6 @@ public class GraficosFinancas {
 					new Color[] { MaterialColors.BLUE_900, MaterialColors.BLUE_300 });
 		}
 
-//		LocalDate initDate = periodo.equals(EstatisticaPeriodos.PERSONALIZADO) ? estatiscas.getDatas1().getInitDate()
-//				: periodo.getInit();
-//		LocalDate finalDate = periodo.equals(EstatisticaPeriodos.PERSONALIZADO) ? estatiscas.getDatas1().getFinalDate()
-//				: periodo.getEnd();
-
 		chart.addSeries(Tipo_Transacao.ENTRADA.getDescricao(),
 				TableModelFinancas.getInstance().getTotalEntradas(initDate, finalDate));
 		chart.addSeries(Tipo_Transacao.SAIDA.getDescricao(),
@@ -63,8 +67,10 @@ public class GraficosFinancas {
 	}
 
 	/**
-	 * 
-	 * @return o gráfico das finanças (entradas/saídas)
+	 * Gera um gráfico de barras para o ano indicado
+	 * @param ano
+	 * @param print - indica se o gráfico gerado vai ser impresso ou não (usada para controlar as cores)
+	 * @return
 	 */
 	public static CategoryChart getEntrada_Saida_BarChart(int ano, boolean print) {
 		CategoryChart chart = new CategoryChartBuilder().width(800).height(500)
@@ -84,8 +90,6 @@ public class GraficosFinancas {
 					new Color[] { MaterialColors.BLUE_900, MaterialColors.BLUE_300 });
 		}
 
-		// chart.getStyler().setPlotContentSize(0.7);
-
 		List<String> eixoX = new ArrayList<>();
 		String[] tooltips = new String[12];
 		for (Month m : Month.values()) {
@@ -104,7 +108,6 @@ public class GraficosFinancas {
 				.setCustomToolTips(true).setToolTips(tooltips);
 		chart.addSeries(Tipo_Transacao.SAIDA.getDescricao(), eixoX, financas.getTotalSaidasPorMes(ano))
 				.setCustomToolTips(true).setToolTips(tooltips);
-		// chart.addSeries("Sub-total", eixoX, financas.getSubTotalPorMes(ano));
 		return chart;
 	}
 }

@@ -33,7 +33,7 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelMembro;
-import dad.fam_com_cristo.types.EstatisticaPeriodos;
+import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.recursos.GraficosFinancas;
 import dad.recursos.GraficosMembros;
 import dad.recursos.MultiDatePicker;

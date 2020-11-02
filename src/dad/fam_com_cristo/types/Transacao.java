@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
+import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
 import dad.recursos.DataPesquisavel;
 import dad.recursos.Log;
 import dad.recursos.Money;

@@ -53,29 +53,34 @@ public class Log {
 
 	}
 
+	/**
+	 * Abre a conexão ao ficheiro de log
+	 */
 	public void open() {
 		try {
 			fh = new FileHandler(name);
 			logger.addHandler(fh);
-		} catch (SecurityException e) {
-			String message = "Ocorreu um erro ao criar o log...\n" + e.getMessage() + "\n" + this.getClass();
-			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
-					new ImageIcon(getClass().getResource("DAD_S.jpg")));
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			String message = "Ocorreu um erro ao criar o log...\n" + e.getMessage() + "\n" + this.getClass();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
 					new ImageIcon(getClass().getResource("DAD_S.jpg")));
 			e.printStackTrace();
 		}
 	}
-
-	public void printLog(String message) {
-		logger.info(message + "\n");
-	}
 	
+	/**
+	 * Fecha a conexão ao ficheiro de log
+	 */
 	public void close(){
 		fh.close();
+	}
+
+	/**
+	 * Adiciona uma mensagem ao ficheiro de log
+	 * @param message
+	 */
+	public void printLog(String message) {
+		logger.info(message + "\n");
 	}
 	
 	/**

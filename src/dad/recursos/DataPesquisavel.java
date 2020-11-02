@@ -3,7 +3,7 @@ package dad.recursos;
 import java.time.LocalDate;
 
 /**
- * Classe que retorna a data num formato String pesquisavel e ao mesmo tempo
+ * Classe que retorna a data (usando internamente um LocalDate) num formato String pesquisavel e ao mesmo tempo
  * permite ordenação
  * 
  * @author dariopereiradp

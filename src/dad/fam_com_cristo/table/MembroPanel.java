@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.DefaultCellEditor;
@@ -46,7 +47,7 @@ import dad.fam_com_cristo.gui.MembroDetail;
 import dad.fam_com_cristo.table.cells.CellRenderer;
 import dad.fam_com_cristo.table.cells.DataCellEditor;
 import dad.fam_com_cristo.types.Membro;
-import dad.fam_com_cristo.types.Tipo_Membro;
+import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;

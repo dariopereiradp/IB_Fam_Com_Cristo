@@ -8,6 +8,11 @@ import javax.swing.Icon;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+/**
+ * Classe que representa um JTextField com um ícone e placeholder
+ * @author dariopereiradp
+ *
+ */
 public class IconTextField extends JTextField implements FocusListener {
     /**
 	 * 

@@ -51,10 +51,10 @@ import dad.fam_com_cristo.table.TableModelFinancas;
 import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
-import dad.fam_com_cristo.types.EstatisticaPeriodos;
-import dad.fam_com_cristo.types.ImageFormats;
-import dad.fam_com_cristo.types.Tipo_Membro;
-import dad.fam_com_cristo.types.Tipo_Transacao;
+import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
+import dad.fam_com_cristo.types.enumerados.ImageFormats;
+import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
+import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
 import dad.recursos.CSVExport;
 import dad.recursos.DataPesquisavel;
 import dad.recursos.Log;
@@ -508,7 +508,7 @@ public class DataGui extends JFrame {
 		});
 		mnExportLogo.add(mnExportJpg);
 
-		mnExportLogoSvg = new JMenuItem("SVG (vetores)");
+		mnExportLogoSvg = new JMenuItem("SVG (para imprimir)");
 		mnExportLogoSvg.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.IMAGE_ASPECT_RATIO,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnExportLogoSvg.addActionListener(new ActionListener() {

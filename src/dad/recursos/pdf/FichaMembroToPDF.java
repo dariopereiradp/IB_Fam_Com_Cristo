@@ -29,8 +29,17 @@ import dad.fam_com_cristo.types.Membro;
 import dad.recursos.Log;
 import dad.recursos.Utils;
 
+/**
+ * Classe para gerar uma ficha de membro em PDF
+ * @author dariopereiradp
+ *
+ */
 public class FichaMembroToPDF {
 
+	/**
+	 * Gera uma ficha de membro
+	 * @param membro - membro para ser gerada a ficha; se for passado null, será gerada uma ficha vazia
+	 */
 	public static void membroToPdf(Membro membro) {
 
 		DateTimeFormatter dateFormat = Utils.getInstance().getDateFormat();

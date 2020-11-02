@@ -19,6 +19,12 @@ import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.conexao.Conexao;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 
+/**
+ * Classe que exporta a lista de Membros ou Financas para CSV,
+ * diretamente da base de dados (Access para CSV)
+ * @author dariopereiradp
+ *
+ */
 public class CSVExport {
 
 	public static void exportToCsv(Conexao connection) {

@@ -10,6 +10,11 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.gui.themes.DateChooser;
 
+/**
+ * Painel que contem 2 DateChooser sincronizados, para escolher uma data inicial e data final
+ * @author dariopereiradp
+ *
+ */
 public class MultiDatePicker extends JPanel {
 	/**
 	 * 
@@ -48,6 +53,22 @@ public class MultiDatePicker extends JPanel {
 		finalDateChooser.setEnabled(enabled);
 	};
 
+	public DateChooser getInitDateChooser() {
+		return initDateChooser;
+	}
+
+	public DateChooser getFinalDateChooser() {
+		return finalDateChooser;
+	}
+
+	public LocalDate getInitDate() {
+		return initDateChooser.getDate();
+	}
+
+	public LocalDate getFinalDate() {
+		return finalDateChooser.getDate();
+	}
+	
 	private class Listener implements DateChangeListener {
 
 		@Override
@@ -65,21 +86,5 @@ public class MultiDatePicker extends JPanel {
 			}
 			DataGui.getInstance().newFilter(DataGui.getInstance().getPesquisa().getText().toLowerCase());
 		}
-	}
-
-	public DateChooser getInitDateChooser() {
-		return initDateChooser;
-	}
-
-	public DateChooser getFinalDateChooser() {
-		return finalDateChooser;
-	}
-
-	public LocalDate getInitDate() {
-		return initDateChooser.getDate();
-	}
-
-	public LocalDate getFinalDate() {
-		return finalDateChooser.getDate();
 	}
 }

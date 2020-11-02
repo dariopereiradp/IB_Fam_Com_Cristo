@@ -2,7 +2,7 @@ package dad.recursos;
 import java.awt.*;
 import javax.swing.*;
 
-/*
+/**
  *  Support custom painting on a panel in the form of
  *
  *  a) images - that can be scaled, tiled or painted at original size
@@ -28,7 +28,7 @@ public class BackgroundPanel extends JPanel
 	private float alignmentY = 0.5f;
 	private boolean isTransparentAdd = true;
 
-	/*
+	/**
 	 *  Set image as the background with the SCALED style
 	 */
 	public BackgroundPanel(Image image)
@@ -36,7 +36,7 @@ public class BackgroundPanel extends JPanel
 		this(image, SCALED);
 	}
 
-	/*
+	/**
 	 *  Set image as the background with the specified style
 	 */
 	public BackgroundPanel(Image image, int style)
@@ -46,7 +46,7 @@ public class BackgroundPanel extends JPanel
 		setLayout( new BorderLayout() );
 	}
 
-	/*
+	/**
 	 *  Set image as the backround with the specified style and alignment
 	 */
 	public BackgroundPanel(Image image, int style, float alignmentX, float alignmentY)
@@ -58,7 +58,7 @@ public class BackgroundPanel extends JPanel
 		setLayout( new BorderLayout() );
 	}
 
-	/*
+	/**
 	 *  Use the Paint interface to paint a background
 	 */
 	public BackgroundPanel(Paint painter)
@@ -67,7 +67,7 @@ public class BackgroundPanel extends JPanel
 		setLayout( new BorderLayout() );
 	}
 
-	/*
+	/**
 	 *	Set the image used as the background
 	 */
 	public void setImage(Image image)
@@ -76,7 +76,7 @@ public class BackgroundPanel extends JPanel
 		repaint();
 	}
 
-	/*
+	/**
 	 *	Set the style used to paint the background image
 	 */
 	public void setStyle(int style)
@@ -85,7 +85,7 @@ public class BackgroundPanel extends JPanel
 		repaint();
 	}
 
-	/*
+	/**
 	 *	Set the Paint object used to paint the background
 	 */
 	public void setPaint(Paint painter)
@@ -94,7 +94,7 @@ public class BackgroundPanel extends JPanel
 		repaint();
 	}
 
-	/*
+	/**
 	 *  Specify the horizontal alignment of the image when using ACTUAL style
 	 */
 	public void setImageAlignmentX(float alignmentX)
@@ -103,7 +103,7 @@ public class BackgroundPanel extends JPanel
 		repaint();
 	}
 
-	/*
+	/**
 	 *  Specify the horizontal alignment of the image when using ACTUAL style
 	 */
 	public void setImageAlignmentY(float alignmentY)
@@ -112,7 +112,7 @@ public class BackgroundPanel extends JPanel
 		repaint();
 	}
 
-	/*
+	/**
 	 *  Override method so we can make the component transparent
 	 */
 	public void add(JComponent component)
@@ -120,7 +120,7 @@ public class BackgroundPanel extends JPanel
 		add(component, null);
 	}
 
-	/*
+	/**
 	 *  Override to provide a preferred size equal to the image size
 	 */
 	@Override
@@ -132,7 +132,7 @@ public class BackgroundPanel extends JPanel
 			return new Dimension(image.getWidth(null), image.getHeight(null));
 	}
 
-	/*
+	/**
 	 *  Override method so we can make the component transparent
 	 */
 	public void add(JComponent component, Object constraints)
@@ -145,7 +145,7 @@ public class BackgroundPanel extends JPanel
 		super.add(component, constraints);
 	}
 
-	/*
+	/**
 	 *  Controls whether components added to this panel should automatically
 	 *  be made transparent. That is, setOpaque(false) will be invoked.
 	 *  The default is set to true.
@@ -155,7 +155,7 @@ public class BackgroundPanel extends JPanel
 		this.isTransparentAdd = isTransparentAdd;
 	}
 
-	/*
+	/**
 	 *	Try to make the component transparent.
 	 *  For components that use renderers, like JTable, you will also need to
 	 *  change the renderer to be transparent. An easy way to do this it to
@@ -179,7 +179,7 @@ public class BackgroundPanel extends JPanel
 		}
 	}
 
-	/*
+	/**
 	 *  Add custom painting
 	 */
 	@Override
@@ -220,7 +220,7 @@ public class BackgroundPanel extends JPanel
 		}
 	}
 
-	/*
+	/**
 	 *  Custom painting code for drawing a SCALED image as the background
 	 */
 	private void drawScaled(Graphics g)
@@ -229,7 +229,7 @@ public class BackgroundPanel extends JPanel
 		g.drawImage(image, 0, 0, d.width, d.height, null);
 	}
 
-	/*
+	/**
 	 *  Custom painting code for drawing TILED images as the background
 	 */
 	private void drawTiled(Graphics g)
@@ -247,7 +247,7 @@ public class BackgroundPanel extends JPanel
 		   }
 	}
 
-	/*
+	/**
 	 *  Custom painting code for drawing the ACTUAL image as the background.
 	 *  The image is positioned in the panel based on the horizontal and
 	 *  vertical alignments specified.

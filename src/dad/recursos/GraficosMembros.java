@@ -10,11 +10,16 @@ import org.knowm.xchart.style.Styler.ChartTheme;
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.fam_com_cristo.table.TableModelMembro;
-import dad.fam_com_cristo.types.Estado_Civil;
-import dad.fam_com_cristo.types.Sexo;
-import dad.fam_com_cristo.types.Tipo_Membro;
+import dad.fam_com_cristo.types.enumerados.Estado_Civil;
+import dad.fam_com_cristo.types.enumerados.Sexo;
+import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
 import mdlaf.utils.MaterialColors;
 
+/**
+ * Classe para agrupar os diferentes gráficos de membros a serem gerados
+ * @author dariopereiradp
+ *
+ */
 public class GraficosMembros {
 	/**
 	 * 
@@ -460,6 +465,10 @@ public class GraficosMembros {
 		return chart;
 	}
 	
+	/**
+	 * Altera as cores do gráfico para se adaptarem ao DarkMode, se estiver ativo
+	 * @param styler
+	 */
 	public static void customizeDarkMode(Styler styler) {
 		// DarkTheme
 		if (Utils.getInstance().getCurrentTheme().equals(DarkTheme.getInstance())) {

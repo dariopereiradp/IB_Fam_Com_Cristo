@@ -16,13 +16,17 @@ import org.apache.commons.lang.WordUtils;
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.DataGui;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.types.enumerados.Estado_Civil;
+import dad.fam_com_cristo.types.enumerados.Sexo;
+import dad.fam_com_cristo.types.enumerados.Sim_Nao;
+import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
 import dad.recursos.DataPesquisavel;
 import dad.recursos.ImageCompression;
 import dad.recursos.Log;
 import dad.recursos.pdf.FichaMembroToPDF;
 
 /**
- * Classe que representa uma pessoa.
+ * Classe que representa uma pessoa associada de alguma forma à igreja
  * 
  * @author Dário Pereira
  *
@@ -352,21 +356,20 @@ public class Membro implements Comparable<Membro> {
 		batizado = sim_nao;
 	}
 
+	/**
+	 * Converte o número de telefone para o formato (XX) X XXXX-XXXX
+	 * @return
+	 */
 	public String getPhoneString() {
 		String phone = getTelefone();
 		return "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
 				+ phone.substring(7);
 	}
 
-//	/**
-//	 * Cria uma ficha PDF do membro.
-//	 * 
-//	 * @return
-//	 */
-//	public PDFDocument toPdf() {
-//		return new MembroToPDF(this).generatePDF();
-//	}
-
+	/**
+	 * 
+	 * @return um ficheiro que aponta para a localização da imagem de perfil desse membro
+	 */
 	public File getImageFile() {
 		if (img == null)
 			return null;
@@ -419,6 +422,9 @@ public class Membro implements Comparable<Membro> {
 		return id + "." + nome;
 	}
 
+	/**
+	 * Compara os membros de acordo com o nome
+	 */
 	@Override
 	public int compareTo(Membro o) {
 		return this.getNome().compareToIgnoreCase(o.getNome());

@@ -8,6 +8,11 @@ import javax.swing.Icon;
 import javax.swing.JPasswordField;
 import javax.swing.border.Border;
 
+/**
+ * Classe que representa um JPasswordField com um ícone dentro e uma placeholder
+ * @author dariopereiradp
+ *
+ */
 public class IconPasswordField extends JPasswordField implements FocusListener {
     /**
 	 * 

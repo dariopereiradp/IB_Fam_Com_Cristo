@@ -3,7 +3,7 @@ package dad.recursos;
 import java.math.BigDecimal;
 
 /**
- * Class que representa o dinheiro e permite ordenar e pesquisar
+ * Class que representa o dinheiro (usando internament um BigDecimal) e permite ordenar e pesquisar
  * @author dariopereiradp
  *
  */
@@ -14,8 +14,6 @@ public class Money implements Comparable<Money> {
 	public Money(BigDecimal value) {
 		this.value = value;
 	}
-	
-	
 
 	public BigDecimal getValue() {
 		return value;
@@ -29,8 +27,6 @@ public class Money implements Comparable<Money> {
 	public String toString() {
 		return Utils.getInstance().getNumberFormatCurrency().format(value);
 	}
-
-
 
 	@Override
 	public int compareTo(Money o) {

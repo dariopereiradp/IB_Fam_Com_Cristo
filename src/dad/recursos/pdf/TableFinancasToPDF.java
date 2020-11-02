@@ -40,17 +40,34 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.TableModelFinancas;
-import dad.fam_com_cristo.types.EstatisticaPeriodos;
+import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.recursos.GraficosFinancas;
 import dad.recursos.Log;
 import dad.recursos.Utils;
 
+/**
+ * Calsse que gera um PDF contendo o relatório financeiro para o período indicado
+ * @author dariopereiradp
+ *
+ */
 public class TableFinancasToPDF {
 
 	private static TableModelFinancas financas = TableModelFinancas.getInstance();
 	private static Utils utils = Utils.getInstance();
 	private static String descricaoS;
 
+	/**
+	 * 
+	 * @param table - tabela base que vai ser convertida para PDF
+	 * @param descricao - descrição que vai para o título e nome do ficheiro
+	 * @param periodo - período do relatório
+	 * @param init - data de início
+	 * @param end - data de fim
+	 * @param anual - true inclui um CategoryChart
+	 * 				- false inclui um PieChart
+	 * 
+	 * @return
+	 */
 	public static String transacoesToPDF(JTable table, String descricao, EstatisticaPeriodos periodo, LocalDate init,
 			LocalDate end, boolean anual) {
 

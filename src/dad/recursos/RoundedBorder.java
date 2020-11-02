@@ -6,6 +6,11 @@ import java.awt.Insets;
 
 import javax.swing.border.Border;
 
+/**
+ * Classe que representa uma borda curva
+ * @author dariopereiradp
+ *
+ */
 public class RoundedBorder implements Border {
 
 	private int radius;
