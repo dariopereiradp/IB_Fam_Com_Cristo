@@ -47,7 +47,7 @@ public class Log {
 		} catch (SecurityException e) {
 			String message = "Ocorreu um erro ao criar o log...\n" + e.getMessage() + "\n" + this.getClass();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
-					new ImageIcon(getClass().getResource("DAD_S.jpg")));
+					new ImageIcon(getClass().getResource("FC_SS.jpg")));
 			e.printStackTrace();
 		}
 
@@ -63,7 +63,7 @@ public class Log {
 		} catch (Exception e) {
 			String message = "Ocorreu um erro ao criar o log...\n" + e.getMessage() + "\n" + this.getClass();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
-					new ImageIcon(getClass().getResource("DAD_S.jpg")));
+					new ImageIcon(getClass().getResource("FC_SS.jpg")));
 			e.printStackTrace();
 		}
 	}

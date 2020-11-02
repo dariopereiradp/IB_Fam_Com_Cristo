@@ -5,8 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 
-import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.table.models.TableModelMembro;
 import dad.fam_com_cristo.types.Membro;
 import dad.fam_com_cristo.types.enumerados.Estado_Civil;
 import dad.fam_com_cristo.types.enumerados.Sexo;

@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.table;
+package dad.fam_com_cristo.table.models;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -30,6 +30,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import dad.fam_com_cristo.gui.ChangePassword;
+import dad.fam_com_cristo.table.Table;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.fam_com_cristo.types.Funcionario;
 import dad.recursos.Log;
@@ -152,7 +153,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 		funcionarios.add(func);
 	}
 
-	public Funcionario getFuncionario(int rowIndex) {
+	private Funcionario getFuncionario(int rowIndex) {
 		return funcionarios.get(rowIndex);
 	}
 
@@ -161,7 +162,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 	 * 
 	 * @param rows - array que contém as posições dos funcionários a remover.
 	 */
-	public void removeFuncionarios(int[] rows) {
+	private void removeFuncionarios(int[] rows) {
 		ArrayList<Funcionario> toDelete = new ArrayList<>();
 		for (int i = 0; i < rows.length; i++) {
 			Funcionario func = funcionarios.get(rows[i]);
@@ -197,7 +198,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 	 * @return um array com todos os indexes do modelo dos funcionários que estão
 	 *         selecionados.
 	 */
-	public int[] convertRowsIndextoModel(JTable table) {
+	private int[] convertRowsIndextoModel(JTable table) {
 		int[] rows = table.getSelectedRows();
 		for (int i = 0; i < rows.length; i++) {
 			rows[i] = table.convertRowIndexToModel(rows[i]);
@@ -284,7 +285,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 					int ok = JOptionPane.showConfirmDialog(small,
 							"Tem certeza que quer apagar o(s) funcionário(s) selecionado(s)?\nATENÇÃO: ESSA AÇÃO NÃO PODE SER ANULADA!",
 							"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-							new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+							new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 					if (ok == JOptionPane.OK_OPTION) {
 						removeFuncionarios(rows);
 					}
@@ -356,7 +357,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 						int ok = JOptionPane.showConfirmDialog(small,
 								"Tem certeza que quer apagar o(s) funcionário(s) selecionado(s)?\nATENÇÃO: ESSA AÇÃO NÃO PODE SER ANULADA!",
 								"APAGAR", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-								new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+								new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 						if (ok == JOptionPane.OK_OPTION) {
 							removeFuncionarios(rows);
 						}

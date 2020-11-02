@@ -18,12 +18,12 @@ import org.apache.commons.io.FileUtils;
 
 import dad.fam_com_cristo.gui.Login;
 import dad.fam_com_cristo.gui.Splash;
-import dad.fam_com_cristo.table.TableModelFinancas;
-import dad.fam_com_cristo.table.TableModelFuncionario;
-import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
+import dad.fam_com_cristo.table.models.TableModelFuncionario;
+import dad.fam_com_cristo.table.models.TableModelMembro;
 import dad.fam_com_cristo.types.Membro;
 import dad.recursos.Log;
 import dad.recursos.Utils;
@@ -47,7 +47,7 @@ public class Main {
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String DEFAULT_USER = "admin";
 	public static final String DEFAULT_PASS = "dad";
-	public static final String DOCUMENTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
+	private static final String DOCUMENTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
 			+ "Documents/IB_Fam_Com_Cristo/";
 	public static final String LISTAS_DIR = DOCUMENTS_DIR + "Listas/";
 	public static final String BACKUP_DIR = DOCUMENTS_DIR + "Backups/";
@@ -136,7 +136,7 @@ public class Main {
 	 * Cria o ficheiro de configurações, se ainda não existir
 	 * @return
 	 */
-	public File createConfFile() {
+	private File createConfFile() {
 		File conf = null;
 		try {
 			conf = Utils.getInstance().getPropertiesFile();
@@ -245,7 +245,7 @@ public class Main {
 	 * Caso o programa esteja a iniciar após o restauro de uma cópia de segurança,
 	 * esse método trata de substituir as bases de dados e apagar as temporárias.
 	 */
-	public void restaurar() {
+	private void restaurar() {
 		String path = DATA_DIR + "temp/";
 		File tmp = new File(path);
 		if (tmp.exists()) {

@@ -46,6 +46,7 @@ import javax.swing.text.MaskFormatter;
 import dad.fam_com_cristo.gui.MembroDetail;
 import dad.fam_com_cristo.table.cells.CellRenderer;
 import dad.fam_com_cristo.table.cells.DataCellEditor;
+import dad.fam_com_cristo.table.models.TableModelMembro;
 import dad.fam_com_cristo.types.Membro;
 import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
 import dad.recursos.SairAction;
@@ -313,7 +314,7 @@ public class MembroPanel extends JPanel {
 
 	}
 
-	public void inicializarBotoes() {
+	private void inicializarBotoes() {
 		pInferior.add(panel2, BorderLayout.WEST);
 		JButton bSair = new JButton("Sair");
 		bSair.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.EXIT_TO_APP,
@@ -469,7 +470,7 @@ public class MembroPanel extends JPanel {
 	 * 
 	 * @return um array contendo as posições selecionadas em indices do modelo
 	 */
-	public int[] convertRowsIndextoModel() {
+	private int[] convertRowsIndextoModel() {
 		int[] rows = membros.getSelectedRows();
 		for (int i = 0; i < rows.length; i++) {
 			rows[i] = membros.convertRowIndexToModel(rows[i]);
@@ -480,7 +481,7 @@ public class MembroPanel extends JPanel {
 	/**
 	 * Apaga um membro, caso se confirme
 	 */
-	public void removerMembros() {
+	private void removerMembros() {
 		int[] rows = convertRowsIndextoModel();
 		if (rows.length > 0) {
 			int ok = JOptionPane.showConfirmDialog(this, "Tem certeza que quer apagar o(s) membro(s) selecionado(s)?",
@@ -496,7 +497,7 @@ public class MembroPanel extends JPanel {
 		return membros;
 	}
 
-	public void abrir(Membro membro) {
+	private void abrir(Membro membro) {
 		new MembroDetail(membro).open();
 	}
 
@@ -546,10 +547,6 @@ public class MembroPanel extends JPanel {
 
 	public JTextField getJft_criancas() {
 		return jft_criancas;
-	}
-
-	public JButton getbAdd() {
-		return bAdd;
 	}
 
 	/**

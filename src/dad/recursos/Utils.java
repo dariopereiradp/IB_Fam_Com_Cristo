@@ -39,7 +39,7 @@ import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.gui.themes.Theme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
-import dad.fam_com_cristo.table.TableModelFinancas;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.fam_com_cristo.types.enumerados.ImageFormats;
 import mdlaf.MaterialLookAndFeel;
@@ -55,8 +55,8 @@ import mdlaf.utils.MaterialColors;
 public class Utils {
 
 	private static Utils INSTANCE;
-	public static final String DATE_FORMAT = "dd/MM/yyyy";
-	public static final String DATETIME_FORMAT = "dd/MM/yyyy 'às' HH'h'mm'm'ss's'";
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
+	private static final String DATETIME_FORMAT = "dd/MM/yyyy 'às' HH'h'mm'm'ss's'";
 	public static final String APP_THEME = "APP_THEME";
 	public static final String THEME_LITE = "Lite";
 	public static final String THEME_DARK = "Dark";

@@ -31,8 +31,8 @@ import org.knowm.xchart.XChartPanel;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
-import dad.fam_com_cristo.table.TableModelFinancas;
-import dad.fam_com_cristo.table.TableModelMembro;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
+import dad.fam_com_cristo.table.models.TableModelMembro;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.recursos.GraficosFinancas;
 import dad.recursos.GraficosMembros;
@@ -222,7 +222,7 @@ public class Estatisticas extends JDialog {
 	/**
 	 * @return o painel dos detalhes das financas, configurado
 	 */
-	public JPanel setUpDetalhesFinancas() {
+	private JPanel setUpDetalhesFinancas() {
 		JPanel panel = new JPanel(null);
 
 		// Painel do mes atual
@@ -510,7 +510,7 @@ public class Estatisticas extends JDialog {
 	/**
 	 * SetUp do painel dos numeros de membros
 	 */
-	public void setUpMembrosNumerosPanel() {
+	private void setUpMembrosNumerosPanel() {
 		JPanel numeros = new JPanel();
 		numeros.setToolTipText("(Exceto Ex-Membros)");
 		numeros.setLayout(null);

@@ -42,6 +42,7 @@ import dad.fam_com_cristo.table.cells.CellRenderer;
 import dad.fam_com_cristo.table.cells.CellRendererNoImage;
 import dad.fam_com_cristo.table.cells.CurrencyCell;
 import dad.fam_com_cristo.table.cells.DataCellEditor;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.types.Transacao;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
@@ -237,7 +238,7 @@ public class FinancasPanel extends JPanel {
 
 	}
 
-	public void inicializarBotoes() {
+	private void inicializarBotoes() {
 		pInferior.add(panel2, BorderLayout.WEST);
 		JButton bSair = new JButton("Sair");
 		bSair.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.EXIT_TO_APP,
@@ -262,7 +263,7 @@ public class FinancasPanel extends JPanel {
 
 	}
 
-	public void adicionarTransacao() {
+	private void adicionarTransacao() {
 		BigDecimal valor = Utils.getInstance().getNumberFromFormat(jtfValor.getText());
 
 		if (valor.compareTo(new BigDecimal("0")) == 0) {
@@ -395,7 +396,7 @@ public class FinancasPanel extends JPanel {
 
 	}
 
-	public int[] convertRowsIndextoModel() {
+	private int[] convertRowsIndextoModel() {
 		int[] rows = financas.getSelectedRows();
 		for (int i = 0; i < rows.length; i++) {
 			rows[i] = financas.convertRowIndexToModel(rows[i]);
@@ -403,13 +404,13 @@ public class FinancasPanel extends JPanel {
 		return rows;
 	}
 
-	public void removerTranscacoes() {
+	private void removerTranscacoes() {
 		int[] rows = convertRowsIndextoModel();
 		if (rows.length > 0) {
 			int ok = JOptionPane.showConfirmDialog(this,
 					"Tem certeza que quer apagar a(s) transação(ões) selecionada(s)?", "APAGAR",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-					new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			if (ok == JOptionPane.OK_OPTION) {
 				modelFinancas.removerTransacao(rows);
 			}

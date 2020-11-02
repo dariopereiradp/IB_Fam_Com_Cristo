@@ -106,7 +106,7 @@ public class Table extends JTable {
 		};
 	}
 
-	public void personalizarHeader() {
+	private void personalizarHeader() {
 		TableCellRenderer tcr = getTableHeader().getDefaultRenderer();
 		setTableHeader(new JTableHeader(columnModel) {
 

@@ -185,7 +185,7 @@ public class ChangePassword extends JDialog {
 	/**
 	 * Verifica se a 'oldPass' corresponde à senha antiga.
 	 */
-	public void verify() {
+	private void verify() {
 		String oldPass = String.valueOf(passAtual.getPassword());
 		String pass = String.valueOf(newPass.getPassword());
 		String conf = String.valueOf(confPass.getPassword());
@@ -211,7 +211,7 @@ public class ChangePassword extends JDialog {
 				} else {
 					JOptionPane.showMessageDialog(DataGui.getInstance(), "Ocorreu um erro ao alterar a senha...",
 							"ALTERAR SENHA", JOptionPane.ERROR_MESSAGE,
-							new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+							new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 					Log.getInstance().printLog("Erro ao mudar senha! (ResultSet is empty)");
 				}
 
@@ -228,7 +228,7 @@ public class ChangePassword extends JDialog {
 	/**
 	 * Verifica se as senhas introduzidas coincidem entre si. Se sim, altera a senha atual.
 	 */
-	public void change() {
+	private void change() {
 		String pass = String.valueOf(newPass.getPassword());
 		String conf = String.valueOf(confPass.getPassword());
 		try {

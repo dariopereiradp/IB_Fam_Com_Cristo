@@ -62,12 +62,4 @@ public class Funcionario {
 		this.data_criacao = data_criacao;
 	}
 
-	/**
-	 * Regista um novo login feito por esse funcionário.
-	 */
-	public void novoAcesso() {
-		num_acessos++;
-		data_ultimo_acesso = LocalDateTime.now();
-	}
-
 }

@@ -147,7 +147,7 @@ public class Restauro extends JDialog {
 	 * mantendo apenas aqueles que foram selecionados nas check-box e depois
 	 * encerra o programa.
 	 */
-	public void restaurar() {
+	private void restaurar() {
 		String tempDir = Main.DATA_DIR + "temp/";
 		File temp = new File(tempDir);
 		temp.mkdirs();

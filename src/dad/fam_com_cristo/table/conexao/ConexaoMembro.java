@@ -18,11 +18,11 @@ import dad.recursos.Log;
  */
 public class ConexaoMembro implements Conexao{
 
-	public static Connection con;
+	private static Connection con;
 
-	public static final String csvFile = Main.BACKUP_DIR + "membros.csv";
-	public static final String dbFile = Main.DATABASE_DIR + "membros.mdb";
-	public static final String dbUrl = "jdbc:ucanaccess://" + dbFile + ";memory=true;immediatelyReleaseResources=true";
+	private static final String csvFile = Main.BACKUP_DIR + "membros.csv";
+	private static final String dbFile = Main.DATABASE_DIR + "membros.mdb";
+	private static final String dbUrl = "jdbc:ucanaccess://" + dbFile + ";memory=true;immediatelyReleaseResources=true";
 
 	public Connection getConnection() {
 		try {

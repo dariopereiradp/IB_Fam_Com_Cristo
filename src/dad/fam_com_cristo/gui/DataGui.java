@@ -47,10 +47,10 @@ import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.fam_com_cristo.gui.themes.LiteTheme;
 import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.MembroPanel;
-import dad.fam_com_cristo.table.TableModelFinancas;
-import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
+import dad.fam_com_cristo.table.models.TableModelMembro;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.fam_com_cristo.types.enumerados.ImageFormats;
 import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
@@ -193,7 +193,7 @@ public class DataGui extends JFrame {
 	/**
 	 * 
 	 */
-	public void createMenus() {
+	private void createMenus() {
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -567,7 +567,6 @@ public class DataGui extends JFrame {
 				}
 			}
 		});
-		menuManual.setToolTipText("Manual ainda não disponível!");
 
 		mnAjuda.add(menuManual);
 		mnAjuda.add(mntmRelatarErro);
@@ -610,7 +609,7 @@ public class DataGui extends JFrame {
 	/**
 	 * Cria as checkboxes
 	 */
-	public void createCheckBoxes() {
+	private void createCheckBoxes() {
 		checkMembroAtivo = new JCheckBox("Membro Ativo");
 		checkMembroAtivo.setSelected(true);
 		filtrosPanel.add(checkMembroAtivo);
@@ -653,7 +652,7 @@ public class DataGui extends JFrame {
 	/**
 	 * Adiciona os changeListeners às checkboxes
 	 */
-	public void addCheckBoxListeners() {
+	private void addCheckBoxListeners() {
 		checkMembroAtivo.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				newFilter(pesquisa.getText().toLowerCase());
@@ -699,7 +698,7 @@ public class DataGui extends JFrame {
 	 * Atualiza quais check-box estarão visíveis, dependendo da tabela que estiver
 	 * ativa.
 	 */
-	public void visibleBoxes() {
+	private void visibleBoxes() {
 		if (tabbedPane.getSelectedIndex() == 0) {
 			checkMembroAtivo.setVisible(true);
 			checkMembroNominal.setVisible(true);
@@ -725,7 +724,7 @@ public class DataGui extends JFrame {
 	 * Atualiza os menus anular e refazer, de acordo com a tabela que estiver ativa
 	 * no momento.
 	 */
-	public void updateItems() {
+	private void updateItems() {
 		if (tabbedPane.getSelectedIndex() == 0)
 			TableModelMembro.getInstance().updateItems();
 		else if (tabbedPane.getSelectedIndex() == 1)
@@ -757,7 +756,7 @@ public class DataGui extends JFrame {
 	/**
 	 * Chama o método undo da tabela que estiver ativa.
 	 */
-	public void anular() {
+	private void anular() {
 		if (tabbedPane.getSelectedIndex() == 0)
 			TableModelMembro.getInstance().getUndoManager().undo();
 		else if (tabbedPane.getSelectedIndex() == 1)
@@ -767,7 +766,7 @@ public class DataGui extends JFrame {
 	/**
 	 * Chama o método redo da tabela que estiver ativa.
 	 */
-	public void refazer() {
+	private void refazer() {
 		if (tabbedPane.getSelectedIndex() == 0)
 			TableModelMembro.getInstance().getUndoManager().redo();
 		else if (tabbedPane.getSelectedIndex() == 1)
@@ -777,7 +776,7 @@ public class DataGui extends JFrame {
 	/**
 	 * Ordena a tabela que estiver ativa, caso esteja disponível essa função.
 	 */
-	public void ordenar() {
+	private void ordenar() {
 		if (tabbedPane.getSelectedIndex() == 0)
 			TableModelMembro.getInstance().ordenar();
 		else if (tabbedPane.getSelectedIndex() == 1)

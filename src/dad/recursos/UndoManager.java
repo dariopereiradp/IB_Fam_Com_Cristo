@@ -12,27 +12,15 @@ import dad.fam_com_cristo.table.command.Command;
  *
  */
 public class UndoManager {
+	
+	private Stack<Command> undoStack = new Stack<>();
+	private Stack<Command> redoStack = new Stack<>();
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcs.addPropertyChangeListener(listener);
 	}
-
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		pcs.addPropertyChangeListener(propertyName, listener);
-	}
-
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		pcs.removePropertyChangeListener(listener);
-	}
-
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		pcs.removePropertyChangeListener(propertyName, listener);
-	}
-
-	private Stack<Command> undoStack = new Stack<>();
-	private Stack<Command> redoStack = new Stack<>();
 
 	private class OldState {
 		private String undoName = getUndoName();

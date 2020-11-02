@@ -25,11 +25,6 @@ public class IconTextField extends JTextField implements FocusListener {
         addFocusListener(this);
     }
 
-    public IconTextField(int cols) {
-        super(cols);
-        addFocusListener(this);
-    }
-
     private IconTextComponentHelper getHelper() {
         if (mHelper == null)
             mHelper = new IconTextComponentHelper(this);

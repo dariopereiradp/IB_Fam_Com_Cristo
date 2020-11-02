@@ -156,7 +156,7 @@ public class TableMembrosToPDF {
 					"Não foi possível criar o PDF da Lista de Membros!\n"
 							+ "Se tiver uma Lista de Membros aberta, por favor feche e tente novamente!",
 					"Criar Lista de Membros - Erro", JOptionPane.OK_OPTION,
-					new ImageIcon(TableMembrosToPDF.class.getResource("/DAD_SS.jpg")));
+					new ImageIcon(TableMembrosToPDF.class.getResource("/FC_SS.jpg")));
 			e.printStackTrace();
 		}
 

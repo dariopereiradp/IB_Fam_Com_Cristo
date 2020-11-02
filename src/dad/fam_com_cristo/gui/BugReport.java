@@ -126,7 +126,7 @@ public class BugReport extends JDialog{
 	 * Cria um ficheiro '.zip' com os ficheiros log do mês atual e com um
 	 * ficheiro '.txt' contendo a descrição do problema.
 	 */
-	public void criarRelatorio() {
+	private void criarRelatorio() {
 		String data_hora = new SimpleDateFormat("dd/MM/yyyy 'às' HH'h'mm'm'ss").format(new Date());
 		String data = new SimpleDateFormat("ddMMMyyyy_HH'h'mm").format(new Date());
 		String info = Main.TITLE + " - " + Main.VERSION + "\n" + data_hora + "\n\nRelatório criado por: " + Login.NOME + "\n\n" + text.getText();

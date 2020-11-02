@@ -21,10 +21,10 @@ import dad.recursos.Log;
  */
 public class ConexaoLogin {
 
-	public static Connection con;
+	private static Connection con;
 
-	public static String dbFile = Main.DATABASE_DIR + "logins.mdb";
-	public static String dbUrl = "jdbc:ucanaccess://" + dbFile + ";memory=true;immediatelyReleaseResources=true";
+	private static String dbFile = Main.DATABASE_DIR + "logins.mdb";
+	private static String dbUrl = "jdbc:ucanaccess://" + dbFile + ";memory=true;immediatelyReleaseResources=true";
 
 	public static Connection getConnection() {
 		try {

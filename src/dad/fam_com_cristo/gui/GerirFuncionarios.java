@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
-import dad.fam_com_cristo.table.TableModelFuncionario;
+import dad.fam_com_cristo.table.models.TableModelFuncionario;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;

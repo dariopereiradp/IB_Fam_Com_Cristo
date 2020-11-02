@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 
-import dad.fam_com_cristo.table.TableModelFinancas;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
 
 /**
  * Enumerado que representa alguns períodos predefinidos de datas, para serem usados

@@ -142,7 +142,7 @@ public class Login {
 	 * Verifica se os campos estão preenchidos e se o funcionário existe na base de
 	 * dados.
 	 */
-	public void verify() {
+	private void verify() {
 		String username = user.getText();
 		String password = String.valueOf(pass.getPassword());
 		if (username.trim().equals("") || password.trim().equals("")) {
@@ -231,7 +231,7 @@ public class Login {
 	 * @return true - se apenas existe 1 funcionário registrado, que é o admin <br>
 	 *         false - caso contrário
 	 */
-	public boolean registo() {
+	private boolean registo() {
 		con = ConexaoLogin.getConnection();
 		try {
 			pst = con.prepareStatement("select count(*) from logins");

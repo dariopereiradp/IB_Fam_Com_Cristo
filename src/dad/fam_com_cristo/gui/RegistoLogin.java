@@ -31,8 +31,8 @@ import javax.swing.SwingConstants;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
 import dad.fam_com_cristo.Main;
-import dad.fam_com_cristo.table.TableModelFuncionario;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
+import dad.fam_com_cristo.table.models.TableModelFuncionario;
 import dad.fam_com_cristo.types.Funcionario;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.IconPasswordField;
@@ -179,7 +179,7 @@ public class RegistoLogin {
 	 * Verifica se os campos foram preenchidos corretamente e se o usuário ainda não
 	 * existe e depois faz o registo
 	 */
-	public void registo() {
+	private void registo() {
 		String username = user.getText();
 		String password = String.valueOf(pass.getPassword());
 		if (username.trim().equals("") || password.trim().equals("")) {

@@ -39,7 +39,7 @@ import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import dad.fam_com_cristo.Main;
-import dad.fam_com_cristo.table.TableModelFinancas;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.recursos.GraficosFinancas;
 import dad.recursos.Log;
@@ -225,14 +225,14 @@ public class TableFinancasToPDF {
 					"Não foi possível criar o PDF do Relatório Financeiro!\n"
 							+ "Se tiver um relatório aberto, por favor feche e tente novamente!",
 					"Criar Relatório Financeiro - Erro", JOptionPane.OK_OPTION,
-					new ImageIcon(TableFinancasToPDF.class.getResource("/DAD_SS.jpg")));
+					new ImageIcon(TableFinancasToPDF.class.getResource("/FC_SS.jpg")));
 			e.printStackTrace();
 		}
 
 		return title;
 	}
 
-	public static Image createImage(JComponent component) throws BadElementException, IOException {
+	private static Image createImage(JComponent component) throws BadElementException, IOException {
 
 		int w = component.getWidth();
 		int h = component.getHeight();

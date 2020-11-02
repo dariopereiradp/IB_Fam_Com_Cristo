@@ -38,7 +38,7 @@ public class Transacao implements Comparable<Transacao> {
 	 * @param data
 	 * @param total
 	 */
-	public void init(BigDecimal value, Tipo_Transacao tipo, String descricao, LocalDate data, BigDecimal total) {
+	private void init(BigDecimal value, Tipo_Transacao tipo, String descricao, LocalDate data, BigDecimal total) {
 		con = new ConexaoFinancas().getConnection();
 		id = ++countID;
 		this.value = new Money(value);

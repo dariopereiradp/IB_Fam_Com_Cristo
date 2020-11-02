@@ -31,7 +31,6 @@ public class TableHeaderWithSortIcons implements TableCellRenderer {
 		this.tcr = tcr;
 	}
 
-
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 			boolean hasFocused, int row, int column) {

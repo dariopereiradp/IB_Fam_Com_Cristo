@@ -16,7 +16,7 @@ import org.knowm.xchart.PieChartBuilder;
 import org.knowm.xchart.style.Styler.ChartTheme;
 
 import dad.fam_com_cristo.Main;
-import dad.fam_com_cristo.table.TableModelFinancas;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
 import mdlaf.utils.MaterialColors;

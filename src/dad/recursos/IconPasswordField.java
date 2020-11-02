@@ -25,11 +25,6 @@ public class IconPasswordField extends JPasswordField implements FocusListener {
         addFocusListener(this);
     }
 
-    public IconPasswordField(int cols) {
-        super(cols);
-        addFocusListener(this);
-    }
-
     private IconTextComponentHelper getHelper() {
         if (mHelper == null)
             mHelper = new IconTextComponentHelper(this);

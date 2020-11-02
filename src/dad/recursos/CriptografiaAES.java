@@ -43,7 +43,7 @@ public class CriptografiaAES {
 		return decryptedString;
 	}
 
-	public static void setDecryptedString(String decryptedString) {
+	private static void setDecryptedString(String decryptedString) {
 		CriptografiaAES.decryptedString = decryptedString;
 	}
 
@@ -51,7 +51,7 @@ public class CriptografiaAES {
 		return encryptedString;
 	}
 
-	public static void setEncryptedString(String encryptedString) {
+	private static void setEncryptedString(String encryptedString) {
 		CriptografiaAES.encryptedString = encryptedString;
 	}
 

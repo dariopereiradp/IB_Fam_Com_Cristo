@@ -321,36 +321,36 @@ public class Membro implements Comparable<Membro> {
 		return batizado;
 	}
 
-	/**
-	 * Altera o estado da variavel batizado automaticamente, dependendo do tipo de
-	 * membro. Se for Congregado, não é batizado. Caso contrário (exceto ex-membro)
-	 * é batizado. Se for ex-membro não faz nada.
-	 */
-	public void setBatizado() {
-		if (tipo_membro == Tipo_Membro.CONGREGADO) {
-			batizado = Sim_Nao.NAO;
-		} else if (tipo_membro == Tipo_Membro.LIDERANCA || tipo_membro == Tipo_Membro.MEMBRO_ATIVO
-				|| tipo_membro == Tipo_Membro.MEMBRO_NOMINAL)
-			batizado = Sim_Nao.SIM;
-	}
+//	/**
+//	 * Altera o estado da variavel batizado automaticamente, dependendo do tipo de
+//	 * membro. Se for Congregado, não é batizado. Caso contrário (exceto ex-membro)
+//	 * é batizado. Se for ex-membro não faz nada.
+//	 */
+//	public void setBatizado() {
+//		if (tipo_membro == Tipo_Membro.CONGREGADO) {
+//			batizado = Sim_Nao.NAO;
+//		} else if (tipo_membro == Tipo_Membro.LIDERANCA || tipo_membro == Tipo_Membro.MEMBRO_ATIVO
+//				|| tipo_membro == Tipo_Membro.MEMBRO_NOMINAL)
+//			batizado = Sim_Nao.SIM;
+//	}
 
-	/**
-	 * Diz se o membro é batizado ou não, dependendo do tipo de membro.<br>
-	 * Se for Congregado, não é batizado. Caso contrário (exceto ex-membro) é
-	 * batizado. Se for ex-membro retorna o estado atual da variavel batizado.
-	 * 
-	 * @return um enumerado do tipo Sim_Nao, indicando se o membro é ou não
-	 *         batizado.
-	 */
-	public Sim_Nao newBatizadoState() {
-		if (tipo_membro == Tipo_Membro.CONGREGADO) {
-			return Sim_Nao.NAO;
-		} else if (tipo_membro == Tipo_Membro.LIDERANCA || tipo_membro == Tipo_Membro.MEMBRO_ATIVO
-				|| tipo_membro == Tipo_Membro.MEMBRO_NOMINAL)
-			return Sim_Nao.SIM;
-		else
-			return eBatizado();
-	}
+//	/**
+//	 * Diz se o membro é batizado ou não, dependendo do tipo de membro.<br>
+//	 * Se for Congregado, não é batizado. Caso contrário (exceto ex-membro) é
+//	 * batizado. Se for ex-membro retorna o estado atual da variavel batizado.
+//	 * 
+//	 * @return um enumerado do tipo Sim_Nao, indicando se o membro é ou não
+//	 *         batizado.
+//	 */
+//	public Sim_Nao newBatizadoState() {
+//		if (tipo_membro == Tipo_Membro.CONGREGADO) {
+//			return Sim_Nao.NAO;
+//		} else if (tipo_membro == Tipo_Membro.LIDERANCA || tipo_membro == Tipo_Membro.MEMBRO_ATIVO
+//				|| tipo_membro == Tipo_Membro.MEMBRO_NOMINAL)
+//			return Sim_Nao.SIM;
+//		else
+//			return eBatizado();
+//	}
 
 	public void setBatizado(Sim_Nao sim_nao) {
 		batizado = sim_nao;

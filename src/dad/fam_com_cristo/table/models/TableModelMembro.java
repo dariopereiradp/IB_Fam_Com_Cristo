@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.table;
+package dad.fam_com_cristo.table.models;
 
 import java.io.File;
 import java.sql.Connection;
@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
 import dad.fam_com_cristo.gui.DataGui;
+import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.command.AtualizaMembro;
 import dad.fam_com_cristo.table.command.Command;
 import dad.fam_com_cristo.table.command.CompositeCommand;
@@ -116,9 +117,9 @@ public class TableModelMembro extends AbstractTableModel {
 	 */
 	public void updateItems() {
 		DataGui.getInstance().getMenuAnular().setEnabled(undoManager.isUndoAvailable());
-		DataGui.getInstance().getMenuAnular().setText("Anular (Ctrl+Z) - (" + undoManager.getUndoName() + ")");
+		DataGui.getInstance().getMenuAnular().setText("Anular (Ctrl+Z)".concat(!undoManager.getUndoName().equals("") ? "- (" + undoManager.getUndoName() + ")": ""));
 		DataGui.getInstance().getMenuRefazer().setEnabled(undoManager.isRedoAvailable());
-		DataGui.getInstance().getMenuRefazer().setText("Refazer (Ctrl+Y) - (" + undoManager.getRedoName() + ")");
+		DataGui.getInstance().getMenuRefazer().setText("Refazer (Ctrl+Y)".concat(!undoManager.getRedoName().equals("") ? "- (" + undoManager.getRedoName() + ")": ""));
 	}
 
 	@Override
@@ -272,7 +273,7 @@ public class TableModelMembro extends AbstractTableModel {
 	 * @param membro - membro que se pretende inserir.
 	 * @param row    - linha em que se pretende inserir o membro.
 	 */
-	public void insertMembro(Membro membro, int row) {
+	private void insertMembro(Membro membro, int row) {
 		membro.adicionarNaBaseDeDados();
 		membros.add(row, membro);
 

@@ -1,4 +1,4 @@
-package dad.fam_com_cristo.table;
+package dad.fam_com_cristo.table.models;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import dad.fam_com_cristo.gui.DataGui;
+import dad.fam_com_cristo.table.FinancasPanel;
 import dad.fam_com_cristo.table.command.AtualizaTransacao;
 import dad.fam_com_cristo.table.command.Command;
 import dad.fam_com_cristo.table.command.CompositeCommand;
@@ -101,9 +102,9 @@ public class TableModelFinancas extends AbstractTableModel {
 	 */
 	public void updateItems() {
 		DataGui.getInstance().getMenuAnular().setEnabled(undoManager.isUndoAvailable());
-		DataGui.getInstance().getMenuAnular().setText("Anular (Ctrl+Z) - (" + undoManager.getUndoName() + ")");
+		DataGui.getInstance().getMenuAnular().setText("Anular (Ctrl+Z)".concat(!undoManager.getUndoName().equals("") ? " - (" + undoManager.getUndoName() + ")": ""));
 		DataGui.getInstance().getMenuRefazer().setEnabled(undoManager.isRedoAvailable());
-		DataGui.getInstance().getMenuRefazer().setText("Refazer (Ctrl+Y) - (" + undoManager.getRedoName() + ")");
+		DataGui.getInstance().getMenuRefazer().setText("Refazer (Ctrl+Y)".concat(!undoManager.getRedoName().equals("") ? " - (" + undoManager.getRedoName() + ")": ""));
 	}
 
 	@Override
@@ -133,24 +134,6 @@ public class TableModelFinancas extends AbstractTableModel {
 	public void addTransacao(Transacao transacao) {
 		undoManager.execute(new AddTransacao(transacao));
 		fireTableDataChanged();
-	}
-
-	public Transacao getTranscao(int rowIndex) {
-		return transacoes.get(rowIndex);
-	}
-
-	/**
-	 * 
-	 * @param transacao transacao que se pretende descobrir em que linha está
-	 * @return a linha em que a transacao está, se ele existir na tabela. <br>
-	 *         -1 se a transacao não existir na tabela.
-	 */
-	public int getRow(Transacao transacao) {
-		for (int i = 0; i < transacoes.size(); i++) {
-			if (transacoes.get(i).getId() == transacao.getId())
-				return i;
-		}
-		return -1;
 	}
 
 	/**
@@ -255,7 +238,7 @@ public class TableModelFinancas extends AbstractTableModel {
 	 * @param transacao - transacao que se pretende inserir.
 	 * @param row       - linha em que se pretende inserir a transacao.
 	 */
-	public void insertTransacao(Transacao transacao, int row) {
+	private void insertTransacao(Transacao transacao, int row) {
 		transacao.adicionarNaBaseDeDados();
 		transacoes.add(row, transacao);
 

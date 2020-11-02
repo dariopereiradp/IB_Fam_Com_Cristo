@@ -91,13 +91,13 @@ public class Config extends JDialog {
 				JPasswordField pass = new JPasswordField();
 				int ok = JOptionPane.showConfirmDialog(null, pass, "Introduza a senha do administrador",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 				if (ok == JOptionPane.OK_OPTION) {
 					if (String.valueOf(pass.getPassword()).equals(Main.DEFAULT_PASS))
 						new GerirFuncionarios().open();
 					else
 						JOptionPane.showMessageDialog(null, "Senha errada!", "SENHA ERRADA", JOptionPane.OK_OPTION,
-								new ImageIcon(getClass().getResource("/DAD_SS.jpg")));
+								new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 				}
 
 			}

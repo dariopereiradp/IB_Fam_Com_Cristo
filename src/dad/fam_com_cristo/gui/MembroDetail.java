@@ -40,9 +40,9 @@ import javax.swing.text.MaskFormatter;
 
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.themes.DateChooser;
-import dad.fam_com_cristo.table.TableModelMembro;
 import dad.fam_com_cristo.table.command.AtualizaMembro;
 import dad.fam_com_cristo.table.command.CompositeCommand;
+import dad.fam_com_cristo.table.models.TableModelMembro;
 import dad.fam_com_cristo.types.Membro;
 import dad.fam_com_cristo.types.enumerados.Estado_Civil;
 import dad.fam_com_cristo.types.enumerados.Sexo;
@@ -449,11 +449,11 @@ public class MembroDetail extends JDialog {
 		 */
 		final class Apagar_Imagem implements ActionListener {
 
-			public void apagar() {
+			private void apagar() {
 				int ok = JOptionPane.showOptionDialog(DataGui.getInstance(),
 						"Tem certeza que quer apagar a foto do membro?\n(Não é possível voltar atrás, a não ser adicionando uma nova imagem!)",
 						"APAGAR", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
-						new ImageIcon(getClass().getResource("/DAD_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
+						new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
 				if (ok == JOptionPane.YES_OPTION) {
 					membro.setImg(null);
 					image.setIcon(null);
@@ -576,7 +576,7 @@ public class MembroDetail extends JDialog {
 
 			private boolean close;
 
-			public Salvar(boolean close) {
+			private Salvar(boolean close) {
 				this.close = close;
 			}
 
@@ -620,7 +620,7 @@ public class MembroDetail extends JDialog {
 	/**
 	 * Torna os text_fields editáveis
 	 */
-	protected void editState() {
+	private void editState() {
 		nome.setEditable(true);
 		profissao.setEditable(true);
 		data_nascimento.setEnabled(true);
@@ -651,7 +651,7 @@ public class MembroDetail extends JDialog {
 	/**
 	 * Torna os text_field não editáveis
 	 */
-	protected void savedState() {
+	private void savedState() {
 		nome.setEditable(false);
 		profissao.setEditable(false);
 		data_nascimento.setEnabled(false);
@@ -702,7 +702,7 @@ public class MembroDetail extends JDialog {
 	 * @return true se teve sucesso <br>
 	 *         false caso contrário
 	 */
-	public boolean save(boolean close) {
+	private boolean save(boolean close) {
 		if (nome.getText().trim().equals("")) {
 			JOptionPane.showMessageDialog(null, "Nome em branco! Introduza um pelo menos o nome do membro para salvar!",
 					"Salvar", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")));

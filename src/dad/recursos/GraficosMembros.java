@@ -9,7 +9,7 @@ import org.knowm.xchart.style.Styler.ChartTheme;
 
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
-import dad.fam_com_cristo.table.TableModelMembro;
+import dad.fam_com_cristo.table.models.TableModelMembro;
 import dad.fam_com_cristo.types.enumerados.Estado_Civil;
 import dad.fam_com_cristo.types.enumerados.Sexo;
 import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
