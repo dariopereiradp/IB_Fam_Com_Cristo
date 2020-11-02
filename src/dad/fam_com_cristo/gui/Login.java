@@ -61,7 +61,7 @@ public class Login {
 		frame = new JFrame("Igreja Batista Famílias com Cristo - Login");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
-		frame.setBounds(100, 100, 400, 450);
+		frame.setBounds(100, 100, 400, 460);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
@@ -79,7 +79,7 @@ public class Login {
 		ImageIcon icon = new ImageIcon(new ImageIcon(Login.class.getResource("/FC-T-Big.png")).getImage()
 				.getScaledInstance(290, 240, Image.SCALE_SMOOTH));
 		image.setIcon(icon);
-		image.setBounds(40, 22, 325, 270);
+		image.setBounds(50, 20, 290, 240);
 		frame.getContentPane().add(image);
 
 		user = new IconTextField();
@@ -99,7 +99,7 @@ public class Login {
 		frame.getContentPane().add(pass);
 
 		JButton entrar = new JButton("ENTRAR");
-		entrar.setBounds(140, 380, 130, 30);
+		entrar.setBounds(130, 380, 140, 30);
 		entrar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.CHECK_CIRCLE,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		Utils.personalizarBotao(entrar);

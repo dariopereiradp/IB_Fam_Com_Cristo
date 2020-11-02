@@ -67,7 +67,7 @@ public class RegistoLogin {
 		dialog.setTitle("Igreja Batista Famílias com Cristo - Registro");
 		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));
-		dialog.setBounds(100, 100, 480, 420);
+		dialog.setBounds(100, 100, 480, 430);
 		dialog.setLocationRelativeTo(null);
 		dialog.setResizable(false);
 		dialog.getContentPane().setLayout(null);
@@ -78,8 +78,16 @@ public class RegistoLogin {
 		ImageIcon icon = new ImageIcon(new ImageIcon(Login.class.getResource("/FC-T-Big.png")).getImage()
 				.getScaledInstance(240, 200, Image.SCALE_SMOOTH));
 		image.setIcon(icon);
-		image.setBounds(120, 20, 240, 200);
+		image.setBounds(115, 20, 240, 200);
 		dialog.getContentPane().add(image);
+		
+		JLabel warning = new JLabel(
+				"ATEN\u00C7\u00C3O: N\u00E3o esque\u00E7a da senha! Apenas o administrador pode recuper\u00E1-la!");
+		warning.setFont(new Font("Dialog", Font.PLAIN, 12));
+		warning.setForeground(Color.RED);
+		warning.setHorizontalAlignment(SwingConstants.CENTER);
+		warning.setBounds(0, 230, 470, 15);
+		dialog.getContentPane().add(warning);
 
 		user = new IconTextField();
 		user.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.ACCOUNT_CIRCLE,
@@ -111,14 +119,6 @@ public class RegistoLogin {
 
 			}
 		});
-
-		JLabel warning = new JLabel(
-				"ATEN\u00C7\u00C3O: N\u00E3o esque\u00E7a da senha! Apenas o administrador pode recuper\u00E1-la!");
-		warning.setFont(new Font("Dialog", Font.PLAIN, 12));
-		warning.setForeground(Color.RED);
-		warning.setHorizontalAlignment(SwingConstants.CENTER);
-		warning.setBounds(5, 230, 470, 15);
-		dialog.getContentPane().add(warning);
 
 		JCheckBox showPass = new JCheckBox("Mostrar senha");
 		pass.setEchoChar('*');
