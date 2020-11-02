@@ -105,7 +105,6 @@ public class FinancasPanel extends JPanel {
 	 * Usado para garantir que tudo muda ao mudar o tema (Dark/Light)
 	 */
 	public void recreate() {
-
 		financas = new Table(modelFinancas, columnToolTips, new boolean[] { false, true, true, true, true, false });
 
 		financas.setPreferredScrollableViewportSize(new Dimension(800, 600));
@@ -498,7 +497,8 @@ public class FinancasPanel extends JPanel {
 
 				@Override
 				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-					LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1)).getData();
+					LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1))
+							.getData();
 					if (data.isAfter(init) || data.isEqual(init))
 						return true;
 					else
@@ -512,7 +512,8 @@ public class FinancasPanel extends JPanel {
 
 				@Override
 				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-					LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1)).getData();
+					LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1))
+							.getData();
 					if (data.isBefore(fim) || data.isEqual(fim))
 						return true;
 					else

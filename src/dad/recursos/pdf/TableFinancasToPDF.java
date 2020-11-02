@@ -46,7 +46,9 @@ import dad.recursos.Log;
 import dad.recursos.Utils;
 
 /**
- * Calsse que gera um PDF contendo o relatório financeiro para o período indicado
+ * Calsse que gera um PDF contendo o relatório financeiro para o período
+ * indicado
+ * 
  * @author dariopereiradp
  *
  */
@@ -58,13 +60,12 @@ public class TableFinancasToPDF {
 
 	/**
 	 * 
-	 * @param table - tabela base que vai ser convertida para PDF
+	 * @param table     - tabela base que vai ser convertida para PDF
 	 * @param descricao - descrição que vai para o título e nome do ficheiro
-	 * @param periodo - período do relatório
-	 * @param init - data de início
-	 * @param end - data de fim
-	 * @param anual - true inclui um CategoryChart
-	 * 				- false inclui um PieChart
+	 * @param periodo   - período do relatório
+	 * @param init      - data de início
+	 * @param end       - data de fim
+	 * @param anual     - true inclui um CategoryChart - false inclui um PieChart
 	 * 
 	 * @return
 	 */
@@ -134,7 +135,7 @@ public class TableFinancasToPDF {
 					.add(" O saldo atual é: " + utils.getNumberFormatCurrency().format(financas.getTotal()) + ".\n");
 			descricaoSaldo.add(bullet);
 			descricaoSaldo.add(" O saldo total no último dia do período era: "
-					+ table.getValueAt(table.getRowCount() - 1, 5) + ".\n");
+					.concat(table.getRowCount() == 0 ? "R$0,00.\n" : table.getValueAt(table.getRowCount() - 1, 5) + ".\n"));
 			descricaoSaldo.add(bullet);
 			descricaoSaldo.add(" O total de entradas no período foi: "
 					+ utils.getNumberFormatCurrency().format(financas.getTotalEntradas(init, end)) + ".\n");

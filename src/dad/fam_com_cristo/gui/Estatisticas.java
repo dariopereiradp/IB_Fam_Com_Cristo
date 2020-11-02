@@ -69,7 +69,7 @@ public class Estatisticas extends JDialog {
 
 	public Estatisticas() {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
-		setBounds(100, 100, 1200, 600);
+		setBounds(100, 100, 1200, 620);
 		setResizable(false);
 		setTitle("Estatísticas");
 		setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));

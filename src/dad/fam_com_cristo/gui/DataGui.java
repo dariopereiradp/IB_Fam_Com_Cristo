@@ -744,8 +744,10 @@ public class DataGui extends JFrame {
 			if (e.getID() == KeyEvent.KEY_PRESSED) {
 				if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 					anular();
+					e.consume();
 				} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 					refazer();
+					e.consume();
 				}
 
 			}

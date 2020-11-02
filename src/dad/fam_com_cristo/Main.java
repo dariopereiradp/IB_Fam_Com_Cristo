@@ -2,13 +2,9 @@ package dad.fam_com_cristo;
 
 import java.awt.EventQueue;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
-import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -67,7 +63,7 @@ public class Main {
 	 */
 	public Main() {
 		try {
-			createConfFile();
+			createFolders();
 			MaterialLookAndFeel materialTheme = new MaterialLookAndFeel(
 					(MaterialTheme) Utils.getInstance().getCurrentTheme());
 
@@ -86,7 +82,7 @@ public class Main {
 
 				@Override
 				public void run() {
-					createFoldersAndTables();
+					createTables();
 					TableModelMembro.getInstance().uploadDataBase();
 					TableModelFuncionario.getInstance().uploadDataBase();
 					TableModelFinancas.getInstance().uploadDataBase();
@@ -132,31 +128,6 @@ public class Main {
 		}
 	}
 
-	/**
-	 * Cria o ficheiro de configurações, se ainda não existir
-	 * @return
-	 */
-	private File createConfFile() {
-		File conf = null;
-		try {
-			conf = Utils.getInstance().getPropertiesFile();
-			if (conf.createNewFile()) {
-				FileOutputStream output = new FileOutputStream(conf);
-				Properties prop = new Properties();
-				prop.setProperty(Utils.APP_THEME, Utils.THEME_DARK);
-				prop.setProperty(PASTOR, "");
-				prop.store(output, AVISO_INI);
-				output.close();
-			}
-			return conf;
-
-		} catch (IOException | InputMismatchException e1) {
-			Log.getInstance().printLog("Erro ao carregar configurações! - " + e1.getMessage());
-			e1.printStackTrace();
-			return null;
-		}
-
-	}
 
 	/**
 	 * Classe que representa uma thread que incrementa o valor da porcentagem na
@@ -182,7 +153,38 @@ public class Main {
 	/**
 	 * Cria as pastas e tabelas das bases de dados, caso não existam.
 	 */
-	private void createFoldersAndTables() {
+	private void createTables() {
+
+		restaurar();
+
+		try {
+			ConexaoLogin.createTable();
+
+			ConexaoMembro.createTable();
+
+			ConexaoFinancas.createTable();
+
+			File imgs = new File(Membro.IMG_PATH);
+			if (!imgs.exists())
+				imgs.mkdirs();
+
+		} catch (
+
+		SQLException e) {
+			String message = "Ocorreu um erro ao criar a base de dados... Tenta novamente!\n" + e.getMessage() + "\n"
+					+ this.getClass();
+			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+			Log.getInstance().printLog(message);
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 
+	 */
+	private void createFolders() {
 		File dir = new File(DATABASE_DIR);
 		if (!dir.exists())
 			dir.mkdirs();
@@ -214,31 +216,6 @@ public class Main {
 		File bugDir = new File(Main.BUG_REPORTS_DIR);
 		if (!bugDir.exists())
 			bugDir.mkdirs();
-
-		restaurar();
-
-		try {
-			ConexaoLogin.createTable();
-
-			ConexaoMembro.createTable();
-
-			ConexaoFinancas.createTable();
-
-			File imgs = new File(Membro.IMG_PATH);
-			if (!imgs.exists())
-				imgs.mkdirs();
-
-		} catch (
-
-		SQLException e) {
-			String message = "Ocorreu um erro ao criar a base de dados... Tenta novamente!\n" + e.getMessage() + "\n"
-					+ this.getClass();
-			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
-					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
-			Log.getInstance().printLog(message);
-			e.printStackTrace();
-		}
-
 	}
 
 	/**

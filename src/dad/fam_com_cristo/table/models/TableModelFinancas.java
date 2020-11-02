@@ -102,9 +102,11 @@ public class TableModelFinancas extends AbstractTableModel {
 	 */
 	public void updateItems() {
 		DataGui.getInstance().getMenuAnular().setEnabled(undoManager.isUndoAvailable());
-		DataGui.getInstance().getMenuAnular().setText("Anular (Ctrl+Z)".concat(!undoManager.getUndoName().equals("") ? " - (" + undoManager.getUndoName() + ")": ""));
+		DataGui.getInstance().getMenuAnular().setText("Anular (Ctrl+Z)"
+				.concat(!undoManager.getUndoName().equals("") ? " - (" + undoManager.getUndoName() + ")" : ""));
 		DataGui.getInstance().getMenuRefazer().setEnabled(undoManager.isRedoAvailable());
-		DataGui.getInstance().getMenuRefazer().setText("Refazer (Ctrl+Y)".concat(!undoManager.getRedoName().equals("") ? " - (" + undoManager.getRedoName() + ")": ""));
+		DataGui.getInstance().getMenuRefazer().setText("Refazer (Ctrl+Y)"
+				.concat(!undoManager.getRedoName().equals("") ? " - (" + undoManager.getRedoName() + ")" : ""));
 	}
 
 	@Override
@@ -619,7 +621,10 @@ public class TableModelFinancas extends AbstractTableModel {
 		ArrayList<Transacao> sorted = (ArrayList<Transacao>) transacoes.clone();
 
 		sorted.sort((o1, o2) -> o1.getData().compareTo(o2.getData()));
-		return sorted.get(0).getData();
+		if (sorted.size() > 0)
+			return sorted.get(0).getData();
+		else
+			return LocalDate.now();
 	}
 
 	public static TableModelFinancas getInstance() {

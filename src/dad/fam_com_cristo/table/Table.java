@@ -59,6 +59,7 @@ public class Table extends JTable {
 		this.columnToolTips = columnToolTips;
 		this.cellEditable = cellEditable;
 		personalizarHeader();
+		setOpaque(true);
 		setFillsViewportHeight(true);
 		setAutoCreateRowSorter(true);
 		getTableHeader().setReorderingAllowed(false);

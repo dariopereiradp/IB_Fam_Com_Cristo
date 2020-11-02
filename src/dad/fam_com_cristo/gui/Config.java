@@ -47,7 +47,7 @@ public class Config extends JDialog {
 	private static final long serialVersionUID = -1792634540833333974L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField pastor;
-	private File conf = Utils.getInstance().getPropertiesFile();
+	private File conf = Utils.getPropertiesFile();
 	private String pastorName = Utils.getInstance().getPastorName();
 
 	public Config() {

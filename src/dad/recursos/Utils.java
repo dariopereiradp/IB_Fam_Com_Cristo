@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -48,7 +49,9 @@ import mdlaf.themes.MaterialTheme;
 import mdlaf.utils.MaterialColors;
 
 /**
- * Classe que agrupa diversas funções que são de utilidade em diferentes classes do programa
+ * Classe que agrupa diversas funções que são de utilidade em diferentes classes
+ * do programa
+ * 
  * @author dariopereiradp
  *
  */
@@ -65,7 +68,10 @@ public class Utils {
 	public Utils() {
 		FileInputStream inputStream;
 		try {
-			inputStream = new FileInputStream(getPropertiesFile());
+			if (getPropertiesFile().exists())
+				inputStream = new FileInputStream(getPropertiesFile());
+			else
+				inputStream = new FileInputStream(createConfFile());
 			Properties prop = new Properties();
 			prop.load(inputStream);
 			String theme = prop.getProperty(APP_THEME);
@@ -82,8 +88,36 @@ public class Utils {
 	}
 
 	/**
-	 * Altera o tema do programa, garantindo que todos os componentes são devidamente recriados (incluindo as
-	 * cores dos ícones dos botões
+	 * Cria o ficheiro de configurações, se ainda não existir
+	 * 
+	 * @return
+	 */
+	public static File createConfFile() {
+		File conf = null;
+		try {
+			conf = getPropertiesFile();
+			if (conf.createNewFile()) {
+				FileOutputStream output = new FileOutputStream(conf);
+				Properties prop = new Properties();
+				prop.setProperty(Utils.APP_THEME, Utils.THEME_DARK);
+				prop.setProperty(Main.PASTOR, "");
+				prop.store(output, Main.AVISO_INI);
+				output.close();
+			}
+			return conf;
+
+		} catch (IOException | InputMismatchException e1) {
+			Log.getInstance().printLog("Erro ao carregar configurações! - " + e1.getMessage());
+			e1.printStackTrace();
+			return null;
+		}
+
+	}
+
+	/**
+	 * Altera o tema do programa, garantindo que todos os componentes são
+	 * devidamente recriados (incluindo as cores dos ícones dos botões
+	 * 
 	 * @param theme
 	 */
 	public void changeTheme(Theme theme) {
@@ -121,7 +155,7 @@ public class Utils {
 	 * 
 	 * @return o ficheiro de configurações
 	 */
-	public File getPropertiesFile() {
+	public static File getPropertiesFile() {
 		return new File(Main.DATABASE_DIR + "conf.dad");
 	}
 
@@ -227,10 +261,11 @@ public class Utils {
 	public DateTimeFormatter getDateFormat() {
 		return DateTimeFormatter.ofPattern(DATE_FORMAT);
 	}
-	
+
 	/**
 	 * 
-	 * @return o formatador de Data e Hora no formato "dd/MM/yyyy 'às' HH'h'mm'm'ss's'"
+	 * @return o formatador de Data e Hora no formato "dd/MM/yyyy 'às'
+	 *         HH'h'mm'm'ss's'"
 	 */
 	public DateTimeFormatter getDateTimeFormat() {
 		return DateTimeFormatter.ofPattern(DATETIME_FORMAT);
@@ -271,7 +306,9 @@ public class Utils {
 	}
 
 	/**
-	 * Configura com o DatePicker padrão do programa (com cores para o tema, local, formato e outros)
+	 * Configura com o DatePicker padrão do programa (com cores para o tema, local,
+	 * formato e outros)
+	 * 
 	 * @return
 	 */
 	public DatePickerSettings getDateSettings() {
@@ -327,6 +364,7 @@ public class Utils {
 
 	/**
 	 * Exporta o logotipo da igreja de acordo com o formato indicado
+	 * 
 	 * @param format
 	 */
 	public static void exportLogo(ImageFormats format) {
@@ -371,6 +409,7 @@ public class Utils {
 
 	/**
 	 * Exporta uma imagem para a localização indicada
+	 * 
 	 * @param source
 	 * @param target
 	 * @throws IOException

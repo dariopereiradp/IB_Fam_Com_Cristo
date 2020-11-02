@@ -123,7 +123,6 @@ public class MembroPanel extends JPanel {
 	 */
 	public void recreate() {
 		membros = new Table(modelMembro, columnToolTips, true);
-
 		membros.setPreferredScrollableViewportSize(new Dimension(800, 600));
 
 		membros.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
