@@ -9,10 +9,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -41,7 +39,7 @@ import net.lingala.zip4j.ZipFile;
  * @author Dário Pereira
  *
  */
-public class BugReport extends JDialog{
+public class BugReport extends JDialog {
 
 	/**
 	 * 
@@ -65,15 +63,14 @@ public class BugReport extends JDialog{
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			JLabel lblReportarErro = new JLabel("REPORTAR ERRO");
-			lblReportarErro.setIcon(MaterialImageFactory.getInstance().getImage(
-	                MaterialIconFont.BUG_REPORT,
-	                Utils.getInstance().getCurrentTheme().getColorIcons()));
+			lblReportarErro.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.BUG_REPORT,
+					Utils.getInstance().getCurrentTheme().getColorIcons()));
 			lblReportarErro.setFont(new Font("Dialog", Font.PLAIN, 17));
 			lblReportarErro.setHorizontalAlignment(SwingConstants.CENTER);
 			contentPanel.add(lblReportarErro, BorderLayout.NORTH);
 		}
-			JPanel panel = new JPanel(new BorderLayout());
-			contentPanel.add(panel, BorderLayout.CENTER);
+		JPanel panel = new JPanel(new BorderLayout());
+		contentPanel.add(panel, BorderLayout.CENTER);
 		{
 			text = new JTextArea();
 			text.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -93,12 +90,11 @@ public class BugReport extends JDialog{
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
-				okButton.setIcon(MaterialImageFactory.getInstance().getImage(
-		                MaterialIconFont.CHECK,
-		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				okButton.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.CHECK,
+						Utils.getInstance().getCurrentTheme().getColorIcons()));
 				Utils.personalizarBotao(okButton);
 				okButton.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						criarRelatorio();
@@ -109,78 +105,77 @@ public class BugReport extends JDialog{
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
-				cancelButton.setIcon(MaterialImageFactory.getInstance().getImage(
-		                MaterialIconFont.CANCEL,
-		                Utils.getInstance().getCurrentTheme().getColorIcons()));
+				cancelButton.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.CANCEL,
+						Utils.getInstance().getCurrentTheme().getColorIcons()));
 				Utils.personalizarBotao(cancelButton);
 				cancelButton.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						dispose();						
+						dispose();
 					}
 				});
 				buttonPane.add(cancelButton);
 			}
 		}
 	}
-	
+
 	/**
-	 * Cria um ficheiro '.zip' com os ficheiros log do mês atual e com um
-	 * ficheiro '.txt' contendo a descrição do problema.
+	 * Cria um ficheiro '.zip' com os ficheiros log do mês atual e com um ficheiro
+	 * '.txt' contendo a descrição do problema.
 	 */
 	private void criarRelatorio() {
-		String data_hora = new SimpleDateFormat("dd/MM/yyyy 'às' HH'h'mm'm'ss").format(new Date());
-		String data = new SimpleDateFormat("ddMMMyyyy_HH'h'mm").format(new Date());
-		String info = Main.TITLE + " - " + Main.VERSION + "\n" + data_hora + "\n\nRelatório criado por: " + Login.NOME + "\n\n" + text.getText();
-		String path_temp = Main.DATA_DIR + Main.SIGLA + "_Relatorio_v." + Main.VERSION + "_" + data + ".txt"; 
+		String data_hora = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH'h'mm'm'ss").format(LocalDateTime.now());
+		String data = DateTimeFormatter.ofPattern("ddMMMyyyy_HH'h'mm").format(LocalDateTime.now());
+		String info = Main.TITLE + " - " + Main.VERSION + "\n" + data_hora + "\n\nRelatório criado por: " + Login.NOME
+				+ "\n\nDESCRIÇÃO DO PROBLEMA\n\n" + text.getText();
+		String path_temp = Main.DATA_DIR + Main.SIGLA + "_Relatorio_v." + Main.VERSION + "_" + data + ".txt";
 		File file_text = new File(path_temp);
 		String month_year = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMyyyy")).toUpperCase();
 		String name = Main.SIGLA + "_Relatorio_v." + Main.VERSION + "_" + data + ".zip";
 		try (FileWriter fw = new FileWriter(file_text, false);) {
 			fw.write(info);
-			
+
 			Log.getInstance().close();
-			
+
 			ZipCompress.compress(Main.DATA_DIR + "Logs/" + month_year + "/", name, Main.BUG_REPORTS_DIR);
-			
+
 			Log.getInstance().open();
-			
+
 		} catch (NullPointerException | IOException e) {
 			String message = "Erro ao criar o relatório de erros! - " + e.getMessage();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
 					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			Log.getInstance().printLog(message);
 		}
-		try{
-		ZipFile zip = new ZipFile(Main.BUG_REPORTS_DIR + name);
-		zip.addFile(file_text);
-		
-		String bName = Utils.getInstance().backupDirect();
-		
-		zip.addFile(new File(bName));
-		
-		String message = "Relatório criado com sucesso em: " + data_hora + "\nEnvie o arquivo de relatório '" + name + "' para '" + Main.EMAIL_SUPORTE + "' "
-				+ "\npara que possamos resolver o problema o mais rápido possível! Pedimos desculpa pelos incovenientes causados!";
-		JOptionPane.showMessageDialog(null, message, "Sucesso", JOptionPane.INFORMATION_MESSAGE,
-				new ImageIcon(getClass().getResource("/FC_SS.jpg")));
-		Desktop.getDesktop().open(new File(Main.BUG_REPORTS_DIR));
-		Log.getInstance().printLog(message);
-		file_text.delete();
-		dispose();
+		try {
+			ZipFile zip = new ZipFile(Main.BUG_REPORTS_DIR + name);
+			zip.addFile(file_text);
+
+			Utils.getInstance().backupDirect();
+
+			String message = "Relatório criado com sucesso em: " + data_hora + "\nEnvie o arquivo de relatório '" + name
+					+ "' para '" + Main.EMAIL_SUPORTE + "' "
+					+ "\npara que possamos resolver o problema o mais rápido possível! Pedimos desculpa pelos incovenientes causados!";
+			JOptionPane.showMessageDialog(null, message, "Sucesso", JOptionPane.INFORMATION_MESSAGE,
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+			Desktop.getDesktop().open(new File(Main.BUG_REPORTS_DIR));
+			Log.getInstance().printLog(message);
+			file_text.delete();
+			dispose();
 		} catch (Exception e) {
 			String message = "Erro ao criar o relatório de erros! - " + e.getMessage();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
 					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			Log.getInstance().printLog(message);
 		}
-		
+
 	}
 
 	/**
 	 * Torna o diálogo visível.
 	 */
-	public void open(){
+	public void open() {
 		setVisible(true);
 	}
 

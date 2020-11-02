@@ -13,10 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Properties;
@@ -198,7 +197,7 @@ public class Utils {
 	 * @return o nome do ficheiro de backup criado.
 	 */
 	public String backupDirect() {
-		String name = "IB_Fam_com_Cristo-Backup-" + new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date())
+		String name = "IB_Fam_com_Cristo-Backup-" + DateTimeFormatter.ofPattern("ddMMMyyyy-HH'h'mm").format(LocalDateTime.now())
 				+ ".fccb";
 		ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
 		return Main.BACKUP_DIR + name;
