@@ -48,10 +48,10 @@ public class DataCellEditor extends DateTableEditor {
 		getDatePicker().getComponentToggleCalendarButton().setIcon(MaterialImageFactory.getInstance()
 				.getImage(MaterialIconFont.DATE_RANGE, Utils.getInstance().getCurrentTheme().getColorIcons()));
 
-		InputMap iMap2 = getDatePicker().getComponentDateTextField().getInputMap(JComponent.WHEN_FOCUSED);
-		iMap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
-		ActionMap aMap2 = getDatePicker().getComponentDateTextField().getActionMap();
-		aMap2.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
+		InputMap iMap = getDatePicker().getComponentDateTextField().getInputMap(JComponent.WHEN_FOCUSED);
+		iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), KeyEvent.getKeyText(KeyEvent.VK_ENTER));
+		ActionMap aMap = getDatePicker().getComponentDateTextField().getActionMap();
+		aMap.put(KeyEvent.getKeyText(KeyEvent.VK_ENTER), new AbstractAction() {
 			/**
 			 * 
 			 */

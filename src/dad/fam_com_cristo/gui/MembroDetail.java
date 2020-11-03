@@ -43,7 +43,6 @@ import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 import dad.fam_com_cristo.Main;
-import dad.fam_com_cristo.gui.themes.DateChooser;
 import dad.fam_com_cristo.table.command.AtualizaMembro;
 import dad.fam_com_cristo.table.command.CompositeCommand;
 import dad.fam_com_cristo.table.models.TableModelMembro;
@@ -52,6 +51,7 @@ import dad.fam_com_cristo.types.enumerados.Estado_Civil;
 import dad.fam_com_cristo.types.enumerados.Sexo;
 import dad.fam_com_cristo.types.enumerados.Sim_Nao;
 import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
+import dad.recursos.DateChooser;
 import dad.recursos.ImageViewer;
 import dad.recursos.Utils;
 import mdlaf.utils.MaterialImageFactory;
@@ -179,7 +179,8 @@ public class MembroDetail extends JDialog {
 		b_exportar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				save(false);
-				membro.savePdf();
+				if (membro != null)
+					membro.savePdf();
 			}
 		});
 		botoesSecund.add(b_exportar, "flowy,cell 3 0");
@@ -624,7 +625,6 @@ public class MembroDetail extends JDialog {
 				} else
 					dispose();
 			}
-
 		});
 
 		addImage.addActionListener(new Add_Image());
@@ -761,6 +761,7 @@ public class MembroDetail extends JDialog {
 						new AtualizaMembro("Data_Batismo", membro, data_batismo),
 						new AtualizaMembro("Observacoes", membro, observacoes)));
 				TableModelMembro.getInstance().fireTableDataChanged();
+				TableModelMembro.getInstance().atualizarTextFieldsNumeros();
 			}
 			savedState();
 			idade.setText(String.valueOf(membro.getIdade()));

@@ -125,7 +125,7 @@ public class AtualizaMembro implements Command {
 			case "Telefone":
 				String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ", "");
 				if (telefone.length() != 11)
-					telefone = "00000000000";
+					telefone = "";
 				pst.setString(1, telefone);
 				membro.setTelefone(telefone);
 				break;

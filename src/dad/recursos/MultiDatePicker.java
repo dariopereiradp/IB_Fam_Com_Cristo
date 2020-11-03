@@ -8,7 +8,6 @@ import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 import dad.fam_com_cristo.gui.DataGui;
-import dad.fam_com_cristo.gui.themes.DateChooser;
 
 /**
  * Painel que contem 2 DateChooser sincronizados, para escolher uma data inicial e data final

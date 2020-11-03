@@ -332,8 +332,14 @@ public class Membro implements Comparable<Membro> {
 	 */
 	public String getPhoneString() {
 		String phone = getTelefone();
-		return "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
+		String formatada = "";
+		try {
+		formatada =  "(" + phone.substring(0, 2) + ") " + phone.substring(2, 3) + " " + phone.substring(3, 7) + "-"
 				+ phone.substring(7);
+		} catch (Exception e) {
+		}
+		
+		return formatada;
 	}
 
 	/**

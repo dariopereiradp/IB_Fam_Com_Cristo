@@ -436,7 +436,7 @@ public class MembroPanel extends JPanel {
 		panel_8 = new JPanel();
 		both.add(panel_8);
 
-		lblAdultos = new JLabel("Adultos (+18): ");
+		lblAdultos = new JLabel("Adultos (18+): ");
 		panel_8.add(lblAdultos);
 
 		jft_adultos = new JTextField("0");
@@ -456,7 +456,7 @@ public class MembroPanel extends JPanel {
 		panel_10 = new JPanel();
 		both.add(panel_10);
 
-		lblCrianas = new JLabel("Crian\u00E7as (12-)");
+		lblCrianas = new JLabel("Crian\u00E7as (-12)");
 		panel_10.add(lblCrianas);
 
 		jft_criancas = new JTextField("0");

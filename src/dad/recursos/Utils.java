@@ -314,7 +314,6 @@ public class Utils {
 		DatePickerSettings dateSettings = new DatePickerSettings(new Locale("pt", "br"));
 		dateSettings.setFormatForDatesBeforeCommonEra(DATE_FORMAT);
 		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT);
-		dateSettings.setAllowKeyboardEditing(false);
 		dateSettings.setAllowEmptyDates(false);
 
 		dateSettings.setColor(DateArea.TextMonthAndYearMenuLabels, getCurrentTheme().getColorIcons());

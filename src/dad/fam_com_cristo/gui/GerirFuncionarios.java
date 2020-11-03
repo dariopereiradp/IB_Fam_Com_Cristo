@@ -1,6 +1,7 @@
 package dad.fam_com_cristo.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,6 +44,7 @@ public class GerirFuncionarios extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle("Gerir Funcionários");
 		setBounds(100, 100, 1100, 350);
+		setMinimumSize(new Dimension(1100, 350));
 		getContentPane().setLayout(new BorderLayout());
 		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		contentPanel.setLayout(new BorderLayout());

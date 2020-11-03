@@ -54,7 +54,7 @@ public class Config extends JDialog {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle("Configurações");
-		setBounds(100, 100, 450, 350);
+		setBounds(100, 100, 480, 350);
 		setResizable(false);
 		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		getContentPane().setLayout(new BorderLayout());
@@ -129,7 +129,7 @@ public class Config extends JDialog {
 		contentPanel.add(bAlterarPass);
 
 		pastor = new JTextField();
-		pastor.setBounds(215, 70, 210, 30);
+		pastor.setBounds(215, 70, 225, 30);
 		contentPanel.add(pastor);
 		pastor.setColumns(10);
 		pastor.setText(pastorName);
@@ -155,7 +155,7 @@ public class Config extends JDialog {
 							int ok = JOptionPane.showOptionDialog(Config.this,
 									"Tem certeza que quer alterar o nome do pastor titular?", "ALTERAR NOME DO PASTOR",
 									JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-									new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
+									new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[0]);
 							if (ok == JOptionPane.OK_OPTION) {
 								JPasswordField pass = new JPasswordField();
 								int ok1 = JOptionPane.showConfirmDialog(null, pass,

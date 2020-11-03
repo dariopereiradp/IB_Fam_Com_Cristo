@@ -684,7 +684,7 @@ public class Estatisticas extends JDialog {
 		n_casados.setBounds(190, 317, 62, 25);
 		numeros.add(n_casados);
 
-		JLabel lblAdultos = new JLabel("Adultos (+18): ");
+		JLabel lblAdultos = new JLabel("Adultos (18+): ");
 		lblAdultos.setBounds(10, 361, 171, 25);
 		numeros.add(lblAdultos);
 
@@ -783,7 +783,7 @@ public class Estatisticas extends JDialog {
 		n_crian_mul.setBounds(1080, 456, 62, 25);
 		numeros.add(n_crian_mul);
 
-		JLabel lblCasadoshomens = new JLabel("Solteiros:");
+		JLabel lblCasadoshomens = new JLabel("Solteiros (ambos):");
 		lblCasadoshomens.setBounds(430, 317, 179, 25);
 		numeros.add(lblCasadoshomens);
 
@@ -794,7 +794,7 @@ public class Estatisticas extends JDialog {
 		n_solt.setBounds(630, 317, 62, 25);
 		numeros.add(n_solt);
 
-		JLabel lblDivorciados = new JLabel("Divorciados:");
+		JLabel lblDivorciados = new JLabel("Divorciados (ambos):");
 		lblDivorciados.setBounds(880, 317, 179, 25);
 		numeros.add(lblDivorciados);
 

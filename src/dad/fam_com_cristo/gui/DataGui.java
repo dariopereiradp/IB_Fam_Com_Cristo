@@ -200,7 +200,7 @@ public class DataGui extends JFrame {
 		mnArquivo = new JMenu("Arquivo");
 		menuBar.add(mnArquivo);
 
-		menuEstatisticas = new JMenuItem("Estat\u00EDsticas");
+		menuEstatisticas = new JMenuItem("Estat\u00EDsticas (Ctrl+E)");
 		menuEstatisticas.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.INSERT_CHART,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuEstatisticas.addActionListener(new ActionListener() {
@@ -210,7 +210,7 @@ public class DataGui extends JFrame {
 		});
 		mnArquivo.add(menuEstatisticas);
 
-		menuBackup = new JMenuItem("Cópia de segurança");
+		menuBackup = new JMenuItem("C\u00F3pia de seguran\u00E7a (Ctrl+S)");
 		menuBackup.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.BACKUP,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuBackup.addActionListener(new ActionListener() {
@@ -220,7 +220,7 @@ public class DataGui extends JFrame {
 		});
 		mnArquivo.add(menuBackup);
 
-		menuImportar = new JMenuItem("Restaurar Cópia de Segurança");
+		menuImportar = new JMenuItem("Restaurar C\u00F3pia de Seguran\u00E7a (Ctrl+R)");
 		menuImportar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.RESTORE,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnArquivo.add(menuImportar);
@@ -267,7 +267,7 @@ public class DataGui extends JFrame {
 		else
 			mnLight.setSelected(true);
 
-		menuConfig = new JMenuItem("Outra configura\u00E7\u00F5es");
+		menuConfig = new JMenuItem("Outra configura\u00E7\u00F5es (Ctrl+A)");
 		menuConfig.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.SETTINGS,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnConf.add(menuConfig);
@@ -277,24 +277,23 @@ public class DataGui extends JFrame {
 			}
 		});
 
-		menuAtualizar = new JMenuItem("Atualizar Tabelas");
+		menuAtualizar = new JMenuItem("Atualizar Tabelas (F5)");
 		menuAtualizar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.UPDATE,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		menuAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				atualizarAction();
+			}
+		});
 		mnArquivo.add(menuAtualizar);
 
-		mnLimpar = new JMenuItem("Limpar espa\u00E7o");
+		mnLimpar = new JMenuItem("Limpar espa\u00E7o (Ctrl+L)");
 		mnLimpar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.CLEAR_ALL,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnLimpar.setToolTipText("Apaga os arquivos de logs antigos, que são desnecessários");
 		mnLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ok = JOptionPane.showOptionDialog(null,
-						"Os arquivos de logs antigos serão apagados. Isso não influencia o funcionamento do programa.\n"
-								+ "Tem a certeza que quer limpar?",
-						"Limpar espaço", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-						new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
-				if (ok == JOptionPane.YES_OPTION)
-					Log.limpar();
+				limparLogsAction();
 			}
 		});
 		mnArquivo.add(mnLimpar);
@@ -322,7 +321,7 @@ public class DataGui extends JFrame {
 		menuRefazer.setEnabled(false);
 		mnEditar.add(menuRefazer);
 
-		menuOrdenar = new JMenuItem("Ordenar");
+		menuOrdenar = new JMenuItem("Ordenar (Ctrl+O)");
 		menuOrdenar.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.REORDER,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mnEditar.add(menuOrdenar);
@@ -537,7 +536,7 @@ public class DataGui extends JFrame {
 		mnAjuda = new JMenu("Ajuda");
 		menuBar.add(mnAjuda);
 
-		mntmRelatarErro = new JMenuItem("Relatar erro");
+		mntmRelatarErro = new JMenuItem("Relatar erro (F2)");
 		mntmRelatarErro.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.BUG_REPORT,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		mntmRelatarErro.addActionListener(new ActionListener() {
@@ -546,32 +545,19 @@ public class DataGui extends JFrame {
 			}
 		});
 
-		menuManual = new JMenuItem("Manual de Instru\u00E7\u00F5es");
+		menuManual = new JMenuItem("Manual de Instru\u00E7\u00F5es (Ctrl+M)");
 		menuManual.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.BOOK,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String path = System.getenv("ProgramFiles(X86)") + System.getProperty("file.separator")
-						+ "Igreja Batista Famílias com Cristo/" + "Manual_Instrucoes_" + Main.SIGLA + "_v"
-						+ Main.VERSION + ".pdf";
-				try {
-					Desktop.getDesktop().open(new File(path));
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null,
-							"Ocorreu um erro ao abrir o manual! Pode ter sido apagado...\n"
-									+ "Consulte o manual que veio com o programa ou entre em contato com '"
-									+ Main.EMAIL_SUPORTE + "'",
-							"Manual de Instruções - Erro", JOptionPane.OK_OPTION,
-							new ImageIcon(getClass().getResource("/FC_SS.jpg")));
-					e1.printStackTrace();
-				}
+				openManual();
 			}
 		});
 
 		mnAjuda.add(menuManual);
 		mnAjuda.add(mntmRelatarErro);
 
-		menuSobre = new JMenuItem("Sobre");
+		menuSobre = new JMenuItem("Sobre (F1)");
 		menuSobre.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.HELP,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		menuSobre.addActionListener(new ActionListener() {
@@ -742,14 +728,52 @@ public class DataGui extends JFrame {
 		@Override
 		public boolean dispatchKeyEvent(KeyEvent e) {
 			if (e.getID() == KeyEvent.KEY_PRESSED) {
-				if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-					anular();
+				if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
+					switch (e.getKeyCode()) {
+					case KeyEvent.VK_Z:
+						anular();
+						break;
+					case KeyEvent.VK_Y:
+						refazer();
+						break;
+					case KeyEvent.VK_E:
+						new Estatisticas().open();
+						break;
+					case KeyEvent.VK_A:
+						new Config().open();
+						break;
+					case KeyEvent.VK_L:
+						limparLogsAction();
+						break;
+					case KeyEvent.VK_R:
+						new Restauro().open();
+						break;
+					case KeyEvent.VK_S:
+						Utils.getInstance().backup();
+						break;
+					case KeyEvent.VK_M:
+						openManual();
+						break;
+					case KeyEvent.VK_O:
+						ordenar();
+						break;
+					default:
+						break;
+					}
 					e.consume();
-				} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-					refazer();
+				} else if (e.getKeyCode() == KeyEvent.VK_F5) {
+					atualizarAction();
 					e.consume();
 				}
-
+				else if (e.getKeyCode() == KeyEvent.VK_F1) {
+					new About().open();
+					e.consume();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_F2) {
+					new BugReport().open();
+					e.consume();
+				}
+				
 			}
 			return false;
 		}
@@ -903,6 +927,44 @@ public class DataGui extends JFrame {
 
 	public JCheckBox getCheckSaidas() {
 		return checkSaidas;
+	}
+
+	/**
+	 * Pergunta se pretende fazer a limpeza de logs
+	 */
+	private void limparLogsAction() {
+		int ok = JOptionPane.showOptionDialog(null,
+				"Os arquivos de logs antigos serão apagados. Isso não influencia o funcionamento do programa.\n"
+						+ "Tem a certeza que quer limpar?",
+				"Limpar espaço", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+				new ImageIcon(getClass().getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
+		if (ok == JOptionPane.YES_OPTION)
+			Log.limpar();
+	}
+
+	/**
+	 * Tenta abrir o manual de instruções, se existir
+	 */
+	private void openManual() {
+		String path = System.getenv("ProgramFiles(X86)") + System.getProperty("file.separator")
+				+ "Igreja Batista Famílias com Cristo/" + "Manual_Instrucoes_" + Main.SIGLA + "_v" + Main.VERSION
+				+ ".pdf";
+		try {
+			Desktop.getDesktop().open(new File(path));
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Ocorreu um erro ao abrir o manual! Pode ter sido apagado...\n"
+					+ "Consulte o manual que veio com o programa ou entre em contato com '" + Main.EMAIL_SUPORTE + "'",
+					"Manual de Instruções - Erro", JOptionPane.OK_OPTION,
+					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+		}
+	}
+
+	/**
+	 * Atualiza as tabelas
+	 */
+	private void atualizarAction() {
+		TableModelMembro.getInstance().fireTableDataChanged();
+		TableModelFinancas.getInstance().fireTableDataChanged();
 	}
 
 	/**
