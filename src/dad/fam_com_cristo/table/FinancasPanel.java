@@ -70,9 +70,9 @@ public class FinancasPanel extends JPanel {
 	private TableModelFinancas modelFinancas;
 	private JPanel pInferior, panel2;
 	private JFormattedTextField jtfTotal;
-	private String[] columnToolTips = { "Código de identificação da transação (por ordem sequencial)",
-			"Data em que ocorreu a transação", "Valor numérico da transação", "Tipo da transação: entrada ou saída",
-			"Descrção da transação (dízimo, oferta, etc...)", "Valor total na data da transação" };
+	private String[] columnToolTips = { "Data em que ocorreu a transação", "Valor numérico da transação",
+			"Tipo da transação: entrada ou saída", "Descrção da transação (dízimo, oferta, etc...)",
+			"Valor total na data da transação" };
 	private JPanel panel_total;
 	private JPanel panel;
 	private JLabel lTotalEnt;
@@ -105,31 +105,29 @@ public class FinancasPanel extends JPanel {
 	 * Usado para garantir que tudo muda ao mudar o tema (Dark/Light)
 	 */
 	public void recreate() {
-		financas = new Table(modelFinancas, columnToolTips, new boolean[] { false, true, true, true, true, false });
+		financas = new Table(modelFinancas, columnToolTips, new boolean[] { true, true, true, true, false });
 
 		financas.setPreferredScrollableViewportSize(new Dimension(800, 600));
 
-		financas.getColumnModel().getColumn(0).setCellRenderer(new CellRendererNoImage());
+		financas.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
 		financas.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
-		financas.getColumnModel().getColumn(4).setCellRenderer(new CellRenderer());
-		financas.getColumnModel().getColumn(5).setCellRenderer(new CellRendererNoImage());
+		financas.getColumnModel().getColumn(4).setCellRenderer(new CellRendererNoImage());
 
-		financas.getColumnModel().getColumn(1).setCellEditor(new DataCellEditor());
-		financas.getColumnModel().getColumn(2).setCellEditor(new CurrencyCell());
+		financas.getColumnModel().getColumn(0).setCellEditor(new DataCellEditor());
+		financas.getColumnModel().getColumn(1).setCellEditor(new CurrencyCell());
 
-		financas.getColumnModel().getColumn(0).setPreferredWidth(130);
+		financas.getColumnModel().getColumn(0).setPreferredWidth(160);
 		financas.getColumnModel().getColumn(1).setPreferredWidth(160);
 		financas.getColumnModel().getColumn(2).setPreferredWidth(160);
-		financas.getColumnModel().getColumn(3).setPreferredWidth(160);
-		financas.getColumnModel().getColumn(4).setPreferredWidth(500);
-		financas.getColumnModel().getColumn(0).setMinWidth(130);
+		financas.getColumnModel().getColumn(3).setPreferredWidth(500);
+
+		financas.getColumnModel().getColumn(0).setMinWidth(160);
 		financas.getColumnModel().getColumn(1).setMinWidth(160);
 		financas.getColumnModel().getColumn(2).setMinWidth(160);
-		financas.getColumnModel().getColumn(3).setMinWidth(160);
-		financas.getColumnModel().getColumn(4).setMinWidth(450);
-		financas.getColumnModel().getColumn(5).setMinWidth(130);
+		financas.getColumnModel().getColumn(3).setMinWidth(450);
+		financas.getColumnModel().getColumn(4).setMinWidth(130);
 
 		JComboBox<Tipo_Transacao> tipo_transacao = new JComboBox<Tipo_Transacao>();
 		tipo_transacao.setBounds(370, 255, 191, 25);
@@ -138,7 +136,7 @@ public class FinancasPanel extends JPanel {
 		DefaultCellEditor tipoCell = new DefaultCellEditor(tipo_transacao);
 		tipoCell.setClickCountToStart(2);
 
-		financas.getColumnModel().getColumn(3).setCellEditor(tipoCell);
+		financas.getColumnModel().getColumn(2).setCellEditor(tipoCell);
 
 		JScrollPane jsFinancas = new JScrollPane(financas);
 		add(jsFinancas, BorderLayout.CENTER);
@@ -185,6 +183,7 @@ public class FinancasPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				TableModelFinancas.getInstance().fireTableDataChanged();
+				TableModelFinancas.getInstance().atualizarTextFieldsNumeros();
 			}
 		});
 
@@ -480,14 +479,14 @@ public class FinancasPanel extends JPanel {
 		table.setRowSorter(sorter);
 		switch (descricao) {
 		case "Entradas":
-			filters.add(RowFilter.regexFilter(Tipo_Transacao.ENTRADA.getDescricao(), 3));
+			filters.add(RowFilter.regexFilter(Tipo_Transacao.ENTRADA.getDescricao(), 2));
 			break;
 		case "Saídas":
-			filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 3));
+			filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 2));
 			break;
 		case "Todos":
-			filters.add(RowFilter.regexFilter(Tipo_Transacao.ENTRADA.getDescricao(), 3));
-			filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 3));
+			filters.add(RowFilter.regexFilter(Tipo_Transacao.ENTRADA.getDescricao(), 2));
+			filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 2));
 			break;
 		default:
 			break;
@@ -497,7 +496,7 @@ public class FinancasPanel extends JPanel {
 
 				@Override
 				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-					LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1))
+					LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 0))
 							.getData();
 					if (data.isAfter(init) || data.isEqual(init))
 						return true;
@@ -512,7 +511,7 @@ public class FinancasPanel extends JPanel {
 
 				@Override
 				public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
-					LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 1))
+					LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(), 0))
 							.getData();
 					if (data.isBefore(fim) || data.isEqual(fim))
 						return true;

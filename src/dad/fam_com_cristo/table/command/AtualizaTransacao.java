@@ -6,9 +6,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 
-import javax.swing.table.AbstractTableModel;
-
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
+import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.types.Transacao;
 import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
 import dad.recursos.Log;
@@ -29,10 +28,10 @@ public class AtualizaTransacao implements Command {
 	private String coluna;
 	private Object valor;
 	private Object old;
-	private AbstractTableModel table;
+	private TableModelFinancas table;
 
-	public AtualizaTransacao(AbstractTableModel table, String coluna, Transacao transacao, Object valor) {
-		this.table = table;
+	public AtualizaTransacao(String coluna, Transacao transacao, Object valor) {
+		this.table = TableModelFinancas.getInstance();
 		this.coluna = coluna;
 		this.transacao = transacao;
 		this.valor = valor;
@@ -95,7 +94,9 @@ public class AtualizaTransacao implements Command {
 				break;
 			}
 			pst.execute();
+			table.getTransacoes().sort(null);
 			table.fireTableDataChanged();
+			table.atualizarTextFieldsNumeros();
 		} catch (Exception e) {
 			Log.getInstance().printLog("Erro ao atualizar " + coluna);
 			e.printStackTrace();
@@ -134,7 +135,9 @@ public class AtualizaTransacao implements Command {
 			}
 			pst.setInt(2, transacao.getId());
 			pst.execute();
+			table.getTransacoes().sort(null);
 			table.fireTableDataChanged();
+			table.atualizarTextFieldsNumeros();
 		} catch (Exception e) {
 			Log.getInstance().printLog("Erro ao anular a ação!\n" + e.getMessage());
 			e.printStackTrace();

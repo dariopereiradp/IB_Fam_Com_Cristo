@@ -862,10 +862,10 @@ public class DataGui extends JFrame {
 			andFilters.add(
 					RowFilter.regexFilter((Pattern.compile("(?i)" + filtro, Pattern.CASE_INSENSITIVE).toString())));
 			if (checkEntradas.isSelected()) {
-				filters.add(RowFilter.regexFilter(Tipo_Transacao.ENTRADA.getDescricao(), 3));
+				filters.add(RowFilter.regexFilter(Tipo_Transacao.ENTRADA.getDescricao(), 2));
 			}
 			if (checkSaidas.isSelected()) {
-				filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 3));
+				filters.add(RowFilter.regexFilter(Tipo_Transacao.SAIDA.getDescricao(), 2));
 			}
 			if (datas.getInitDate() != null) {
 				andFilters.add(new RowFilter<TableModelFinancas, Object>() {
@@ -873,7 +873,7 @@ public class DataGui extends JFrame {
 					@Override
 					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
 						LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(),
-								1)).getData();
+								0)).getData();
 						if (data.isAfter(datas.getInitDate()) || data.isEqual(datas.getInitDate()))
 							return true;
 						else
@@ -887,7 +887,7 @@ public class DataGui extends JFrame {
 					@Override
 					public boolean include(Entry<? extends TableModelFinancas, ? extends Object> entry) {
 						LocalDate data = ((DataPesquisavel) entry.getModel().getValueAt((Integer) entry.getIdentifier(),
-								1)).getData();
+								0)).getData();
 						if (data.isBefore(datas.getFinalDate()) || data.isEqual(datas.getFinalDate()))
 							return true;
 						else

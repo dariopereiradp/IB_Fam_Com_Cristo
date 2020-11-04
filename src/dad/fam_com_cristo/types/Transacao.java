@@ -153,4 +153,12 @@ public class Transacao implements Comparable<Transacao> {
 			return r;
 	}
 
+	@Override
+	public String toString() {
+		return "Transacao [id=" + id + ", value=" + value + ", tipo=" + tipo + ", descricao=" + descricao + ", data="
+				+ data + ", total=" + total + "]";
+	}
+	
+	
+
 }

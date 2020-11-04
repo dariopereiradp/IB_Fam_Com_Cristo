@@ -234,7 +234,7 @@ public class TableModelMembro extends AbstractTableModel {
 					String telefone = ((String) valor).replace("-", "").replace("(", "").replace(")", "").replace(" ",
 							"");
 					if (!membro.getTelefone().equals(telefone))
-						if (telefone.length() == 11)
+						if (telefone.length() == 11 || telefone.length() == 0)
 							undoManager.execute(new AtualizaMembro("Telefone", membro, valor));
 					break;
 				case 3:

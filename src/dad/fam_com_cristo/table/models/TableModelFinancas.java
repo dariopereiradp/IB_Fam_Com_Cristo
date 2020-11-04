@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class TableModelFinancas extends AbstractTableModel {
 	private static final long serialVersionUID = 3247984074345998765L;
 	private static TableModelFinancas INSTANCE;
 	private ArrayList<Transacao> transacoes;
-	private String[] colunas = { "Nº Transação", "Data", "Valor", "Tipo", "Descrição", "Sub-total" };
+	private String[] colunas = { "Data", "Valor", "Tipo", "Descrição", "Sub-total" };
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
@@ -58,7 +59,7 @@ public class TableModelFinancas extends AbstractTableModel {
 		int maior = 0;
 		try {
 			con = new ConexaoFinancas().getConnection();
-			pst = con.prepareStatement("select * from financas order by ID");
+			pst = con.prepareStatement("select * from financas order by Data");
 			rs = pst.executeQuery();
 			if (rs.next()) {
 				do {
@@ -76,6 +77,7 @@ public class TableModelFinancas extends AbstractTableModel {
 				} while (rs.next());
 			}
 			Transacao.countID = maior;
+			transacoes.sort(null);
 			fireTableDataChanged();
 			Log.getInstance().printLog("Base de dados Financas carregada com sucesso!");
 		} catch (Exception e) {
@@ -129,38 +131,60 @@ public class TableModelFinancas extends AbstractTableModel {
 	}
 
 	/**
-	 * Adiciona uma transacao à base de dados.
+	 * Adiciona uma transacao à base de dados, atualizando, se necessário, os demais
+	 * campos
 	 * 
 	 * @param transacao - transacao que se pretende adicionar.
 	 */
 	public void addTransacao(Transacao transacao) {
-		undoManager.execute(new AddTransacao(transacao));
-		fireTableDataChanged();
-	}
+		if (transacoes.size() == 0 || !transacao.getData().isBefore(transacoes.get(transacoes.size() - 1).getData())) {
+			undoManager.execute(new AddTransacao(transacao));
+			fireTableDataChanged();
+		} else {
+			transacoes.add(transacao);
+			transacoes.sort(null);
+			int rowIndex = transacoes.indexOf(transacao);
+			BigDecimal oldTotal;
+			if (rowIndex == 0)
+				oldTotal = new BigDecimal("0");
+			else
+				oldTotal = transacoes.get(rowIndex - 1).getTotal();
+			transacoes.remove(transacao);
 
-	/**
-	 * Remove os membros que têm os indexes passados no array rows.
-	 * 
-	 * @param rows - array que contém os indexes dos membros para apagar.
-	 */
-	public void removerTransacao(int[] rows) {
-		undoManager.execute(new RemoverTransacao(rows));
+			if (transacao.getTipo() == Tipo_Transacao.ENTRADA)
+				transacao.setTotal(transacao.getValue().add(oldTotal));
+			else
+				transacao.setTotal(oldTotal.subtract(transacao.getValue()));
+
+			Command[] commands = new Command[1 + transacoes.size() - rowIndex];
+			int index = 0;
+			commands[index++] = new AddTransacao(transacao);
+			BigDecimal diferencaBase = transacao.getValue();
+			for (int i = rowIndex; i < transacoes.size(); i++) {
+				Transacao t = transacoes.get(i);
+				BigDecimal diferenca;
+				if (transacao.getTipo() == Tipo_Transacao.ENTRADA)
+					diferenca = t.getTotal().add(diferencaBase);
+				else
+					diferenca = t.getTotal().subtract(diferencaBase);
+				commands[index++] = new AtualizaTransacao("Total", t, diferenca);
+			}
+			undoManager.execute(new CompositeCommand("Atualizar valor", commands));
+		}
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return transacoes.get(rowIndex).getId();
-		case 1:
 			return transacoes.get(rowIndex).getDataPesquisavel();
-		case 2:
+		case 1:
 			return transacoes.get(rowIndex).getValueMoney();
-		case 3:
+		case 2:
 			return transacoes.get(rowIndex).getTipo();
-		case 4:
+		case 3:
 			return transacoes.get(rowIndex).getDescricao();
-		case 5:
+		case 4:
 			return transacoes.get(rowIndex).getTotalMoney();
 		default:
 			return transacoes.get(rowIndex);
@@ -172,14 +196,12 @@ public class TableModelFinancas extends AbstractTableModel {
 	public Class getColumnClass(int column) {
 		switch (column) {
 		case 0:
-			return Integer.class;
-		case 1:
 			return DataPesquisavel.class;
-		case 2:
+		case 1:
 			return Money.class;
-		case 3:
+		case 2:
 			return Tipo_Transacao.class;
-		case 5:
+		case 3:
 			return Money.class;
 		default:
 			return String.class;
@@ -194,31 +216,98 @@ public class TableModelFinancas extends AbstractTableModel {
 					valor = "-";
 				Transacao transacao = transacoes.get(rowIndex);
 				switch (columnIndex) {
-				case 1:
+				case 0:
 					LocalDate data = (LocalDate) valor;
 					if (!data.isEqual(transacao.getData())) {
-						undoManager.execute(new AtualizaTransacao(this, "Data", transacao, valor));
+						LocalDate oldData = transacao.getData();
+						transacao.setData(data);
+						transacoes.sort(null);
+						int rowIndex1 = transacoes.indexOf(transacao);
+						BigDecimal oldTotal;
+						if (rowIndex1 == 0)
+							oldTotal = new BigDecimal("0");
+						else
+							oldTotal = transacoes.get(rowIndex1 - 1).getTotal();
+						transacao.setData(oldData);
+						transacoes.sort(null);
+
+						BigDecimal novoTotal;
+						if (transacao.getTipo() == Tipo_Transacao.ENTRADA)
+							novoTotal = transacao.getValue().add(oldTotal);
+						else
+							novoTotal = oldTotal.subtract(transacao.getValue());
+						int commandsSize = rowIndex > rowIndex1 ? 2 + rowIndex - rowIndex1 : 2 + rowIndex1 - rowIndex;
+						Command[] commands = new Command[commandsSize];
+						int index = 0;
+						commands[index++] = new AtualizaTransacao("Data", transacao, valor);
+						commands[index++] = new AtualizaTransacao("Total", transacao, novoTotal);
+						BigDecimal diferencaBase = transacao.getValue();
+						if (rowIndex >= rowIndex1) {
+							for (int i = rowIndex1; i < rowIndex; i++) {
+								Transacao t = transacoes.get(i);
+								BigDecimal diferenca;
+								if (transacao.getTipo() == Tipo_Transacao.ENTRADA)
+									diferenca = t.getTotal().add(diferencaBase);
+								else
+									diferenca = t.getTotal().subtract(diferencaBase);
+								commands[index++] = new AtualizaTransacao("Total", t, diferenca);
+							}
+						} else {
+							for (int i = rowIndex + 1; i <= rowIndex1; i++) {
+								Transacao t = transacoes.get(i);
+								BigDecimal diferenca;
+								if (transacao.getTipo() == Tipo_Transacao.SAIDA)
+									diferenca = t.getTotal().add(diferencaBase);
+								else
+									diferenca = t.getTotal().subtract(diferencaBase);
+								commands[index++] = new AtualizaTransacao("Total", t, diferenca);
+							}
+						}
+						undoManager.execute(new CompositeCommand("Atualizar data", commands));
+					}
+					break;
+				case 1:
+					if (transacao.getValue().compareTo((BigDecimal) valor) != 0
+							&& ((BigDecimal) valor).compareTo(new BigDecimal("0")) != 0) {
+						Command[] commands = new Command[1 + transacoes.size() - rowIndex];
+						int index = 0;
+						commands[index++] = new AtualizaTransacao("Valor", transacao, valor);
+						BigDecimal diferencaBase = transacao.getValue().subtract((BigDecimal) valor);
+						for (int i = rowIndex; i < transacoes.size(); i++) {
+							Transacao t = transacoes.get(i);
+							BigDecimal diferenca;
+							if (transacao.getTipo() == Tipo_Transacao.ENTRADA)
+								diferenca = t.getTotal().subtract(diferencaBase);
+							else
+								diferenca = t.getTotal().add(diferencaBase);
+							commands[index++] = new AtualizaTransacao("Total", t, diferenca);
+						}
+						undoManager.execute(new CompositeCommand("Atualizar valor", commands));
 					}
 					break;
 				case 2:
-					if (transacao.getValue().compareTo((BigDecimal) valor) != 0
-							&& ((BigDecimal) valor).compareTo(new BigDecimal("0")) != 0) {
-						BigDecimal diferenca = transacao.getValue().subtract((BigDecimal) valor);
-						diferenca = transacao.getTotal().subtract(diferenca);
-						undoManager.execute(new CompositeCommand("Atualizar valor",
-								new AtualizaTransacao(this, "Valor", transacao, valor),
-								new AtualizaTransacao(this, "Total", transacao, diferenca)));
+					Tipo_Transacao tipo = ((Tipo_Transacao) valor);
+					if (transacao.getTipo() != tipo) {
+						Command[] commands = new Command[1 + transacoes.size() - rowIndex];
+						int index = 0;
+						commands[index++] = new AtualizaTransacao("Tipo", transacao, valor);
+						BigDecimal diferencaBase = transacao.getValue().multiply(new BigDecimal("2"));
+						for (int i = rowIndex; i < transacoes.size(); i++) {
+							Transacao t = transacoes.get(i);
+							BigDecimal diferenca;
+							if (tipo == Tipo_Transacao.SAIDA)
+								diferenca = t.getTotal().subtract(diferencaBase);
+							else
+								diferenca = t.getTotal().add(diferencaBase);
+							commands[index++] = new AtualizaTransacao("Total", t, diferenca);
+						}
+						undoManager.execute(new CompositeCommand("Atualizar tipo", commands));
 					}
 					break;
 				case 3:
-					if (transacao.getTipo() != (Tipo_Transacao) valor) {
-						undoManager.execute(new AtualizaTransacao(this, "Tipo", transacao, valor));
-					}
-					break;
-				case 4:
 					String descricao = (String) valor;
 					if (!transacao.getDescricao().equals(descricao))
-						undoManager.execute(new AtualizaTransacao(this, "Descricao", transacao, valor));
+						undoManager.execute(new AtualizaTransacao("Descricao", transacao, valor));
 				default:
 					transacoes.get(rowIndex);
 					break;
@@ -247,17 +336,26 @@ public class TableModelFinancas extends AbstractTableModel {
 	}
 
 	/**
+	 * Remove os membros que têm os indexes passados no array rows.
+	 * 
+	 * @param rows - array que contém os indexes dos membros para apagar.
+	 */
+	public void removerTransacao(int[] rows) {
+		undoManager.execute(new RemoverTransacoes(rows));
+	}
+
+	/**
 	 * Classe que representa um comando para remover uma ou várias transaçõess
 	 * 
 	 * @author Dário Pereira
 	 *
 	 */
-	private class RemoverTransacao implements Command {
+	private class RemoverTransacoes implements Command {
 
 		private int[] rows;
 		private ArrayList<Transacao> remover = new ArrayList<>();
 
-		public RemoverTransacao(int[] rows) {
+		public RemoverTransacoes(int[] rows) {
 			this.rows = rows;
 		}
 
@@ -269,9 +367,10 @@ public class TableModelFinancas extends AbstractTableModel {
 					remover.add(transacoes.get(rows[i]));
 				}
 				transacoes.removeAll(remover);
+				transacoes.sort(null);
+				recalcularSubTotais(rows[0], transacoes.size());
 				fireTableDataChanged();
 				atualizarTextFieldsNumeros();
-				Log.getInstance().printLog("Transação(ões) apagada(s) com sucesso!");
 			} catch (Exception e) {
 				Log.getInstance().printLog("Erro ao apagar a(s) transação(ões)\n" + e.getMessage());
 				e.printStackTrace();
@@ -284,6 +383,8 @@ public class TableModelFinancas extends AbstractTableModel {
 				insertTransacao(remover.get(i), rows[i]);
 			}
 			atualizarTextFieldsNumeros();
+			transacoes.sort(null);
+			recalcularSubTotais(rows[0], transacoes.size());
 			fireTableDataChanged();
 		}
 
@@ -295,6 +396,32 @@ public class TableModelFinancas extends AbstractTableModel {
 		@Override
 		public String getName() {
 			return "Remover Transação";
+		}
+	}
+
+	private void recalcularSubTotais(int beginIndex, int endIndex) {
+		BigDecimal totalAnterior;
+		if (beginIndex == 0)
+			totalAnterior = new BigDecimal("0");
+		else
+			totalAnterior = transacoes.get(beginIndex - 1).getTotal();
+		for (int i = beginIndex; i < endIndex; i++) {
+			Transacao t = transacoes.get(i);
+			BigDecimal total;
+			if (t.getTipo() == Tipo_Transacao.ENTRADA)
+				total = totalAnterior.add(t.getValue());
+			else
+				total = totalAnterior.subtract(t.getValue());
+			totalAnterior = total;
+			t.setTotal(total);
+			try {
+				pst = con.prepareStatement("update financas set " + "Total" + "=? where ID=" + t.getId());
+				pst.setBigDecimal(1, total);
+				pst.execute();
+			} catch (SQLException e) {
+				Log.getInstance().printLog(getClass() + " - " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -317,6 +444,8 @@ public class TableModelFinancas extends AbstractTableModel {
 			try {
 				transacao.adicionarNaBaseDeDados();
 				transacoes.add(transacao);
+				transacoes.sort(null);
+				;
 				atualizarTextFieldsNumeros();
 			} catch (Exception e) {
 				Log.getInstance().printLog("Erro ao adicionar transação! " + e.getMessage());
@@ -329,12 +458,14 @@ public class TableModelFinancas extends AbstractTableModel {
 			transacao.removerBaseDeDados();
 			transacoes.remove(transacao);
 			atualizarTextFieldsNumeros();
+			transacoes.sort(null);
 			fireTableDataChanged();
 		}
 
 		@Override
 		public void redo() {
 			execute();
+			transacoes.sort(null);
 			fireTableDataChanged();
 		}
 
@@ -616,13 +747,9 @@ public class TableModelFinancas extends AbstractTableModel {
 	 * 
 	 * @return a data da transação mais antiga
 	 */
-	@SuppressWarnings("unchecked")
 	public LocalDate getOldestDate() {
-		ArrayList<Transacao> sorted = (ArrayList<Transacao>) transacoes.clone();
-
-		sorted.sort((o1, o2) -> o1.getData().compareTo(o2.getData()));
-		if (sorted.size() > 0)
-			return sorted.get(0).getData();
+		if (transacoes.size() > 0)
+			return transacoes.get(0).getData();
 		else
 			return LocalDate.now();
 	}

@@ -167,6 +167,7 @@ public class AtualizaMembro implements Command {
 			}
 			pst.execute();
 			table.fireTableDataChanged();
+			table.atualizarTextFieldsNumeros();
 		} catch (Exception e) {
 			Log.getInstance().printLog("Erro ao atualizar " + coluna);
 			e.printStackTrace();
@@ -246,6 +247,7 @@ public class AtualizaMembro implements Command {
 			pst.setInt(2, membro.getId());
 			pst.execute();
 			table.fireTableDataChanged();
+			table.atualizarTextFieldsNumeros();
 		} catch (Exception e) {
 			Log.getInstance().printLog("Erro ao anular a ação!\n" + e.getMessage());
 			e.printStackTrace();
