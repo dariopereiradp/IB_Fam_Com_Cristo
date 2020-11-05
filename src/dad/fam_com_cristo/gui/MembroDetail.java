@@ -481,6 +481,14 @@ public class MembroDetail extends JDialog {
 				apagar();
 			}
 		}
+		
+		JMenuItem menuVerImg = new JMenuItem("Abrir imagem");
+		menuVerImg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ImageViewer.show(MembroDetail.this, membro.getImg(), membro.getImageFile(),
+						new File(Main.SAVED_IMAGES + membro.getId() + ".jpg"));
+			}
+		});
 
 		JPopupMenu menuApagar = new JPopupMenu();
 		JMenuItem mAdd = new JMenuItem();
@@ -489,6 +497,7 @@ public class MembroDetail extends JDialog {
 		} else
 			mAdd.setText("Alterar Imagem");
 		mAdd.addActionListener(new Add_Image());
+		menuApagar.add(menuVerImg);
 		menuApagar.add(mAdd);
 		JMenuItem mApagar = new JMenuItem("Apagar");
 		menuApagar.add(mApagar);
@@ -502,9 +511,11 @@ public class MembroDetail extends JDialog {
 					@Override
 					public void run() {
 						if (image.getIcon() == null) {
+							menuVerImg.setVisible(false);
 							mAdd.setText("Adicionar Imagem");
 							mApagar.setEnabled(false);
 						} else {
+							menuVerImg.setVisible(true);
 							mAdd.setText("Alterar Imagem");
 							mApagar.setEnabled(true);
 						}

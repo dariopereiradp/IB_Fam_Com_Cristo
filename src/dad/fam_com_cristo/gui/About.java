@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -18,7 +19,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
@@ -134,11 +137,24 @@ public class About extends JDialog {
 				public void mouseClicked(MouseEvent evt) {
 					int count = evt.getClickCount();
 					if (count == 2) {
-						ImageViewer.showLogo(About.this, new ImageIcon(getClass().getResource("/FC.jpg")));
+						ImageViewer.show(About.this, new ImageIcon(getClass().getResource("/FC.jpg")),
+								new File(getClass().getResource("/FC.jpg").getFile()),
+								new File(Main.SAVED_IMAGES + "IBFC" + ".jpg"));
 					}
 				}
 
 			});
+			JPopupMenu popup = new JPopupMenu();
+			JMenuItem ver = new JMenuItem("Abrir logotipo");
+			ver.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ImageViewer.show(About.this, new ImageIcon(getClass().getResource("/FC.jpg")),
+							new File(getClass().getResource("/FC.jpg").getFile()),
+							new File(Main.SAVED_IMAGES + "IBFC" + ".jpg"));
+				}
+			});
+			popup.add(ver);
+			lTitle.setComponentPopupMenu(popup);
 			contentPanel.add(lTitle, BorderLayout.NORTH);
 		}
 		{

@@ -28,22 +28,27 @@ import net.miginfocom.swing.MigLayout;
 public class ImageViewer {
 
 	/**
-	 * Visualiza uma imagem 3x4 (177*2 x 263*2)
+	 * Visualiza uma imagem, mantendo o aspect ratio
 	 * 
 	 * @param img - imagem a ser visualizada
 	 */
 	public static void show(JDialog dialog, ImageIcon img, File source, File target) {
 		JDialog jdialog = new JDialog(dialog, ModalityType.DOCUMENT_MODAL);
 		jdialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		jdialog.setTitle(source.getName());
 		jdialog.getContentPane().setLayout(new MigLayout("al center center, wrap, gapy 15"));
 		jdialog.setIconImage(Toolkit.getDefaultToolkit().getImage((ImageViewer.class.getResource("/FC.jpg"))));
-		jdialog.setMinimumSize(new Dimension(177 * 2, 263 * 2));
+
+		Dimension size = new Dimension(600, 600);
+		jdialog.setSize(size);
 		jdialog.setResizable(false);
 		JLabel imageView = new JLabel("");
-		imageView.setMinimumSize(new Dimension(177 * 2, 263 * 2));
+		imageView.setMinimumSize(size);
+
+		Dimension scaled = getScaledDimension(new Dimension(img.getIconWidth(), img.getIconHeight()), size);
 		imageView.setBorder(new LineBorder(Color.BLACK, 2));
-		imageView
-				.setIcon(new ImageIcon(img.getImage().getScaledInstance(177 * 2, 236 * 2, Image.SCALE_AREA_AVERAGING)));
+		imageView.setIcon(new ImageIcon(img.getImage().getScaledInstance((int) scaled.getWidth(),
+				(int) scaled.getHeight(), Image.SCALE_AREA_AVERAGING)));
 		jdialog.getContentPane().add(imageView, "center");
 
 		imageView.setComponentPopupMenu(getPopupMenu(source, target));
@@ -51,28 +56,24 @@ public class ImageViewer {
 	}
 
 	/**
-	 * Visualiza a imagem com o tamanho do logotipo
-	 * @param img
+	 * Redimensiona a imagem sem perder o aspect ratio
+	 * @param imageSize - tamanho original da imagem
+	 * @param boundary - tamanho do painel que contém a imagem
+	 * @return
 	 */
-	public static void showLogo(JDialog dialog, ImageIcon img) {
-		JDialog jdialog = new JDialog(dialog, ModalityType.DOCUMENT_MODAL);
-		jdialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		jdialog.getContentPane().setLayout(new MigLayout("al center center, wrap, gapy 15"));
-		jdialog.setIconImage(Toolkit.getDefaultToolkit().getImage((ImageViewer.class.getResource("/FC.jpg"))));
-		jdialog.setMinimumSize(new Dimension(2873 / 4, 2420 / 4));
-		jdialog.setResizable(false);
-		JLabel imageView = new JLabel("");
-		imageView.setMinimumSize(new Dimension(2873 / 4, 2362 / 4));
-		imageView.setBorder(new LineBorder(Color.BLACK, 2));
-		imageView.setIcon(
-				new ImageIcon(img.getImage().getScaledInstance(2873 / 4, 2362 / 4, Image.SCALE_AREA_AVERAGING)));
-		jdialog.getContentPane().add(imageView, "center");
-		jdialog.setVisible(true);
+	public static Dimension getScaledDimension(Dimension imageSize, Dimension boundary) {
 
+	    double widthRatio = boundary.getWidth() / imageSize.getWidth();
+	    double heightRatio = boundary.getHeight() / imageSize.getHeight();
+	    double ratio = Math.min(widthRatio, heightRatio);
+
+	    return new Dimension((int) (imageSize.width  * ratio),
+	                         (int) (imageSize.height * ratio));
 	}
 
 	/**
 	 * PopoupMenu com a funcionalidade de salvar a imagem
+	 * 
 	 * @param source
 	 * @param target
 	 * @return
