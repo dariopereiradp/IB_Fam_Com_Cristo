@@ -134,8 +134,8 @@ public class TableFinancasToPDF {
 			descricaoSaldo
 					.add(" O saldo atual é: " + utils.getNumberFormatCurrency().format(financas.getTotal()) + ".\n");
 			descricaoSaldo.add(bullet);
-			descricaoSaldo.add(" O saldo total no último dia do período era: "
-					.concat(table.getRowCount() == 0 ? "R$0,00.\n" : table.getValueAt(table.getRowCount() - 1, 5) + ".\n"));
+			descricaoSaldo.add(" O saldo no último dia do período (filtrado) era: "
+					.concat(table.getRowCount() == 0 ? "R$0,00.\n" : table.getValueAt(table.getRowCount() - 1, 4) + ".\n"));
 			descricaoSaldo.add(bullet);
 			descricaoSaldo.add(" O total de entradas no período foi: "
 					+ utils.getNumberFormatCurrency().format(financas.getTotalEntradas(init, end)) + ".\n");
@@ -143,8 +143,8 @@ public class TableFinancasToPDF {
 			descricaoSaldo.add(" O total de saídas no período foi: "
 					+ utils.getNumberFormatCurrency().format(financas.getTotalSaidas(init, end)) + ".\n");
 			descricaoSaldo.add(bullet);
-			descricaoSaldo.add(" Foram registadas " + financas.getNumEntradasPorPeriodo(init, end) + " entradas e "
-					+ financas.getNumSaidasPorPeriodo(init, end) + " saídas durante o período.\n");
+			descricaoSaldo.add(" Foram registadas " + financas.getNumEntradasPorPeriodo(init, end) + " entrada(s) e "
+					+ financas.getNumSaidasPorPeriodo(init, end) + " saída(s) durante o período.\n");
 			descricaoSaldo.add(bullet);
 			descricaoSaldo.add(" O balanço do período foi (entradas-saídas): "
 					+ utils.getNumberFormatCurrency().format(financas.getTotalPeriod(init, end)) + ".");
@@ -156,10 +156,10 @@ public class TableFinancasToPDF {
 
 			// Tabela
 			((TableModelFinancas) table.getModel()).ordenar();
-			PdfPTable pdfTable = new PdfPTable(table.getColumnCount() - 1);
+			PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
 			pdfTable.setWidths(new int[] { 150, 150, 150, 400, 150 });
 			// adding table headers
-			for (int i = 1; i < table.getColumnCount(); i++) {
+			for (int i = 0; i < table.getColumnCount(); i++) {
 				Paragraph header;
 				header = new Paragraph(table.getColumnName(i).toUpperCase(),
 						FontFactory.getFont(FontFactory.COURIER_BOLD, 12));
@@ -170,7 +170,7 @@ public class TableFinancasToPDF {
 			}
 			// extracting data from the JTable and inserting it to PdfPTable
 			for (int rows = 0; rows < table.getRowCount(); rows++) {
-				for (int cols = 1; cols < table.getColumnCount(); cols++) {
+				for (int cols = 0; cols < table.getColumnCount(); cols++) {
 					Paragraph p = null;
 					p = new Paragraph(table.getModel().getValueAt(table.convertRowIndexToModel(rows), cols).toString(),
 							FontFactory.getFont(FontFactory.COURIER, 9));
@@ -182,11 +182,11 @@ public class TableFinancasToPDF {
 			pdfTable.setWidthPercentage(100);
 			doc.add(pdfTable);
 			doc.add(new Paragraph(" "));
-			doc.add(new Paragraph(" "));
 
 			// Assinatura
 			PdfPTable assinatura = new PdfPTable(1);
-			assinatura.setTotalWidth(240);
+			assinatura.setWidthPercentage(45f);
+			assinatura.setHorizontalAlignment(Element.ALIGN_RIGHT);
 
 			Paragraph assinatura_line = new Paragraph("_________________________________________",
 					FontFactory.getFont(FontFactory.COURIER, 9));
@@ -204,9 +204,12 @@ public class TableFinancasToPDF {
 			pastorFCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			pastorFCell.setBorder(Rectangle.NO_BORDER);
 			assinatura.addCell(pastorFCell);
+			
+			doc.add(new Paragraph(" "));
+			doc.add(assinatura);
 
-			assinatura.writeSelectedRows(0, -1, 315, assinatura.getTotalHeight() + doc.bottom(doc.bottomMargin()),
-					writer.getDirectContent());
+//			assinatura.writeSelectedRows(0, -1, 315, assinatura.getTotalHeight() + doc.bottom(doc.bottomMargin()),
+//					writer.getDirectContent());
 
 			// Save
 			doc.close();

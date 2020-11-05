@@ -115,6 +115,7 @@ public class TableMembrosToPDF {
 			}
 			doc.add(pdfTable);
 			doc.add(new Paragraph(" "));
+			
 			PdfPTable assin = new PdfPTable(1);
 			assin.setWidthPercentage(45f);
 			assin.setHorizontalAlignment(Element.ALIGN_RIGHT);
@@ -136,6 +137,8 @@ public class TableMembrosToPDF {
 			pastorFCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			pastorFCell.setBorder(Rectangle.NO_BORDER);
 			assin.addCell(pastorFCell);
+			
+			doc.add(new Paragraph(" "));
 			doc.add(assin);
 
 			doc.close();

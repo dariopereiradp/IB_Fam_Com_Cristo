@@ -136,6 +136,7 @@ public class AtualizaTransacao implements Command {
 			pst.setInt(2, transacao.getId());
 			pst.execute();
 			table.getTransacoes().sort(null);
+			table.recalcularSubTotais(0, table.getTransacoes().size());
 			table.fireTableDataChanged();
 			table.atualizarTextFieldsNumeros();
 		} catch (Exception e) {
@@ -148,6 +149,7 @@ public class AtualizaTransacao implements Command {
 	@Override
 	public void redo() {
 		execute();
+		table.recalcularSubTotais(0, table.getTransacoes().size());
 	}
 
 	@Override
