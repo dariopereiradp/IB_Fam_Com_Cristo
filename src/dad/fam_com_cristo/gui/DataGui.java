@@ -57,6 +57,7 @@ import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
 import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
 import dad.recursos.CSVExport;
 import dad.recursos.DataPesquisavel;
+import dad.recursos.IconTextField;
 import dad.recursos.Log;
 import dad.recursos.MultiDatePicker;
 import dad.recursos.SairAction;
@@ -85,7 +86,7 @@ public class DataGui extends JFrame {
 	private static final int DELAY = 1500;
 	private static DataGui INSTANCE;
 	private JTabbedPane tabbedPane;
-	private JTextField pesquisa;
+	private IconTextField pesquisa;
 	private JPanel filtrosPanel;
 	private JCheckBox checkMembroAtivo, checkMembroNominal, checkCongregados, checkLideranca, check_ex_membros,
 			checkEntradas, checkSaidas;
@@ -130,8 +131,11 @@ public class DataGui extends JFrame {
 	 */
 	public void recreate() {
 		JPanel pesquisaPanel = new JPanel(new BorderLayout());
-		pesquisa = new JTextField();
-		JLabel pesquisaLabel = new JLabel("Pesquisa: ");
+		pesquisa = new IconTextField();
+		pesquisa.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.SEARCH,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		pesquisa.setHint("Escreva o texto a ser pesquisado");
+		JLabel pesquisaLabel = new JLabel("    ");
 		pesquisaPanel.add(pesquisaLabel, BorderLayout.WEST);
 
 		JPanel pesquisaPanel1 = new JPanel(new GridLayout(3, 1));
