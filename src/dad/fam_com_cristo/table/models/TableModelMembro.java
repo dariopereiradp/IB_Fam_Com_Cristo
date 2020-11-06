@@ -302,6 +302,7 @@ public class TableModelMembro extends AbstractTableModel {
 					remover.add(membros.get(rows[i]));
 				}
 				membros.removeAll(remover);
+				ordenar();
 				fireTableDataChanged();
 				atualizarTextFieldsNumeros();
 				Log.getInstance().printLog("Membro(s) apagados com sucesso!");
@@ -317,6 +318,7 @@ public class TableModelMembro extends AbstractTableModel {
 				insertMembro(remover.get(i), rows[i]);
 			}
 			atualizarTextFieldsNumeros();
+			ordenar();
 			fireTableDataChanged();
 		}
 
@@ -350,6 +352,7 @@ public class TableModelMembro extends AbstractTableModel {
 			try {
 				membro.adicionarNaBaseDeDados();
 				membros.add(membro);
+				ordenar();
 				atualizarTextFieldsNumeros();
 			} catch (Exception e) {
 				Log.getInstance().printLog("Erro ao criar membro! " + e.getMessage());
@@ -362,6 +365,7 @@ public class TableModelMembro extends AbstractTableModel {
 			membro.removerBaseDeDados();
 			membros.remove(membro);
 			atualizarTextFieldsNumeros();
+			ordenar();
 			fireTableDataChanged();
 		}
 
@@ -806,8 +810,6 @@ public class TableModelMembro extends AbstractTableModel {
 	public void ordenar() {
 		membros.sort(null);
 		fireTableDataChanged();
-		Log.getInstance().printLog("Membros ordenados com sucesso!");
-
 	}
 
 	public static TableModelMembro getInstance() {

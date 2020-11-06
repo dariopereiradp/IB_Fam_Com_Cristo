@@ -166,6 +166,7 @@ public class AtualizaMembro implements Command {
 				break;
 			}
 			pst.execute();
+			table.ordenar();
 			table.fireTableDataChanged();
 			table.atualizarTextFieldsNumeros();
 		} catch (Exception e) {
@@ -246,6 +247,7 @@ public class AtualizaMembro implements Command {
 			}
 			pst.setInt(2, membro.getId());
 			pst.execute();
+			table.ordenar();
 			table.fireTableDataChanged();
 			table.atualizarTextFieldsNumeros();
 		} catch (Exception e) {
