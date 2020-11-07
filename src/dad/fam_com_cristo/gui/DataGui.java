@@ -40,8 +40,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableRowSorter;
 
-import org.apache.commons.lang.time.DurationFormatUtils;
-
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.themes.DarkTheme;
 import dad.fam_com_cristo.gui.themes.LiteTheme;
@@ -115,10 +113,7 @@ public class DataGui extends JFrame {
 		setExtendedState(MAXIMIZED_BOTH);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				long time = System.currentTimeMillis() - Main.inicialTime;
-				Log.getInstance().printLog("Tempo de Uso: " + DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's")
-						+ "\nPrograma Terminou");
-				System.exit(0);
+				Utils.close("Programa terminou");
 			}
 		});
 		getContentPane().setLayout(new BorderLayout(0, 0));

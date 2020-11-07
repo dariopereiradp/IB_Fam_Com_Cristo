@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -64,6 +63,7 @@ public class Main {
 	public Main() {
 		try {
 			createFolders();
+			restaurar();
 			MaterialLookAndFeel materialTheme = new MaterialLookAndFeel(
 					(MaterialTheme) Utils.getInstance().getCurrentTheme());
 
@@ -128,7 +128,6 @@ public class Main {
 		}
 	}
 
-
 	/**
 	 * Classe que representa uma thread que incrementa o valor da porcentagem na
 	 * splash screen.
@@ -155,22 +154,22 @@ public class Main {
 	 */
 	private void createTables() {
 
-		restaurar();
-
 		try {
-			ConexaoLogin.createTable();
+			File dir = new File(DATABASE_DIR);
+			if (!dir.exists())
+				dir.mkdirs();
 
-			ConexaoMembro.createTable();
+			ConexaoLogin.createTable(false);
 
-			ConexaoFinancas.createTable();
+			ConexaoMembro.createTable(false);
+
+			ConexaoFinancas.createTable(false);
 
 			File imgs = new File(Membro.IMG_PATH);
 			if (!imgs.exists())
 				imgs.mkdirs();
 
-		} catch (
-
-		SQLException e) {
+		} catch (Exception e) {
 			String message = "Ocorreu um erro ao criar a base de dados... Tenta novamente!\n" + e.getMessage() + "\n"
 					+ this.getClass();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,
@@ -232,8 +231,8 @@ public class Main {
 				if (confFile.exists())
 					Files.copy(confFile.toPath(), confDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-				File funcFile = new File(path + "logins.mdb");
-				File funcDest = new File(Main.DATABASE_DIR + "logins.mdb");
+				File funcFile = new File(path + "logins.accdb");
+				File funcDest = new File(Main.DATABASE_DIR + "logins.accdb");
 				if (funcFile.exists())
 					Files.copy(funcFile.toPath(), funcDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -242,13 +241,13 @@ public class Main {
 				if (images.exists())
 					FileUtils.copyDirectory(images, imagesDest);
 
-				File membrosFile = new File(path + "membros.mdb");
-				File membrosDest = new File(Main.DATABASE_DIR + "membros.mdb");
+				File membrosFile = new File(path + "membros.accdb");
+				File membrosDest = new File(Main.DATABASE_DIR + "membros.accdb");
 				if (membrosFile.exists())
 					Files.copy(membrosFile.toPath(), membrosDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-				File financasFile = new File(path + "financas.mdb");
-				File financasDest = new File(Main.DATABASE_DIR + "financas.mdb");
+				File financasFile = new File(path + "financas.accdb");
+				File financasDest = new File(Main.DATABASE_DIR + "financas.accdb");
 				if (financasFile.exists())
 					Files.copy(financasFile.toPath(), financasDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 

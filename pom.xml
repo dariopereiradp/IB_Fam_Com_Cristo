@@ -54,6 +54,13 @@
 			<version>5.0.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.healthmarketscience.jackcess/jackcess-encrypt -->
+		<dependency>
+			<groupId>com.healthmarketscience.jackcess</groupId>
+			<artifactId>jackcess-encrypt</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
 		<dependency>
 			<groupId>net.lingala.zip4j</groupId>

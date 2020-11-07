@@ -81,6 +81,7 @@ public class Log {
 	 */
 	public void printLog(String message) {
 		logger.info(message + "\n");
+		System.out.println(message);
 	}
 	
 	/**

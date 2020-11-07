@@ -1,6 +1,7 @@
 package dad.recursos;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +29,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
+import org.apache.commons.lang.time.DurationFormatUtils;
+
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
 
@@ -46,6 +49,8 @@ import mdlaf.MaterialLookAndFeel;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.themes.MaterialTheme;
 import mdlaf.utils.MaterialColors;
+import mdlaf.utils.MaterialImageFactory;
+import mdlaf.utils.icons.MaterialIconFont;
 
 /**
  * Classe que agrupa diversas funções que são de utilidade em diferentes classes
@@ -197,8 +202,8 @@ public class Utils {
 	 * @return o nome do ficheiro de backup criado.
 	 */
 	public String backupDirect() {
-		String name = "IB_Fam_com_Cristo-Backup-" + DateTimeFormatter.ofPattern("ddMMMyyyy-HH'h'mm").format(LocalDateTime.now())
-				+ ".fccb";
+		String name = "IB_Fam_com_Cristo-Backup-"
+				+ DateTimeFormatter.ofPattern("ddMMMyyyy-HH'h'mm").format(LocalDateTime.now()) + ".fccb";
 		ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
 		return Main.BACKUP_DIR + name;
 	}
@@ -209,7 +214,7 @@ public class Utils {
 	 * @param jb - botão a ser personalizado.
 	 */
 	public static void personalizarBotao(JButton jb) {
-		jb.setFont(new Font("Roboto", Font.PLAIN, 15));
+		jb.setFont(new Font("Dialog", Font.PLAIN, 15));
 		jb.setBorder(new RoundedBorder(10));
 		MaterialUIMovement.getMovement(jb, MaterialColors.GRAY_300, 5, 1000 / 30);
 	}
@@ -380,11 +385,11 @@ public class Utils {
 				break;
 			case SVG:
 				name += ImageFormats.SVG.getFormat();
-				stream = Utils.class.getResourceAsStream("/FC.svg");
+				stream = Utils.class.getResourceAsStream("/export/FC.svg");
 				break;
 			case PDF:
 				name += ImageFormats.PDF.getFormat();
-				stream = Utils.class.getResourceAsStream("/FC.pdf");
+				stream = Utils.class.getResourceAsStream("/export/FC.pdf");
 				break;
 			default:
 				break;
@@ -430,7 +435,7 @@ public class Utils {
 		try {
 			String filename = Main.MODELOS_DIR + "IBFC_Modelo_Oficio.docx";
 			File modelo = new File(filename);
-			InputStream stream = Utils.class.getResourceAsStream("/IBFC_Modelo.docx");
+			InputStream stream = Utils.class.getResourceAsStream("/export/IBFC_Modelo.docx");
 			Files.copy(stream, modelo.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			stream.close();
 			String message = "O modelo de ofício foi exportado com sucesso!\n"
@@ -461,6 +466,62 @@ public class Utils {
 			Desktop.getDesktop().open(new File(dir));
 			Desktop.getDesktop().open(new File(filepath));
 		}
+	}
+
+	/**
+	 * Mostra JOptionPane que faz uma pergunta e depois pede a senha de
+	 * administrador
+	 * 
+	 * @param message
+	 * @throws IOException
+	 */
+	public static boolean askMessage(String title, String message) {
+		String html = "<html><body style='width: %1spx'>%1s";
+		message = message.replaceAll("\n", "<br>");
+		int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), String.format(html, 350, message), title,
+				JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+				new ImageIcon(Utils.class.getResource("/FC_SS.jpg")), Main.OPTIONS, Main.OPTIONS[1]);
+		if (ok == JOptionPane.YES_OPTION) {
+			IconPasswordField pass = getPasswordField();
+			int ok1 = JOptionPane.showConfirmDialog(null, pass, "Introduza a senha do administrador",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+					new ImageIcon(Utils.class.getResource("/FC_SS.jpg")));
+			if (ok1 == JOptionPane.OK_OPTION) {
+				if (String.valueOf(pass.getPassword()).equals(Main.DEFAULT_PASS)) {
+					return true;
+				} else {
+					JOptionPane.showMessageDialog(null, "Senha errada!", "SENHA ERRADA", JOptionPane.OK_OPTION,
+							new ImageIcon(Utils.class.getResource("/FC_SS.jpg")));
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @return an IconPasswordField with an icon and a hint and a preferred dimension
+	 */
+	public static IconPasswordField getPasswordField() {
+		IconPasswordField pass = new IconPasswordField();
+		pass.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.LOCK,
+				Utils.getInstance().getCurrentTheme().getColorIcons()));
+		pass.setHint("Senha do administrador");
+		pass.setPreferredSize(new Dimension(150, 30));
+		return pass;
+	}
+
+	/**
+	 * Encerra o programa e salva informaçao nos logs
+	 */
+	public static void close(String message) {
+		long time = System.currentTimeMillis() - Main.inicialTime;
+		Log.getInstance().printLog(
+				"Tempo de Uso: " + DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's") + "\n" + message);
+		System.exit(0);
 	}
 
 	public static Utils getInstance() {

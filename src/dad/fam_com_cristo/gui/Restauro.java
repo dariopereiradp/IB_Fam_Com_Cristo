@@ -1,39 +1,31 @@
 package dad.fam_com_cristo.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.time.DurationFormatUtils;
 
 import dad.fam_com_cristo.Main;
 import dad.recursos.Log;
-import dad.recursos.ZipCompress;
+import dad.recursos.Utils;
 import net.lingala.zip4j.ZipFile;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.swing.SwingConstants;
-import javax.swing.JCheckBox;
 
 /**
  * Classe que permite escolher o que se deseja restaurar de uma cópia de
@@ -111,18 +103,12 @@ public class Restauro extends JDialog {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						int ok = JOptionPane.showOptionDialog(null,
-								"Tem certeza que quer restaurar a cópia de segurança selecionada?\n"
-										+ "Tenha atenção que os dados selecionados serão perdidos e substituídos pelos dados da cópia!\n"
-										+ "Se clicar em 'Sim', o programa vai ser fechado. Quando você abrir outra vez os dados da cópia estarão restaurados.\n"
-										+ "Obs: Por segurança, vai ser realizada uma cópia de segurança dos dados atuais. Essa cópia pode ser restaurada mais tarde.",
-								"Restaurar Cópia de Segurança", JOptionPane.YES_NO_OPTION,
-								JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("/FC_SS.jpg")),
-								Main.OPTIONS, Main.OPTIONS[0]);
-						if (ok == JOptionPane.YES_OPTION) {
-							String name = "IB_Fam_com_Cristo-Backup-"
-									+ new SimpleDateFormat("ddMMMyyyy-HH'h'mm").format(new Date());
-							ZipCompress.compress(Main.DATABASE_DIR, name, Main.BACKUP_DIR);
+						String message = "Tem certeza que quer restaurar a cópia de segurança selecionada?\n"
+								+ "Tenha atenção que os dados selecionados serão perdidos e substituídos pelos dados da cópia!\n"
+								+ "Se clicar em 'Sim', o programa vai ser fechado. Quando você abrir outra vez os dados da cópia estarão restaurados.\n"
+								+ "Obs: Por segurança, vai ser realizada uma cópia de segurança dos dados atuais. Essa cópia pode ser restaurada mais tarde.";
+						if(Utils.askMessage("Restaurar Cópia de Segurança", message)) {
+							Utils.getInstance().backupDirect();
 							restaurar();
 						}
 					}
@@ -161,23 +147,20 @@ public class Restauro extends JDialog {
 				confFile.delete();
 			}
 			if (!membros.isSelected()) {
-				File membrosFile = new File(tempDir + "membros.mdb");
+				File membrosFile = new File(tempDir + "membros.accdb");
 				membrosFile.delete();
 				File images = new File(tempDir + "Imagens/");
 				FileUtils.deleteDirectory(images);
 			}
 			if (!financas.isSelected()) {
-				File financasFile = new File(tempDir + "financas.mdb");
+				File financasFile = new File(tempDir + "financas.accdb");
 				financasFile.delete();
 			}
 			if (funcionarios.isSelected()) {
-				File funcFile = new File(tempDir + "logins.mdb");
+				File funcFile = new File(tempDir + "logins.accdb");
 				funcFile.delete();
 			}
-			long time = System.currentTimeMillis() - Main.inicialTime;
-			Log.getInstance().printLog("Tempo de Uso: " + DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's")
-					+ "\nO programa terminou, para restaurar a cópia de segurança!");
-			System.exit(0);
+			Utils.close("O programa terminou, para restaurar a cópia de segurança!");
 		} catch (Exception e) {
 			Log.getInstance()
 					.printLog("Ocorreram alguns erros ao restaurar a cópia de segurança... - " + e.getMessage());
