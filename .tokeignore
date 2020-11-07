@@ -1,1 +1,8 @@
-tokei --exclude doc/ --exclude settings/ --exclude resources/ --exclude target/ --exclude .classpath --exclude .project --exclude ClassDiagram.ucls --exclude README.md
+doc
+.settings
+resources
+target 
+.classpath 
+.project 
+ClassDiagram.ucls 
+README.md
