@@ -1,0 +1,28 @@
+Item,Value,Mean Value per Class,Max Value,Resource with Max Value,Description
+Number of Classes,84.0,0.0,3.0,Estatisticas.java,Return the number of classes and inner classes of a class in a project.
+Lines of Code,9386.0,111.73809523809523,776.0,DataGui.java,Number of the lines of the code in a project.
+Number of Methods,508.0,6.047619047619048,63.0,TableModelMembro.java,The number of methods in a project.
+Number of Attributes,349.0,4.154761904761903,46.0,MembroPanel.java,The number of attributes in a project.
+Cyclomatic Complexity,757.0,9.011904761904761,13.0,MembroDetail.java,It is calculated based on the number of different possible paths through the source code.
+Weight Methods per Class,1358.0,16.16666666666666,13.0,MembroDetail.java,It is the sum of the complexities of all class methods.
+Depth of Inheritance Tree,158.0,1.880952380952381,7.0,IconPasswordField.java,Provides the position of the class in the inheritance tree.
+Number of Children,11.0,0.13095238095238093,7.0,Command.java,It is the number of direct descendants (subclasses) for each class.
+Coupling between Objects,130.0,1.5476190476190477,8.0,Login.java,Total of the number of classes that a class referenced plus the number of classes that referenced the class.
+Fan-out,61.0,0.7261904761904762,1.0,Main.java,Defined as the number of other classes referenced by a class.
+Response for Class,911.0,10.845238095238097,82.0,TableModelMembro.java,Measures the complexity of the class in terms of method calls. It is calculated by adding the number of methods in the class (not including inherited methods) plus the number of distinct method calls made by the methods in the class (each method call is counted only once even if it is called from different methods).
+Lack of Cohesion of Methods,383.0,4.559523809523809,61.0,TableModelMembro.java,LCOM defined by CK.
+Lack of Cohesion of Methods 2,33.570814058727244,0.3996525483181815,1.6,ImageFormats.java,"It is the percentage of methods that do not access a specific attribute averaged over all attributes in the class. If the number of methods or attributes is zero, LCOM2 is undefined and displayed as zero."
+Lack of Cohesion of Methods 4,427.0,5.083333333333333,57.0,DataGui.java,"LCOM4 measures the number of 'connected components' in a class. A connected component is a set of related methods and fields. There should be only one such component in each class. If there are 2 or more components, the class should be split into so many smaller classes."
+Tight Class Cohesion,8.825999999999999,0.10507142857142858,1.0,RegistoLogin.java,"Measures the 'connection density', so to speak (while LCC is only affected by whether the methods are connected at all)."
+Loose Class Cohesion,8.82649,0.1050772619047619,1.0,RegistoLogin.java,Measures the overall connectedness. It depends on the number of methods and how they group together.
+Item,Value,Mean Value per Class,Max Value,Resource with Max Value,Description
+Number of Packages,12.0,0.0,1.0,,Total number of packages in a project
+Number of Lambdas,2.0,0.0,1.0,TableModelFinancas.java,Total number of lambda expression used in a class
+Number of Interfaces,3.0,0.0,1.0,,Total number of interfaces in a project
+Number of Method References,0.0,0.0,0.0,,Total number of method references used in a class
+Number of Modules,0.0,0.0,0.0,,Total number of modules used in a project
+Efferent Coupling,1048.0,12.476190476190474,61.0,DataGui.java,The number of classes inside a package that depend on classes outside the package.
+Afferent Coupling,211.0,2.511904761904762,24.0,Utils.java,The number of classes outside a package that depend on classes inside the package.
+Abstractness,3.0,0.0,1.0,Theme.java,The number of abstract classes (and interfaces) divided by the total number of types in a package.
+Instability,48.27654165491917,0.574720733987133,1.0,RegistoLogin.java,Ce/(Ca + Ce) - indicates the necessity of performing modifications in an entity due to updates occurred in other software entities.
+Distance from the Main Sequence,19.723458345080825,0.2348030755366765,1.0,Command.java,"| A + I - 1 |, this number should be small, close to zero for good packaging design."
