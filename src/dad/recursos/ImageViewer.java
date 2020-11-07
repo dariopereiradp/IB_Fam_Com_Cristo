@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -30,12 +31,19 @@ public class ImageViewer {
 	/**
 	 * Visualiza uma imagem, mantendo o aspect ratio
 	 * 
-	 * @param img - imagem a ser visualizada
+	 * @param dialog               - diálogo pai
+	 * @param img                  - imagem a ser visualizada
+	 * @param optionalSourceFile   - source em formato File (se escolher InputStream
+	 *                             pode deixar esse como null)
+	 * @param target               - File com localização do destino
+	 * @param optionalSourceStream - source em stream (pode ser null se escolher o
+	 *                             formato File em optionalSourceFile
 	 */
-	public static void show(JDialog dialog, ImageIcon img, File source, File target) {
+	public static void show(JDialog dialog, ImageIcon img, File optionalSourceFile, File target,
+			InputStream optionalSourceStream) {
 		JDialog jdialog = new JDialog(dialog, ModalityType.DOCUMENT_MODAL);
 		jdialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		jdialog.setTitle(source.getName());
+		jdialog.setTitle(optionalSourceFile != null ? optionalSourceFile.getName() : "FC.jpg");
 		jdialog.getContentPane().setLayout(new MigLayout("al center center, wrap, gapy 15"));
 		jdialog.setIconImage(Toolkit.getDefaultToolkit().getImage((ImageViewer.class.getResource("/FC.jpg"))));
 
@@ -51,41 +59,45 @@ public class ImageViewer {
 				(int) scaled.getHeight(), Image.SCALE_AREA_AVERAGING)));
 		jdialog.getContentPane().add(imageView, "center");
 
-		imageView.setComponentPopupMenu(getPopupMenu(source, target));
+		imageView.setComponentPopupMenu(getPopupMenu(optionalSourceFile, target, optionalSourceStream));
 		jdialog.setVisible(true);
 	}
 
 	/**
 	 * Redimensiona a imagem sem perder o aspect ratio
+	 * 
 	 * @param imageSize - tamanho original da imagem
-	 * @param boundary - tamanho do painel que contém a imagem
+	 * @param boundary  - tamanho do painel que contém a imagem
 	 * @return
 	 */
 	public static Dimension getScaledDimension(Dimension imageSize, Dimension boundary) {
 
-	    double widthRatio = boundary.getWidth() / imageSize.getWidth();
-	    double heightRatio = boundary.getHeight() / imageSize.getHeight();
-	    double ratio = Math.min(widthRatio, heightRatio);
+		double widthRatio = boundary.getWidth() / imageSize.getWidth();
+		double heightRatio = boundary.getHeight() / imageSize.getHeight();
+		double ratio = Math.min(widthRatio, heightRatio);
 
-	    return new Dimension((int) (imageSize.width  * ratio),
-	                         (int) (imageSize.height * ratio));
+		return new Dimension((int) (imageSize.width * ratio), (int) (imageSize.height * ratio));
 	}
 
 	/**
 	 * PopoupMenu com a funcionalidade de salvar a imagem
 	 * 
-	 * @param source
+	 * @param optionalSourceFile
 	 * @param target
+	 * @param optionalSourceStream
 	 * @return
 	 */
-	private static JPopupMenu getPopupMenu(File source, File target) {
+	private static JPopupMenu getPopupMenu(File optionalSourceFile, File target, InputStream optionalSourceStream) {
 		JPopupMenu menu = new JPopupMenu();
 
 		JMenuItem save = new JMenuItem("Salvar imagem");
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Utils.exportImg(new FileInputStream(source), target);
+					if (optionalSourceStream == null)
+						Utils.exportImg(new FileInputStream(optionalSourceFile), target);
+					else
+						Utils.exportImg(optionalSourceStream, target);
 				} catch (Exception e1) {
 					Log.getInstance().printLog(e1.getMessage());
 					e1.printStackTrace();

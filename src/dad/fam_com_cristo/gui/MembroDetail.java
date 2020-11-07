@@ -481,12 +481,12 @@ public class MembroDetail extends JDialog {
 				apagar();
 			}
 		}
-		
+
 		JMenuItem menuVerImg = new JMenuItem("Abrir imagem");
 		menuVerImg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ImageViewer.show(MembroDetail.this, membro.getImg(), membro.getImageFile(),
-						new File(Main.SAVED_IMAGES + membro.getId() + ".jpg"));
+						new File(Main.SAVED_IMAGES + membro.getId() + ".jpg"), null);
 			}
 		});
 
@@ -539,7 +539,7 @@ public class MembroDetail extends JDialog {
 				int count = evt.getClickCount();
 				if (membro.getImg() != null && count == 2) {
 					ImageViewer.show(MembroDetail.this, membro.getImg(), membro.getImageFile(),
-							new File(Main.SAVED_IMAGES + membro.getId() + ".jpg"));
+							new File(Main.SAVED_IMAGES + membro.getId() + ".jpg"), null);
 				}
 			}
 

@@ -139,9 +139,8 @@ public class About extends JDialog {
 				public void mouseClicked(MouseEvent evt) {
 					int count = evt.getClickCount();
 					if (count == 2) {
-						ImageViewer.show(About.this, new ImageIcon(getClass().getResource("/FC.jpg")),
-								new File(getClass().getResource("/FC.jpg").getFile()),
-								new File(Main.SAVED_IMAGES + "IBFC" + ".jpg"));
+						ImageViewer.show(About.this, new ImageIcon(getClass().getResource("/FC.jpg")), null,
+								new File(Main.SAVED_IMAGES + "IBFC" + ".jpg"), getClass().getResourceAsStream("/FC.jpg"));
 					}
 				}
 
@@ -150,9 +149,8 @@ public class About extends JDialog {
 			JMenuItem ver = new JMenuItem("Abrir logotipo");
 			ver.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					ImageViewer.show(About.this, new ImageIcon(getClass().getResource("/FC.jpg")),
-							new File(getClass().getResource("/FC.jpg").getFile()),
-							new File(Main.SAVED_IMAGES + "IBFC" + ".jpg"));
+					ImageViewer.show(About.this, new ImageIcon(getClass().getResource("/FC.jpg")), null,
+							new File(Main.SAVED_IMAGES + "IBFC" + ".jpg"), getClass().getResourceAsStream("/FC.jpg"));
 				}
 			});
 			popup.add(ver);
