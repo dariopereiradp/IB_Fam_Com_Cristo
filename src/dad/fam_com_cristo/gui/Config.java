@@ -67,7 +67,7 @@ public class Config extends JDialog {
 
 		JLabel lBemVindo = new JLabel("Bem vindo! Est\u00E1 ligado como " + Login.NOME);
 		lBemVindo.setFont(new Font("Dialog", Font.PLAIN, 14));
-		lBemVindo.setBounds(25, 11, 400, 20);
+		lBemVindo.setBounds(25, 11, 650, 20);
 		contentPanel.add(lBemVindo);
 		lBemVindo.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -124,7 +124,7 @@ public class Config extends JDialog {
 		contentPanel.add(bAlterarPass);
 
 		pastor = new JTextField();
-		pastor.setBounds(215, 70, 410, 30);
+		pastor.setBounds(215, 70, 450, 30);
 		contentPanel.add(pastor);
 		pastor.setColumns(10);
 		pastor.setText(pastorName);

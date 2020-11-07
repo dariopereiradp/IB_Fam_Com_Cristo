@@ -168,7 +168,7 @@ public class TableModelFinancas extends AbstractTableModel {
 			return Money.class;
 		case 2:
 			return Tipo_Transacao.class;
-		case 3:
+		case 4:
 			return Money.class;
 		default:
 			return String.class;
