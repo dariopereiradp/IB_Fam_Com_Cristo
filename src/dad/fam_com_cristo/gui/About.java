@@ -62,6 +62,14 @@ public class About extends JDialog {
 			+ "Compat\u00EDvel com <a href=\"https://www.java.com/download\">Java 8</a><br>"
 			+ "Organizado com o <a href=\"https://maven.apache.org/\">Maven</a>"
 			+ ", usando o <a href=\"https://www.eclipse.org//\">Eclipse</a><br><br>"
+			+ "<h3>Algumas métricas</h3>Resultados extraídos com "
+			+ "<a href=\"https://github.com/mariazevedo88/o3smeasures-tool\">o3smeasures</a> no Eclipse<br>"
+			+ "<a>Número de classes: 84</a><br>"
+			+ "<a>Número de linhas de código (LOC): 9386 (Max: 776 - DataGui.java)</a><br>"
+			+ "<a>Número de métodos: 508 (Max: 63 - TableModelMembro.java)</a><br>"
+			+ "<a>Número de atributos: 349 (Max: 46 - MembroPanel.java)<a><br>"
+			+ "<a>Número de pacotes: 12</a><br>"
+			+ "<a>Número de interfaces: 3</a><br><br>"
 			+ "<h3>Bibliotecas usadas:</h3><a href=\"https://github.com/vincenzopalazzo/material-ui-swing\">Material UI Swing v1.1.2-rc1</a> - Para interface gráifca mais moderna<br>"
 			+ "<a href=\"http://ucanaccess.sourceforge.net/site.html\">UCanAccess 5.0.0</a> - Para manipular as bases de dados MSAccess<br>"
 			+ "<a href=\"https://jackcessencrypt.sourceforge.io\">Jackcess Encrypt 3.0.0</a> - Para aceder as bases de dados encriptadas, implementando segurança<br>"
@@ -91,6 +99,7 @@ public class About extends JDialog {
 	 */
 	public About() {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
+		System.out.println(info);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));
 		setBounds(350, 100, 600, 500);
