@@ -83,7 +83,6 @@ public class TableModelFuncionario extends AbstractTableModel {
 				} while (rs.next());
 			}
 			fireTableDataChanged();
-			Log.getInstance().printLog("Base de dados funcionarios carregada com sucesso!");
 		} catch (Exception e) {
 			Log.getInstance().printLog(
 					"Erro ao carregar a base de dados dos Funcionários: " + e.getMessage() + "\n" + getClass());

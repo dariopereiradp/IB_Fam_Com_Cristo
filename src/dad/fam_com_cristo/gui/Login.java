@@ -24,9 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-import org.apache.commons.lang.time.DurationFormatUtils;
-
-import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.IconPasswordField;
@@ -112,10 +109,7 @@ public class Login {
 		});
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				long time = System.currentTimeMillis() - Main.inicialTime;
-				Log.getInstance().printLog("Tempo de Uso: " + DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's")
-						+ "\nPrograma Terminou");
-				System.exit(0);
+				Utils.close("Programa terminou");
 			}
 		});
 

@@ -92,7 +92,6 @@ public class TableModelMembro extends AbstractTableModel {
 			}
 			Membro.countID = maior;
 			fireTableDataChanged();
-			Log.getInstance().printLog("Base de dados membros carregada com sucesso!");
 		} catch (Exception e) {
 			Log.getInstance()
 					.printLog("Erro ao carregar a base de dados dos Membros: " + e.getMessage() + "\n" + getClass());

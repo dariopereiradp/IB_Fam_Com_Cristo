@@ -79,7 +79,6 @@ public class TableModelFinancas extends AbstractTableModel {
 			transacoes.sort(null);
 			recalcularSubTotais(0, transacoes.size());
 			fireTableDataChanged();
-			Log.getInstance().printLog("Base de dados Financas carregada com sucesso!");
 		} catch (Exception e) {
 			Log.getInstance()
 					.printLog("Erro ao carregar a base de dados das Finanças: " + e.getMessage() + "\n" + getClass());

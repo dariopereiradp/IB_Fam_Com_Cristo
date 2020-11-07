@@ -29,7 +29,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
-import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
@@ -520,7 +520,7 @@ public class Utils {
 	public static void close(String message) {
 		long time = System.currentTimeMillis() - Main.inicialTime;
 		Log.getInstance().printLog(
-				"Tempo de Uso: " + DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's") + "\n" + message);
+				"Tempo de Uso: " + DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's'") + "\n" + message);
 		System.exit(0);
 	}
 

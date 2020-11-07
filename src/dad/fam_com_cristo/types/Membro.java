@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit;
 
 import javax.swing.ImageIcon;
 
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.text.WordUtils;
 
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.DataGui;

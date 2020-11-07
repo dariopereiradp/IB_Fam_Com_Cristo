@@ -1,10 +1,10 @@
 package dad.fam_com_cristo.gui;
 
 import java.awt.Color;
+import java.awt.Dialog.ModalityType;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -31,9 +31,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-import org.apache.commons.lang.time.DurationFormatUtils;
-
-import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.fam_com_cristo.table.models.TableModelFuncionario;
 import dad.fam_com_cristo.types.Funcionario;
@@ -139,10 +136,7 @@ public class RegistoLogin {
 		dialog.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if (login) {
-					long time = System.currentTimeMillis() - Main.inicialTime;
-					Log.getInstance().printLog("Tempo de Uso: "
-							+ DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's") + "\nPrograma Terminou");
-					System.exit(0);
+					Utils.close("Programa terminou");
 				} else
 					dialog.dispose();
 			}
