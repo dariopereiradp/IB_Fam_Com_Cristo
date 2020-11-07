@@ -39,7 +39,6 @@ public class Log {
 				dir.mkdirs();
 			name = dir.getAbsolutePath() + "/" + logFormatName + ".log";
 			open();
-			logger.addHandler(fh);
 			logger.setUseParentHandlers(true);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fh.setFormatter(formatter);
