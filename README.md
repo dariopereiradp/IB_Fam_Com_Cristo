@@ -101,7 +101,7 @@ I extracted this metrics using <a href="https://github.com/mariazevedo88/o3smeas
 This program was made in Java. You will need a JVM with the minimum version 1.8.
 I adapted this program to work with Windows. But, since Java is multiplataform, it should work in other operating systems. Still, I didn't tested it.
 
-### Instalation
+### Installation
 Just run the jar file inside the target/ folder.
 
 
@@ -129,16 +129,18 @@ To see a full explanation, read the manual (in portuguese). Bellow you can see s
 ![Product Name Screen Shot6][product-screenshot6]
 
 * Login GUI
+
 ![Product Name Screen Shot7][product-screenshot7]
 
 * Financial report PDF sample
+
 ![Product Name Screen Shot8][product-screenshot8]
 
 * Member profile sample
 ![Product Name Screen Shot9][product-screenshot9]
 
 
-## Acknowledgments
+## Acknowledgements
 * <a href="https://github.com/vincenzopalazzo/material-ui-swing">Material UI Swing v1.1.2-rc1</a> - Implements a beauty and modern Look-and-feel, based on Material Design.
 * <a href="http://ucanaccess.sourceforge.net/site.html">UCanAccess 5.0.0</a> - Read and write Microsoft Access Databases
 * <a href="https://jackcessencrypt.sourceforge.io">Jackcess Encrypt 3.0.0</a> - Read and write encrypted Access databases
