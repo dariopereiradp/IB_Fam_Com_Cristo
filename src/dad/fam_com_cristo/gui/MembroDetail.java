@@ -111,7 +111,7 @@ public class MembroDetail extends JDialog {
 	 */
 	private void inicializar() {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		setSize(new Dimension(1000, 550));
+		setSize(new Dimension(1030, 550));
 		setMinimumSize(new Dimension(1000, 520));
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
