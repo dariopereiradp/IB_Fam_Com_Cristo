@@ -143,7 +143,7 @@ public class TableFinancasToPDF {
 			descricaoSaldo.add(" O total de saídas no período foi: "
 					+ utils.getNumberFormatCurrency().format(financas.getTotalSaidas(init, end)) + ".\n");
 			descricaoSaldo.add(bullet);
-			descricaoSaldo.add(" Foram registadas " + financas.getNumEntradasPorPeriodo(init, end) + " entrada(s) e "
+			descricaoSaldo.add(" Foram registradas " + financas.getNumEntradasPorPeriodo(init, end) + " entrada(s) e "
 					+ financas.getNumSaidasPorPeriodo(init, end) + " saída(s) durante o período.\n");
 			descricaoSaldo.add(bullet);
 			descricaoSaldo.add(" O balanço do período foi (entradas-saídas): "
