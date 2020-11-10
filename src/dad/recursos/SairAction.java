@@ -20,7 +20,7 @@ public class SairAction implements ActionListener {
 		DataGui.getInstance().dispose();
 		long time = System.currentTimeMillis() - Login.inicialTime;
 		Log.getInstance().printLog("Usuário " + Login.NOME + " saiu!\nTempo de Uso: "
-				+ DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's"));
+				+ DurationFormatUtils.formatDuration(time, "HH'h'mm'm'ss's'"));
 		Login.getInstance().open();
 
 	}
