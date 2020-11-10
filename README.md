@@ -4,20 +4,20 @@
 	<p align="center">Software to manage the church members and the finances</p>
 </p>
 <p align="center">
+	<a href="https://github.com/dariopereiradp/IB_Fam_Com_Cristo/releases">
+		<img src="https://img.shields.io/github/v/release/dariopereiradp/IB_Fam_Com_Cristo" />
+	</a>
+	<a href="https://github.com/dariopereiradp/IB_Fam_Com_Cristo/tree/master/src/dad">
+		<img src="https://img.shields.io/github/languages/top/dariopereiradp/IB_Fam_Com_Cristo" />
+	</a>
+	<a href="https://github.com/dariopereiradp/IB_Fam_Com_Cristo/commits/master">
+		<img src="https://img.shields.io/github/last-commit/dariopereiradp/IB_Fam_Com_Cristo" />
+	</a>
 	<a href="https://github.com/dariopereiradp/IB_Fam_Com_Cristo/tree/master/src/dad">
 		<img src="https://img.shields.io/github/languages/code-size/dariopereiradp/IB_Fam_Com_Cristo" />
 	</a>
 	<a href="#">
 		<img src="https://img.shields.io/github/repo-size/dariopereiradp/IB_Fam_Com_Cristo" />
-	</a>
-	<a href="https://github.com/dariopereiradp/IB_Fam_Com_Cristo/releases">
-		<img scr="https://img.shields.io/github/v/release/dariopereiradp/IB_Fam_Com_Cristos" />
-	</a>
-	<a href="https://github.com/dariopereiradp/IB_Fam_Com_Cristo/tree/master/src/dad">
-		<img scr="https://img.shields.io/github/languages/top/dariopereiradp/IB_Fam_Com_Cristo" />
-	</a>
-	<a href="https://github.com/dariopereiradp/IB_Fam_Com_Cristo/commits/master">
-		<img scr="https://img.shields.io/github/last-commit/dariopereiradp/IB_Fam_Com_Cristo" />
 	</a>
 	<br />
 	<br />
@@ -28,7 +28,6 @@
 		<img src="https://img.shields.io/badge/Developed%20by-DPSoft-green" />
 	</a>
 </p>
-
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
