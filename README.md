@@ -28,24 +28,18 @@
 		<img src="https://img.shields.io/badge/Developed%20by-DPSoft-green" />
 	</a>
 </p>
-<!-- TABLE OF CONTENTS -->
-## Table of Contents
+
 
 * [About the Project](#about-the-project)
   * [Main functionalities](#main-functionalities)
   * [Technical details](#technical-details)
   * [Some project metrics](#some-project-metrics)
-  * [Sample images](#sample-images)
   * [Built With](#built-with)
-
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
 * [Usage](#usage)
-* [Roadmap](#roadmap)
-* [Contributing](#contributing)
-* [License](#license)
-* [Contact](#contact)
+  * [Sample images](#sample-images)
 * [Acknowledgements](#acknowledgements)
 
 <!-- ABOUT THE PROJECT -->
@@ -97,37 +91,68 @@ I extracted this metrics using <a href="https://github.com/mariazevedo88/o3smeas
 * Number of packages: 12
 * Number of interfaces: 3
 
+### Built With
+* [Java 8](https://java.com/)
+
+
+## Getting started
+
+### Prerequisites
+This program was made in Java. You will need a JVM with the minimum version 1.8.
+I adapted this program to work with Windows. But, since Java is multiplataform, it should work in other operating systems. Still, I didn't tested it.
+
+### Instalation
+Just run the jar file inside the target/ folder.
+
+
+## Usage
+To see a full explanation, read the manual (in portuguese). Bellow you can see some samples of the program.
+
 ### Sample images
 
-<p align="center">
-[![Product Name Screen Shot][product-screenshot]]
-[![Product Name Screen Shot2][product-screenshot2]]
-[![Product Name Screen Shot3][product-screenshot3]]
-[![Product Name Screen Shot4][product-screenshot4]]
-[![Product Name Screen Shot5][product-screenshot5]]
-[![Product Name Screen Shot6][product-screenshot6]]
-[![Product Name Screen Shot7][product-screenshot7]]
-[![Product Name Screen Shot8][product-screenshot8]]
-[![Product Name Screen Shot9][product-screenshot9]]
-	</p>
+* Members GUI
+![Product Name Screen Shot][product-screenshot]
+
+* Members GUI (with filter)
+![Product Name Screen Shot2][product-screenshot2]
+
+* Finances GUI
+![Product Name Screen Shot3][product-screenshot3]
+
+* Collaborators GUI
+![Product Name Screen Shot4][product-screenshot4]
+
+* Statistics charts
+![Product Name Screen Shot5][product-screenshot5]
+
+* Light theme
+![Product Name Screen Shot6][product-screenshot6]
+
+* Login GUI
+![Product Name Screen Shot7][product-screenshot7]
+
+* Financial report PDF sample
+![Product Name Screen Shot8][product-screenshot8]
+
+* Member profile sample
+![Product Name Screen Shot9][product-screenshot9]
 
 
-
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should element DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
-
-A list of commonly used resources that I find helpful are listed in the acknowledgements.
-
-### Built With
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
-* [Laravel](https://laravel.com)
-
+## Acknowledgments
+* <a href="https://github.com/vincenzopalazzo/material-ui-swing">Material UI Swing v1.1.2-rc1</a> - Implements a beauty and modern Look-and-feel, based on Material Design.
+* <a href="http://ucanaccess.sourceforge.net/site.html">UCanAccess 5.0.0</a> - Read and write Microsoft Access Databases
+* <a href="https://jackcessencrypt.sourceforge.io">Jackcess Encrypt 3.0.0</a> - Read and write encrypted Access databases
+* <a href="https://github.com/srikanth-lingala/zip4j">Zip4j 2.6.4</a> - Generate Zip files (used in Backups and BugReports)
+* <a href="https://github.com/LGoodDatePicker/LGoodDatePicker">LGoodDatePicker 11.1.0</a> - Choose a date in the LocalDate type.
+* <a href="https://itextpdf.com/en/products/itext-5-legacy">iTextPDF 5.5.13.2</a> - Generate a PDF file (used to the lists of members, financial reports and member profiles)
+* <a href="https://knowm.org/open-source/xchart">xChart 3.6.5</a> - Generate charts (used in statistics and financial reports)
+* <a href="http://miglayout.com/">MigLayout-Swing 5.2</a> - Used in some layouts (for example, in the profile page)
+* <a href="https://commons.apache.org/proper/commons-csv">Apache Commons CSV 1.8</a> - Export the databases to CSV
+* <a href="https://commons.apache.org/proper/commons-codec">Apache Commons Codec 1.15</a> - Used to implement AES Encryption
+* <a href="https://commons.apache.org/proper/commons-io">Apache Commons IO 2.8.0</a> - FileUtils: copy files or delete directories
+* <a href="https://commons.apache.org/proper/commons-lang">Commons Lang 3.11</a> - DurationFormatUtils: format the time of using the program
+* <a href="https://commons.apache.org/proper/commons-text">Commons Text 1.9</a> - WordUtils.capitalize: capitalize the names
+* <a href="https://commons.apache.org/proper/commons-logging">Apache Commons Logging 1.2</a> - Generate the log files
 
 
 [product-screenshot]: Samples/sample.png
