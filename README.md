@@ -53,6 +53,7 @@ This project was created by Dário Pereira, to help Igreja Batista Famílias com
 * Add and remove persons (members). Visualize a profile page (with profile image) and edit the fields.
 * Add and remove collaborators (person who have access to the program). This persons can enter the program with a password, and have limited access to it. Only the admin can have total access.
 * Add and remove financial transactions and edit the fields (date, description, value). The total available in the moment of the transaction will update automatically.
+* Login: different types of users have access to different functionalities in the program.
 * Search tool with different types of filters.
 * Auto sorting in the tables.
 * Visualize and save (export) images (like profile images or different formats of the logo image).
@@ -84,10 +85,10 @@ This project was created by Dário Pereira, to help Igreja Batista Famílias com
 
 I extracted this metrics using <a href="https://github.com/mariazevedo88/o3smeasures-tool">o3smeasures-tool</a> to Eclipse.
 
-* Number of classes: 84
-* Lines of code (LOC): 9386 (Max: 776 - DataGui.java)
-* Numbers of Methods: 508 (Max: 63 - TableModelMembro.java)
-* Number of Attributes: 349 (Max: 46 - MembroPanel.java)
+* Number of classes: 85
+* Lines of code (LOC): 9610 (Max: 824 - DataGui.java)
+* Numbers of Methods: 513 (Max: 63 - TableModelMembro.java)
+* Number of Attributes: 355 (Max: 46 - MembroPanel.java)
 * Number of packages: 12
 * Number of interfaces: 3
 
