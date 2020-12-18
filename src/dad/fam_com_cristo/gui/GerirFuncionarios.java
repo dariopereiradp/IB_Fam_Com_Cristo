@@ -43,7 +43,7 @@ public class GerirFuncionarios extends JDialog {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle("Gerir Funcionários");
-		setBounds(100, 100, 1100, 350);
+		setBounds(100, 100, 1200, 350);
 		setMinimumSize(new Dimension(1100, 350));
 		getContentPane().setLayout(new BorderLayout());
 		getRootPane().setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.RAISED));

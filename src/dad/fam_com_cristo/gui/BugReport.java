@@ -127,8 +127,8 @@ public class BugReport extends JDialog {
 	private void criarRelatorio() {
 		String data_hora = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH'h'mm'm'ss").format(LocalDateTime.now());
 		String data = DateTimeFormatter.ofPattern("ddMMMyyyy_HH'h'mm").format(LocalDateTime.now());
-		String info = Main.TITLE + " - " + Main.VERSION + "\n" + data_hora + "\n\nRelatório criado por: " + Login.NOME
-				+ "\n\nDESCRIÇÃO DO PROBLEMA\n\n" + text.getText();
+		String info = Main.TITLE + " - " + Main.VERSION + "\n" + data_hora + "\n\nRelatório criado por: "
+				+ Login.getInstance().getFuncionario().getNome() + "\n\nDESCRIÇÃO DO PROBLEMA\n\n" + text.getText();
 		String path_temp = Main.DATA_DIR + Main.SIGLA + "_Relatorio_v." + Main.VERSION + "_" + data + ".txt";
 		File file_text = new File(path_temp);
 		String month_year = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMyyyy")).toUpperCase();

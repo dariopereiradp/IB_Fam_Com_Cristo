@@ -13,7 +13,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -25,6 +24,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
+import dad.fam_com_cristo.table.models.TableModelFuncionario;
+import dad.fam_com_cristo.types.Funcionario;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.IconPasswordField;
 import dad.recursos.IconTextField;
@@ -49,7 +50,7 @@ public class Login {
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
-	public static String NOME;
+	private Funcionario funcionario;
 	public static long inicialTime;
 	private static Login INSTANCE;
 
@@ -195,12 +196,8 @@ public class Login {
 						new ImageIcon(getClass().getResource("/FC_SS.jpg")));
 			} else {
 				Log.getInstance().printLog("Usuário: " + username + " - Conectado com sucesso!");
-				pst = con.prepareStatement(
-						"update logins set Num_acessos = Num_acessos + 1,Ultimo_Acesso=? where nome = ?");
-				pst.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-				pst.setString(2, username);
-				pst.execute();
-				NOME = username;
+				funcionario = TableModelFuncionario.getInstance().getFuncionario(username);
+				funcionario.registerLogin();
 				inicialTime = System.currentTimeMillis();
 				frame.setVisible(false);
 				DataGui.getInstance().open();
@@ -283,6 +280,10 @@ public class Login {
 		frame.setVisible(true);
 		user.setText("");
 		pass.setText("");
+	}
+	
+	public Funcionario getFuncionario() {
+		return funcionario;
 	}
 	
 	public static Login getInstance() {

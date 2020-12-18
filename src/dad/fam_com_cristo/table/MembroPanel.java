@@ -74,7 +74,7 @@ public class MembroPanel extends JPanel {
 	private JButton bAdd;
 	private String[] columnToolTips = { "Nome do membro", "Data de nascimento do membro",
 			"Telefone de contato do membro",
-			"Tipo de membro (Congregado, Membro Ativo, Membro Nominal, Liderança ou Ex-membro)" };
+			"Tipo de membro" };
 	private JPanel panel_total;
 	private JPanel panel;
 	private JLabel lblNmeroDeMembros;

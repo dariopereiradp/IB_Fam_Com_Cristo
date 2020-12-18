@@ -17,7 +17,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -29,10 +33,12 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.gui.ChangePassword;
 import dad.fam_com_cristo.table.Table;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.fam_com_cristo.types.Funcionario;
+import dad.fam_com_cristo.types.enumerados.Tipo_Funcionario;
 import dad.recursos.Log;
 import dad.recursos.Utils;
 
@@ -50,7 +56,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 	private static final long serialVersionUID = 3247984074345998765L;
 	private static TableModelFuncionario INSTANCE;
 	private ArrayList<Funcionario> funcionarios;
-	private String[] colunas = { "Nome (Login)", "Senha", "Número de Acessos", "Data do Último Acesso",
+	private String[] colunas = { "Nome (Login)", "Tipo", "Senha", "Número de Acessos", "Data do Último Acesso",
 			"Data de Criação" };
 	private Connection con;
 	private PreparedStatement pst;
@@ -74,11 +80,12 @@ public class TableModelFuncionario extends AbstractTableModel {
 			rs = pst.executeQuery();
 			if (rs.next()) {
 				do {
-					String nome = rs.getString(1);
-					int num_acessos = rs.getInt(3);
-					LocalDateTime data_ultimo_acesso = rs.getTimestamp(4).toLocalDateTime();
-					LocalDateTime data_criacao = rs.getTimestamp(5).toLocalDateTime();
-					Funcionario func = new Funcionario(nome, num_acessos, data_ultimo_acesso, data_criacao);
+					Tipo_Funcionario tipo = Tipo_Funcionario.getEnum(rs.getString(1));
+					String nome = rs.getString(2);
+					int num_acessos = rs.getInt(4);
+					LocalDateTime data_ultimo_acesso = rs.getTimestamp(5).toLocalDateTime();
+					LocalDateTime data_criacao = rs.getTimestamp(6).toLocalDateTime();
+					Funcionario func = new Funcionario(tipo, nome, num_acessos, data_ultimo_acesso, data_criacao);
 					funcionarios.add(func);
 				} while (rs.next());
 			}
@@ -112,15 +119,30 @@ public class TableModelFuncionario extends AbstractTableModel {
 		case 0:
 			return funcionarios.get(rowIndex).getNome();
 		case 1:
-			return "********";
+			if (funcionarios.get(rowIndex).getNome().equals(Main.DEFAULT_USER))
+				return "Administrador de TI";
+			else
+				return funcionarios.get(rowIndex).getType();
 		case 2:
-			return funcionarios.get(rowIndex).getNum_acessos();
+			return "********";
 		case 3:
-			return funcionarios.get(rowIndex).getData_ultimo_acesso();
+			return funcionarios.get(rowIndex).getNum_acessos();
 		case 4:
+			return funcionarios.get(rowIndex).getData_ultimo_acesso();
+		case 5:
 			return funcionarios.get(rowIndex).getData_criacao();
 		default:
 			return funcionarios.get(rowIndex);
+		}
+	}
+
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		if (columnIndex == 1) {
+			Tipo_Funcionario tipo = (Tipo_Funcionario) aValue;
+			Funcionario temp = funcionarios.get(rowIndex);
+			if (temp.getType() != tipo)
+				temp.setType(tipo);
 		}
 	}
 
@@ -128,6 +150,8 @@ public class TableModelFuncionario extends AbstractTableModel {
 	@Override
 	public Class getColumnClass(int column) {
 		switch (column) {
+		case 1:
+			return Tipo_Funcionario.class;
 		case 2:
 			return Integer.class;
 		case 3:
@@ -156,6 +180,14 @@ public class TableModelFuncionario extends AbstractTableModel {
 		return funcionarios.get(rowIndex);
 	}
 
+	public Funcionario getFuncionario(String nome) {
+		for (Funcionario funcionario : funcionarios) {
+			if (funcionario.getNome().equals(nome))
+				return funcionario;
+		}
+		return null;
+	}
+
 	/**
 	 * Remove os funcionários que estão nas posições indicadas pelo array rows.
 	 * 
@@ -169,6 +201,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 				apagar(func, toDelete);
 		}
 		funcionarios.removeAll(toDelete);
+		fireTableDataChanged();
 	}
 
 	/**
@@ -184,7 +217,6 @@ public class TableModelFuncionario extends AbstractTableModel {
 			pst.setString(1, func.getNome());
 			pst.execute();
 			toDelete.add(func);
-			fireTableDataChanged();
 		} catch (SQLException e1) {
 			Log.getInstance().printLog("Erro ao apagar o funcionário! - " + e1.getMessage());
 			e1.printStackTrace();
@@ -211,11 +243,24 @@ public class TableModelFuncionario extends AbstractTableModel {
 	 * @return - a nova tabela
 	 */
 	public JTable getSmallTable() {
-		JTable small = new Table(this, colunas, false);
+		JTable small = new Table(this, colunas, new boolean[] { false, true, false, false, false }) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3982011995056875399L;
 
-		small.setPreferredScrollableViewportSize(new Dimension(1100, 350));
+			@Override
+			public boolean isCellEditable(int data, int columns) {
+				if (getFuncionario(convertRowIndexToModel(data)).getNome().equals(Main.DEFAULT_USER))
+					return false;
+				else
+					return super.isCellEditable(data, columns);
+			}
+		};
 
-		small.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+		small.setPreferredScrollableViewportSize(new Dimension(1200, 350));
+
+		small.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
 			/**
 			 * 
 			 */
@@ -225,6 +270,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean selected,
 					boolean hasFocus, int row, int column) {
 				super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
+				setBorder(BorderFactory.createRaisedSoftBevelBorder());
 				if (!getFuncionario(small.convertRowIndexToModel(row)).getNome().equals("admin"))
 					this.setIcon(new ImageIcon(getClass().getResource("/edit.png")));
 				else
@@ -233,8 +279,18 @@ public class TableModelFuncionario extends AbstractTableModel {
 			}
 		});
 
+		small.getColumnModel().getColumn(0).setCellRenderer(new Renderer());
+		small.getColumnModel().getColumn(1).setCellRenderer(new Renderer());
 		small.getColumnModel().getColumn(3).setCellRenderer(new Renderer());
 		small.getColumnModel().getColumn(4).setCellRenderer(new Renderer());
+		small.getColumnModel().getColumn(5).setCellRenderer(new Renderer());
+
+		JComboBox<Tipo_Funcionario> tipoFuncionario = new JComboBox<>();
+		tipoFuncionario.setModel(new DefaultComboBoxModel<>(Tipo_Funcionario.values()));
+
+		DefaultCellEditor tipoCell = new DefaultCellEditor(tipoFuncionario);
+		tipoCell.setClickCountToStart(2);
+		small.getColumnModel().getColumn(1).setCellEditor(tipoCell);
 
 		small.addComponentListener(new ComponentAdapter() {
 
@@ -242,7 +298,6 @@ public class TableModelFuncionario extends AbstractTableModel {
 			public void componentResized(ComponentEvent e) {
 				small.scrollRectToVisible(small.getCellRect(small.getRowCount() - 1, 0, true));
 			}
-
 		});
 
 		small.addMouseListener(new MouseAdapter() {
@@ -254,14 +309,11 @@ public class TableModelFuncionario extends AbstractTableModel {
 				if (rowAtPoint != -1) {
 					int row = table.convertRowIndexToModel(rowAtPoint);
 					if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
-						if (!getFuncionario(row).getNome().equals("admin") && column == 1)
-							new ChangePassword(getFuncionario(row).getNome(), true).open();
-						;
-
+						if (!getFuncionario(row).getNome().equals("admin") && column == 2)
+							new ChangePassword(getFuncionario(row), true).open();
 					}
 				}
 			}
-
 		});
 
 		JMenuItem mudarPassword = new JMenuItem("Alterar senha");
@@ -269,8 +321,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ChangePassword(getFuncionario(small.convertRowIndexToModel(small.getSelectedRow())).getNome(), true)
-						.open();
+				new ChangePassword(getFuncionario(small.convertRowIndexToModel(small.getSelectedRow())), true).open();
 			}
 		});
 
@@ -326,12 +377,10 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 			@Override
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-
 			}
 
 			@Override
 			public void popupMenuCanceled(PopupMenuEvent e) {
-
 			}
 		});
 
@@ -373,17 +422,18 @@ public class TableModelFuncionario extends AbstractTableModel {
 			new TableModelFuncionario();
 		return INSTANCE;
 	}
-	
-	private static class Renderer extends DefaultTableCellRenderer{
+
+	private static class Renderer extends DefaultTableCellRenderer {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 5676060958212154710L;
 
 		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected,
-				boolean hasFocus, int row, int column) {
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus,
+				int row, int column) {
 			super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
+			setBorder(BorderFactory.createRaisedSoftBevelBorder());
 			if (value instanceof LocalDateTime)
 				this.setValue(Utils.getInstance().getDateTimeFormat().format((LocalDateTime) value));
 			return this;

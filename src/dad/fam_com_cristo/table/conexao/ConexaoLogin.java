@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
 import dad.fam_com_cristo.Main;
+import dad.fam_com_cristo.types.enumerados.Tipo_Funcionario;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 
@@ -51,26 +52,28 @@ public class ConexaoLogin {
 					StandardCopyOption.REPLACE_EXISTING);
 
 			// OLD CODE TO CREATE THE FILE
-//			con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoLogin.dbFile
+//			con = DriverManager.getConnection("jdbc:ucanaccess://" + ConexaoLogin.DB_FILE
 //					+ ";newdatabaseversion=V2010;immediatelyReleaseResources=true;");
 //			DatabaseMetaData dmd = con.getMetaData();
 //			try (ResultSet rs = dmd.getTables(null, null, "Logins", new String[] { "TABLE" })) {
 //				try (Statement s = con.createStatement()) {
-//					s.executeUpdate("CREATE TABLE Logins (Nome varchar(255) NOT NULL,"
+//					s.executeUpdate("CREATE TABLE Logins (Tipo varchar(255) NOT NULL, Nome varchar(255) NOT NULL,"
 //							+ "Pass varchar(50) NOT NULL, Num_acessos int, Ultimo_Acesso date,Data_Criacao date, CONSTRAINT PK_Logins PRIMARY KEY (Nome));");
 //					Log.getInstance().printLog("Base de dados logins.mbd criada com sucesso");
 //				}
+//			}
 
 			con = getConnection();
 			CriptografiaAES.setKey(Main.DEFAULT_PASS);
 			CriptografiaAES.encrypt(Main.DEFAULT_PASS);
 			PreparedStatement pst = con.prepareStatement(
-					"insert into logins(Nome,Pass,Num_acessos,Ultimo_Acesso,Data_Criacao) values (?,?,?,?,?)");
-			pst.setString(1, Main.DEFAULT_USER);
-			pst.setString(2, CriptografiaAES.getEncryptedString());
-			pst.setInt(3, 0);
-			pst.setDate(4, new Date(System.currentTimeMillis()));
+					"insert into logins(Tipo,Nome,Pass,Num_acessos,Ultimo_Acesso,Data_Criacao) values (?,?,?,?,?,?)");
+			pst.setString(1, Tipo_Funcionario.PASTOR.toString());
+			pst.setString(2, Main.DEFAULT_USER);
+			pst.setString(3, CriptografiaAES.getEncryptedString());
+			pst.setInt(4, 0);
 			pst.setDate(5, new Date(System.currentTimeMillis()));
+			pst.setDate(6, new Date(System.currentTimeMillis()));
 			pst.execute();
 			con.close();
 			Log.getInstance().printLog("Utilizador admin criado com sucesso!");

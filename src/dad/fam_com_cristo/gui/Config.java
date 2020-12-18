@@ -30,6 +30,7 @@ import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
+import dad.fam_com_cristo.types.enumerados.Tipo_Funcionario;
 import dad.recursos.IconPasswordField;
 import dad.recursos.Log;
 import dad.recursos.Utils;
@@ -65,7 +66,8 @@ public class Config extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 
-		JLabel lBemVindo = new JLabel("Bem vindo! Est\u00E1 ligado como " + Login.NOME);
+		JLabel lBemVindo = new JLabel(
+				"Bem vindo! Est\u00E1 ligado como " + Login.getInstance().getFuncionario().getNome());
 		lBemVindo.setFont(new Font("Dialog", Font.PLAIN, 14));
 		lBemVindo.setBounds(25, 11, 650, 20);
 		contentPanel.add(lBemVindo);
@@ -76,17 +78,17 @@ public class Config extends JDialog {
 		lNome.setBounds(25, 70, 180, 30);
 		contentPanel.add(lNome);
 
-		JButton bAddFuncionrio = new JButton("ADICIONAR FUNCION\u00C1RIO");
-		bAddFuncionrio.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PERSON_ADD,
+		JButton bAddFuncionario = new JButton("ADICIONAR FUNCION\u00C1RIO");
+		bAddFuncionario.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PERSON_ADD,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
-		Utils.personalizarBotao(bAddFuncionrio);
-		bAddFuncionrio.addActionListener(new ActionListener() {
+		Utils.personalizarBotao(bAddFuncionario);
+		bAddFuncionario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				RegistoLogin.getInstance().open(false);
 			}
 		});
-		bAddFuncionrio.setBounds(25, 130, 240, 30);
-		contentPanel.add(bAddFuncionrio);
+		bAddFuncionario.setBounds(25, 130, 240, 30);
+		contentPanel.add(bAddFuncionario);
 
 		JButton bGerirFunc = new JButton("GERIR FUNCION\u00C1RIOS");
 		bGerirFunc.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.PERSON,
@@ -117,7 +119,7 @@ public class Config extends JDialog {
 		Utils.personalizarBotao(bAlterarPass);
 		bAlterarPass.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ChangePassword(Login.NOME, false).open();
+				new ChangePassword(Login.getInstance().getFuncionario(), false).open();
 			}
 		});
 		bAlterarPass.setBounds(25, 210, 240, 30);
@@ -254,7 +256,8 @@ public class Config extends JDialog {
 			}
 		}
 
-		if (!Login.NOME.equals(Main.DEFAULT_USER)) {
+		if (!Login.getInstance().getFuncionario().getNome().equals(Main.DEFAULT_USER)
+				&& Login.getInstance().getFuncionario().getType() != Tipo_Funcionario.PASTOR) {
 			bResetFinancas.setEnabled(false);
 			bResetFinancas.setToolTipText("Apenas o utilizador 'admin' pode fazer reset");
 			bResetFuncionarios.setEnabled(false);
@@ -265,6 +268,19 @@ public class Config extends JDialog {
 			bDeleteAll.setToolTipText("Apenas o utilizador 'admin' pode fazer reset");
 			bGerirFunc.setEnabled(false);
 			bGerirFunc.setToolTipText("Apenas o utilizador 'admin' pode gerir os funcionários!");
+			bAddFuncionario.setEnabled(false);
+			bAddFuncionario.setToolTipText("Apenas o utilizador 'admin' pode gerir os funcionários!");
+			pastor.setEditable(false);
+		} else if (!Login.getInstance().getFuncionario().getNome().equals(Main.DEFAULT_USER) &&
+				Login.getInstance().getFuncionario().getType() == Tipo_Funcionario.PASTOR) {
+			bResetFinancas.setEnabled(false);
+			bResetFinancas.setToolTipText("Apenas o utilizador 'admin' pode fazer reset");
+			bResetFuncionarios.setEnabled(false);
+			bResetFuncionarios.setToolTipText("Apenas o utilizador 'admin' pode fazer reset");
+			bResetMembros.setEnabled(false);
+			bResetMembros.setToolTipText("Apenas o utilizador 'admin' pode fazer reset");
+			bDeleteAll.setEnabled(false);
+			bDeleteAll.setToolTipText("Apenas o utilizador 'admin' pode fazer reset");
 		} else {
 			bAlterarPass.setEnabled(false);
 			bAlterarPass.setToolTipText("Não é possível alterar a senha do administrador");

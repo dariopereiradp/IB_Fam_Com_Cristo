@@ -49,6 +49,7 @@ import dad.fam_com_cristo.table.conexao.ConexaoFinancas;
 import dad.fam_com_cristo.table.conexao.ConexaoMembro;
 import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.table.models.TableModelMembro;
+import dad.fam_com_cristo.types.Funcionario;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.fam_com_cristo.types.enumerados.ImageFormats;
 import dad.fam_com_cristo.types.enumerados.Tipo_Membro;
@@ -763,16 +764,14 @@ public class DataGui extends JFrame {
 				} else if (e.getKeyCode() == KeyEvent.VK_F5) {
 					atualizarAction();
 					e.consume();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_F1) {
+				} else if (e.getKeyCode() == KeyEvent.VK_F1) {
 					new About().open();
 					e.consume();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_F2) {
+				} else if (e.getKeyCode() == KeyEvent.VK_F2) {
 					new BugReport().open();
 					e.consume();
 				}
-				
+
 			}
 			return false;
 		}
@@ -970,9 +969,56 @@ public class DataGui extends JFrame {
 	 * Abre a DataGui e um diálogo de boas vindas
 	 */
 	public void open() {
+		Funcionario func = Login.getInstance().getFuncionario();
+		switch (func.getType()) {
+		case SECRETARIO:
+			tabbedPane.setEnabledAt(0, true);
+			tabbedPane.setEnabledAt(1, false);
+			tabbedPane.setSelectedIndex(0);
+			mnMembros.setEnabled(true);
+			mnFinancas.setEnabled(false);
+			mnExportMembros.setEnabled(true);
+			mnExportTransacoes.setEnabled(false);
+			menuEstatisticas.setEnabled(true);			
+			break;
+		case TESOUREIRO:
+			tabbedPane.setEnabledAt(0, false);
+			tabbedPane.setEnabledAt(1, true);
+			tabbedPane.setSelectedIndex(1);
+			mnMembros.setEnabled(false);
+			mnFinancas.setEnabled(true);
+			mnExportMembros.setEnabled(false);
+			mnExportTransacoes.setEnabled(true);
+			menuEstatisticas.setEnabled(true);
+			break;
+		case PASTOR:
+			if (func.getNome().equals(Main.DEFAULT_USER)) {
+				tabbedPane.setEnabledAt(0, false);
+				tabbedPane.setEnabledAt(1, false);
+				tabbedPane.setSelectedIndex(-1);
+				mnMembros.setEnabled(false);
+				mnFinancas.setEnabled(false);
+				mnExportMembros.setEnabled(false);
+				mnExportTransacoes.setEnabled(false);
+				menuEstatisticas.setEnabled(false);
+			} else {
+				tabbedPane.setEnabledAt(0, true);
+				tabbedPane.setEnabledAt(1, true);
+				tabbedPane.setSelectedIndex(0);
+				mnMembros.setEnabled(true);
+				mnFinancas.setEnabled(true);
+				mnExportMembros.setEnabled(true);
+				mnExportTransacoes.setEnabled(true);
+				menuEstatisticas.setEnabled(true);
+			}
+			break;
+		default:
+			break;
+		}
 		setVisible(true);
-		JOptionPane pane = new JOptionPane("Bem vindo " + Login.NOME + "!", JOptionPane.INFORMATION_MESSAGE,
-				JOptionPane.DEFAULT_OPTION, new ImageIcon(getClass().getResource("/FC_SS.jpg")), new Object[] {}, null);
+		JOptionPane pane = new JOptionPane("Bem vindo " + Login.getInstance().getFuncionario().getNome() + "!",
+				JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION,
+				new ImageIcon(getClass().getResource("/FC_SS.jpg")), new Object[] {}, null);
 		final JDialog dialog = pane.createDialog("Boas vindas");
 		dialog.setModal(true);
 		dialog.setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("/FC.jpg"))));

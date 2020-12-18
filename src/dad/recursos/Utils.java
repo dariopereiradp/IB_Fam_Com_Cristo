@@ -510,7 +510,7 @@ public class Utils {
 		pass.setIcon(MaterialImageFactory.getInstance().getImage(MaterialIconFont.LOCK,
 				Utils.getInstance().getCurrentTheme().getColorIcons()));
 		pass.setHint("Senha do administrador");
-		pass.setPreferredSize(new Dimension(150, 30));
+		pass.setPreferredSize(new Dimension(140, 30));
 		return pass;
 	}
 

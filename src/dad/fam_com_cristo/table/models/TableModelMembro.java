@@ -250,7 +250,6 @@ public class TableModelMembro extends AbstractTableModel {
 								new CompositeCommand("Tipo de Membro", new AtualizaMembro("Tipo_Membro", membro, valor),
 										new AtualizaMembro("Batizado", membro, valor_batismo)));
 					}
-
 					break;
 				default:
 					membros.get(rowIndex);

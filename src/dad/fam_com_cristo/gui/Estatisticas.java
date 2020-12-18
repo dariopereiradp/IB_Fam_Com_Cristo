@@ -32,8 +32,10 @@ import org.knowm.xchart.XChartPanel;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
+import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.table.models.TableModelMembro;
+import dad.fam_com_cristo.types.Funcionario;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.recursos.GraficosFinancas;
 import dad.recursos.GraficosMembros;
@@ -836,11 +838,42 @@ public class Estatisticas extends JDialog {
 	 * Torna o diálogo visível.
 	 */
 	public void open() {
+		Funcionario func = Login.getInstance().getFuncionario();
+		switch (func.getType()) {
+		case SECRETARIO:
+			tabbedPane.setEnabledAt(0, true);
+			tabbedPane.setEnabledAt(1, true);
+			tabbedPane.setEnabledAt(2, false);
+			tabbedPane.setSelectedIndex(0);
+			break;
+		case TESOUREIRO:
+			tabbedPane.setEnabledAt(0, false);
+			tabbedPane.setEnabledAt(1, false);
+			tabbedPane.setEnabledAt(2, true);
+			tabbedPane.setSelectedIndex(2);
+			break;
+		case PASTOR:
+			if (func.getNome().equals(Main.DEFAULT_USER)) {
+				tabbedPane.setEnabledAt(0, false);
+				tabbedPane.setEnabledAt(1, false);
+				tabbedPane.setEnabledAt(2, false);
+				tabbedPane.setSelectedIndex(-1);
+			} else {
+				tabbedPane.setEnabledAt(0, true);
+				tabbedPane.setEnabledAt(1, true);
+				tabbedPane.setEnabledAt(2, true);
+				tabbedPane.setSelectedIndex(0);
+			}
+			break;
+		default:
+			break;
+		}
 		setVisible(true);
 	}
 
 	/**
 	 * Listener para atualizar os valores de acordo com as datas escolhidas
+	 * 
 	 * @author dariopereiradp
 	 *
 	 */
@@ -864,6 +897,7 @@ public class Estatisticas extends JDialog {
 
 	/**
 	 * Listener para atualizar o gráfico de acordo com as datas escolhidas
+	 * 
 	 * @author dariopereiradp
 	 *
 	 */

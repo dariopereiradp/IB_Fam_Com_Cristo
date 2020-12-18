@@ -30,6 +30,7 @@ import javax.swing.JCheckBox;
 import javax.swing.border.LineBorder;
 
 import dad.fam_com_cristo.table.conexao.ConexaoLogin;
+import dad.fam_com_cristo.types.Funcionario;
 import dad.recursos.CriptografiaAES;
 import dad.recursos.Log;
 import dad.recursos.Utils;
@@ -51,14 +52,14 @@ public class ChangePassword extends JDialog {
 	private JPasswordField passAtual;
 	private JPasswordField newPass;
 	private JPasswordField confPass;
-	private String nome;
+	private Funcionario funcionario;
 
 	/**
 	 * Create the dialog.
 	 */
-	public ChangePassword(String nome, boolean admin) {
+	public ChangePassword(Funcionario funcionario, boolean admin) {
 		super(DataGui.getInstance(), ModalityType.DOCUMENT_MODAL);
-		this.nome = nome;
+		this.funcionario = funcionario;
 		setBounds(100, 100, 460, 240);
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);
@@ -68,7 +69,7 @@ public class ChangePassword extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			JLabel lblAlterarSenhaDo = new JLabel("ALTERAR SENHA DO '" + nome + "'");
+			JLabel lblAlterarSenhaDo = new JLabel("ALTERAR SENHA DO '" + funcionario.getNome() + "'");
 			lblAlterarSenhaDo.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAlterarSenhaDo.setFont(new Font("Dialog", Font.PLAIN, 17));
 			lblAlterarSenhaDo.setBackground(new Color(60, 179, 113));
@@ -201,7 +202,7 @@ public class ChangePassword extends JDialog {
 				CriptografiaAES.encrypt(oldPass);
 				Connection con = ConexaoLogin.getConnection();
 				PreparedStatement pst = con.prepareStatement("select Pass from logins where Nome=?");
-				pst.setString(1, nome);
+				pst.setString(1, funcionario.getNome());
 				ResultSet rs = pst.executeQuery();
 				if (rs.next()) {
 					if (!rs.getString(1).equals(CriptografiaAES.getEncryptedString())) {
@@ -247,7 +248,7 @@ public class ChangePassword extends JDialog {
 				CriptografiaAES.encrypt(pass);
 				pst = con.prepareStatement("update logins set Pass=? where Nome=?");
 				pst.setString(1, CriptografiaAES.getEncryptedString());
-				pst.setString(2, nome);
+				pst.setString(2, funcionario.getNome());
 				pst.execute();
 				dispose();
 				JOptionPane.showMessageDialog(DataGui.getInstance(), "Senha alterada com sucesso!", "ALTERAR SENHA",
