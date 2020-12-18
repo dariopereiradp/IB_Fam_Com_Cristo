@@ -145,6 +145,7 @@ To see a full explanation, read the manual (in portuguese). Bellow you can see s
 * <a href="https://github.com/vincenzopalazzo/material-ui-swing">Material UI Swing v1.1.2-rc1</a> - Implements a beauty and modern Look-and-feel, based on Material Design.
 * <a href="http://ucanaccess.sourceforge.net/site.html">UCanAccess 5.0.0</a> - Read and write Microsoft Access Databases
 * <a href="https://jackcessencrypt.sourceforge.io">Jackcess Encrypt 3.0.0</a> - Read and write encrypted Access databases
+* <a href="https://github.com/haraldk/TwelveMonkeys">TwelveMonkeys ImageIO 3.6.1</a> - Compress the images
 * <a href="https://github.com/srikanth-lingala/zip4j">Zip4j 2.6.4</a> - Generate Zip files (used in Backups and BugReports)
 * <a href="https://github.com/LGoodDatePicker/LGoodDatePicker">LGoodDatePicker 11.1.0</a> - Choose a date in the LocalDate type.
 * <a href="https://itextpdf.com/en/products/itext-5-legacy">iTextPDF 5.5.13.2</a> - Generate a PDF file (used to the lists of members, financial reports and member profiles)
