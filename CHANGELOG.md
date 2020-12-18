@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.0.1] - 
+
+### Fixed
+- Manual opening didn't work (wrong pdf name - 2.0 instead of 2.0.1)
+- Data do batismo was wrong on the pdf generation Ficha_de_Membro. It was a mistake: I was calling the wrong function (getMembro_desde())
+- Image upload with wrong orientation. I fixed it using the [TwelveMonkeys ImageIO 3.6.1] library to compress the image.
+
 ## [v2.0.1beta] - 2020-12-18
 
 ### Added
@@ -59,6 +66,7 @@ on October 31, I decided to call it "Reforma" in honor of the [Protestant Reform
 ## [v1.0] - 2020-08-31
 - Initial version
 
+[TwelveMonkeys ImageIO 3.6.1]: https://github.com/haraldk/TwelveMonkeys
 [JCalendar]: https://github.com/toedter/jcalendar
 [LGoodDatePicker]: https://github.com/LGoodDatePicker/LGoodDatePicker
 [Protestant Reformation]: https://www.history.com/topics/reformation/reformation
