@@ -38,7 +38,7 @@ All notable changes to this project will be documented in this file.
 - Access database is now encryted by a password.
 - Settings file is now a INI file instead of plain txt.
 - Use of LocalDate or LocalDateTime instead of the old java.util.Date.
-- Use of [LGoodDatePicker]("https://github.com/LGoodDatePicker/LGoodDatePicker") instead of the old [JCalendar]("https://github.com/toedter/jcalendar")
+- Use of [LGoodDatePicker] instead of the old [JCalendar]
 - Instead of repeating the same code, now the program uses some super classes like Table, that extends JTable and has the common configurations of the tables used in the program (members, finances and collaborators) or DateChooser, that extends DatePicker with some default configurations.
 - Regarding the same problem, it was created an Utils class, that groups some functions that are used in different parts of the program.
 - ImageViewer opens the image in the original aspect ratio.
@@ -53,13 +53,15 @@ All notable changes to this project will be documented in this file.
 
 ### Curiosity about the version
 This version was named v2.0 - Reforma because it made a great reformation in the base code of the program, making it faster, more beautiful and effective. Since the development of functionallities was finished
-on October 31, I decided to call it "Reforma" in honor of the [Protestant Reformation]("https://www.history.com/topics/reformation/reformation"), that changed the world radically.
+on October 31, I decided to call it "Reforma" in honor of the [Protestant Reformation], that changed the world radically.
 
 
 ## [v1.0] - 2020-08-31
 - Initial version
 
-
+[JCalendar]: https://github.com/toedter/jcalendar
+[LGoodDatePicker]: https://github.com/LGoodDatePicker/LGoodDatePicker
+[Protestant Reformation]: https://www.history.com/topics/reformation/reformation
 [v2.0.1beta]: https://github.com/dariopereiradp/IB_Fam_Com_Cristo/compare/v2.0beta-Reforma...v2.0.1beta-Reforma
 [v2.0beta]: https://github.com/dariopereiradp/IB_Fam_Com_Cristo/compare/v1.0...v2.0beta-Reforma
 [v1.0]: https://github.com/dariopereiradp/IB_Fam_Com_Cristo/releases/tag/v1.0
