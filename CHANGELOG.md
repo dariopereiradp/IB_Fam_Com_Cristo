@@ -6,17 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Different types of users that can login to the program. Each type of user grant access to specific features of the program. This change adds a new layer of security and personal data protection. For example, a user that only needs to control the finances doesn't need to have access to personal details of the members.
+- On Windows 10 Control Panel there is a proper unninstall icon on the program (modification on the Inno script)
 
 ### Changed
 - As part of the new feature, the program now saves the user (object) that logged in, instead of saving only the name, in the Login class. This solution is more robust and adds a new layer of security since know the program needs to call a method (getFuncionario()) instead of accessing a public variable directly (Login.NOME).
 - The admin user now can only change settings and manage the users. He doensn't have access to the whole program anymore, and cannot see anything about the members or finnances. This is because the IT guy doesn't need to have access to personal or secret data to manage the program.
 - The version number changed, even if the previous version was a beta version because I added a new important feature, described above. So I changed the version to 2.0.1 and it will remain in beta testing while I wait for users feedback.
 
-
-
-
 ### Fixed
 - Grid lines in the table of collaborators wasn't showing up. Not this is fixed.
+
 
 ## [v2.0beta] - 2020-11-10
 
