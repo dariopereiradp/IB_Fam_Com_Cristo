@@ -86,8 +86,8 @@ This project was created by Dário Pereira, to help Igreja Batista Famílias com
 I extracted this metrics using <a href="https://github.com/mariazevedo88/o3smeasures-tool">o3smeasures-tool</a> to Eclipse.
 
 * Number of classes: 85
-* Lines of code (LOC): 9610 (Max: 824 - DataGui.java)
-* Numbers of Methods: 513 (Max: 63 - TableModelMembro.java)
+* Lines of code (LOC): 9663 (Max: 825 - DataGui.java)
+* Numbers of Methods: 515 (Max: 63 - TableModelMembro.java)
 * Number of Attributes: 355 (Max: 46 - MembroPanel.java)
 * Number of packages: 12
 * Number of interfaces: 3
@@ -146,6 +146,7 @@ To see a full explanation, read the manual (in portuguese). Bellow you can see s
 * <a href="http://ucanaccess.sourceforge.net/site.html">UCanAccess 5.0.0</a> - Read and write Microsoft Access Databases
 * <a href="https://jackcessencrypt.sourceforge.io">Jackcess Encrypt 3.0.0</a> - Read and write encrypted Access databases
 * <a href="https://github.com/haraldk/TwelveMonkeys">TwelveMonkeys ImageIO 3.6.1</a> - Compress the images
+* <a href="https://www.javaxt.com/javaxt-core">JavaXT Core 1.10.3</a> - To see the images with the correct orientation
 * <a href="https://github.com/srikanth-lingala/zip4j">Zip4j 2.6.4</a> - Generate Zip files (used in Backups and BugReports)
 * <a href="https://github.com/LGoodDatePicker/LGoodDatePicker">LGoodDatePicker 11.1.0</a> - Choose a date in the LocalDate type.
 * <a href="https://itextpdf.com/en/products/itext-5-legacy">iTextPDF 5.5.13.2</a> - Generate a PDF file (used to the lists of members, financial reports and member profiles)
