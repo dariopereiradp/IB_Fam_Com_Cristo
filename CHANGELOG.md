@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [v2.0.1] - 
 
+### Changed
+- Small image view (in both MembroDetails and Ficha_Membro_ToPDF) know preserves the original aspect ratio.
+
 ### Fixed
 - Manual opening didn't work (wrong pdf name - 2.0 instead of 2.0.1)
 - Data do batismo was wrong on the pdf generation Ficha_de_Membro. It was a mistake: I was calling the wrong function (getMembro_desde())
-- Image upload with wrong orientation. I fixed it using the [TwelveMonkeys ImageIO 3.6.1] library to compress the image.
+- Image upload with wrong orientation. I fixed it using the [TwelveMonkeys ImageIO 3.6.1] library to compress the image and preserve the metadata and [JavaXT Core] library to rotate the image, according to the orientation metadata.
 
 ## [v2.0.1beta] - 2020-12-18
 
@@ -66,6 +69,7 @@ on October 31, I decided to call it "Reforma" in honor of the [Protestant Reform
 ## [v1.0] - 2020-08-31
 - Initial version
 
+[JavaXT Core]: https://www.javaxt.com/javaxt-core/
 [TwelveMonkeys ImageIO 3.6.1]: https://github.com/haraldk/TwelveMonkeys
 [JCalendar]: https://github.com/toedter/jcalendar
 [LGoodDatePicker]: https://github.com/LGoodDatePicker/LGoodDatePicker
