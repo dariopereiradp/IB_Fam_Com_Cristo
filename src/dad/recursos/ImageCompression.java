@@ -11,8 +11,11 @@ import java.util.Iterator;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
 
@@ -32,10 +35,13 @@ public class ImageCompression {
         InputStream inputStream = new FileInputStream(imageFile);
         OutputStream outputStream = new FileOutputStream(compressedImageFile);
 
-        float imageQuality = 0.15f;
+        float imageQuality = 0.25f;
 
         //Create the buffered image
-        BufferedImage bufferedImage = ImageIO.read(inputStream);
+        ImageReader reader = ImageIO.getImageReadersBySuffix("jpg").next();
+        reader.setInput(ImageIO.createImageInputStream(inputStream));
+        IIOMetadata metadata = reader.getImageMetadata(0);
+        BufferedImage bufferedImage = reader.read(0);
 
         //Get image writers
         Iterator<ImageWriter> imageWriters = ImageIO.getImageWritersByFormatName("jpg");
@@ -52,9 +58,12 @@ public class ImageCompression {
         //Set the compress quality metrics
         imageWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         imageWriteParam.setCompressionQuality(imageQuality);
+        if (imageWriteParam instanceof JPEGImageWriteParam) {
+            ((JPEGImageWriteParam) imageWriteParam).setOptimizeHuffmanTables(true);
+        }
 
         //Created image
-        imageWriter.write(null, new IIOImage(bufferedImage, null, null), imageWriteParam);
+        imageWriter.write(null, new IIOImage(bufferedImage, null, metadata), imageWriteParam);
         
         membro.setImg (new ImageIcon(compressedImageFile.getPath()));
 
@@ -63,5 +72,6 @@ public class ImageCompression {
         outputStream.close();
         imageOutputStream.close();
         imageWriter.dispose();
+        
     }
 }

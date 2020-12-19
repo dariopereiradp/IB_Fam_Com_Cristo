@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -426,10 +425,11 @@ public class MembroDetail extends JDialog {
 		image = new JLabel();
 		image.setHorizontalAlignment(JLabel.CENTER);
 		image.setVerticalAlignment(JLabel.CENTER);
-		image.setMinimumSize(new Dimension(177, 236));
-		if (membro != null && membro.getImg() != null)
-			image.setIcon(new ImageIcon(membro.getImg().getImage().getScaledInstance(177, 236, Image.SCALE_DEFAULT)));
-		else
+		Dimension size = new Dimension(177, 236);
+		image.setMinimumSize(size);
+		if (membro != null && membro.getImg() != null) {
+			image.setIcon(Utils.getScaledImageIcon(size, membro.getImageFile()));
+		} else
 			image.setText("         Sem Imagem         ");
 		image.setBorder(new LineBorder(Color.BLACK, 3));
 
@@ -447,8 +447,8 @@ public class MembroDetail extends JDialog {
 					membro.addImg();
 					if (membro.getImg() != null) {
 						image.setText(null);
-						image.setIcon(new ImageIcon(
-								membro.getImg().getImage().getScaledInstance(177, 236, Image.SCALE_DEFAULT)));
+						Dimension size = new Dimension(177, 236);
+						image.setIcon(Utils.getScaledImageIcon(size, membro.getImageFile()));
 					}
 					editState();
 				}

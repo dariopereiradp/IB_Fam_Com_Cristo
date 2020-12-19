@@ -53,10 +53,16 @@ public class ImageViewer {
 		JLabel imageView = new JLabel("");
 		imageView.setMinimumSize(size);
 
-		Dimension scaled = getScaledDimension(new Dimension(img.getIconWidth(), img.getIconHeight()), size);
+		if (optionalSourceFile == null) {
+			Dimension scaled = getScaledDimension(new Dimension(img.getIconWidth(), img.getIconHeight()), size);
+			imageView.setIcon(new ImageIcon(img.getImage().getScaledInstance((int) scaled.getWidth(),
+					(int) scaled.getHeight(), Image.SCALE_AREA_AVERAGING)));
+		} else {
+			;
+			imageView.setIcon(Utils.getScaledImageIcon(size, optionalSourceFile));
+		}
 		imageView.setBorder(new LineBorder(Color.BLACK, 2));
-		imageView.setIcon(new ImageIcon(img.getImage().getScaledInstance((int) scaled.getWidth(),
-				(int) scaled.getHeight(), Image.SCALE_AREA_AVERAGING)));
+
 		jdialog.getContentPane().add(imageView, "center");
 
 		imageView.setComponentPopupMenu(getPopupMenu(optionalSourceFile, target, optionalSourceStream));

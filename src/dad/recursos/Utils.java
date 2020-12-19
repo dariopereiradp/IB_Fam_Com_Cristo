@@ -45,6 +45,7 @@ import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.fam_com_cristo.types.enumerados.ImageFormats;
+import javaxt.io.Image;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.animation.MaterialUIMovement;
 import mdlaf.themes.MaterialTheme;
@@ -503,7 +504,8 @@ public class Utils {
 	}
 
 	/**
-	 * @return an IconPasswordField with an icon and a hint and a preferred dimension
+	 * @return an IconPasswordField with an icon and a hint and a preferred
+	 *         dimension
 	 */
 	public static IconPasswordField getPasswordField() {
 		IconPasswordField pass = new IconPasswordField();
@@ -512,6 +514,55 @@ public class Utils {
 		pass.setHint("Senha do administrador");
 		pass.setPreferredSize(new Dimension(140, 30));
 		return pass;
+	}
+
+	/**
+	 * This method rotates a image according to the orientation found in the EXIF
+	 * informations. If there is no orientation, it returns the same image.
+	 * 
+	 * @param imageFile
+	 * @return
+	 */
+	public static Image getOrientatedImage(File imageFile) {
+		javaxt.io.Image image = new javaxt.io.Image(imageFile);
+		java.util.HashMap<Integer, Object> exif = image.getExifTags();
+		try {
+			int orientation = (Integer) exif.get(0x0112);
+			switch (orientation) {
+			case 3:
+			case 4:
+				image.rotateClockwise();
+				image.rotateClockwise();
+			case 5:
+			case 6:
+				image.rotateClockwise();
+				break;
+			case 7:
+			case 8:
+				image.rotateCounterClockwise();
+				break;
+			default:
+				break;
+			}
+		} catch (Exception e) {
+
+		}
+		return image;
+	}
+
+	/**
+	 * This method returns a scaled image, to fit a dimension without changing the
+	 * original aspect ratio
+	 * 
+	 * @param size
+	 * @param imageFile
+	 * @return
+	 */
+	public static ImageIcon getScaledImageIcon(Dimension size, File imageFile) {
+		javaxt.io.Image image = getOrientatedImage(imageFile);
+		Dimension scaled = ImageViewer.getScaledDimension(new Dimension(image.getWidth(), image.getHeight()), size);
+		return new ImageIcon(image.getImage().getScaledInstance((int) scaled.getWidth(), (int) scaled.getHeight(),
+				java.awt.Image.SCALE_AREA_AVERAGING));
 	}
 
 	/**

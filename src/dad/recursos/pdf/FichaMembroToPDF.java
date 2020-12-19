@@ -1,5 +1,6 @@
 package dad.recursos.pdf;
 
+import java.awt.Dimension;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -31,6 +32,7 @@ import dad.recursos.Utils;
 
 /**
  * Classe para gerar uma ficha de membro em PDF
+ * 
  * @author dariopereiradp
  *
  */
@@ -38,7 +40,9 @@ public class FichaMembroToPDF {
 
 	/**
 	 * Gera uma ficha de membro
-	 * @param membro - membro para ser gerada a ficha; se for passado null, será gerada uma ficha vazia
+	 * 
+	 * @param membro - membro para ser gerada a ficha; se for passado null, será
+	 *               gerada uma ficha vazia
 	 */
 	public static void membroToPdf(Membro membro) {
 
@@ -79,9 +83,8 @@ public class FichaMembroToPDF {
 			if (membro != null && membro.getImg() != null) {
 
 				Image image;
-				image = Image.getInstance(
-						membro.getImg().getImage().getScaledInstance(68, 91, java.awt.Image.SCALE_AREA_AVERAGING),
-						null);
+				Dimension imgSize = new Dimension(68, 91);
+				image = Image.getInstance(Utils.getScaledImageIcon(imgSize, membro.getImageFile()).getImage(), null);
 				image.setAlignment(Element.ALIGN_CENTER);
 				image.setAbsolutePosition(480, 505);
 				writer.getDirectContent().addImage(image, true);
@@ -184,7 +187,7 @@ public class FichaMembroToPDF {
 
 			if (membro != null && membro.isBatizado()) {
 				vidaCrista.addCell(getCellBoldWithSpace("Data do batismo: "));
-				vidaCrista.addCell(getCellWithSpace(dateFormat.format(membro.getMembro_desde())));
+				vidaCrista.addCell(getCellWithSpace(dateFormat.format(membro.getData_batismo())));
 			} else if (membro == null) {
 				vidaCrista.addCell(getCellBoldWithSpace("Data do batismo: "));
 				vidaCrista.addCell(getCellWithSpace("_____/______/_________"));

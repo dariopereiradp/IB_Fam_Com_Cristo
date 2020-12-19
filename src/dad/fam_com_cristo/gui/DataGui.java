@@ -954,6 +954,7 @@ public class DataGui extends JFrame {
 					+ "Consulte o manual que veio com o programa ou entre em contato com '" + Main.EMAIL_SUPORTE + "'",
 					"Manual de Instruções - Erro", JOptionPane.OK_OPTION,
 					new ImageIcon(getClass().getResource("/FC_SS.jpg")));
+			Log.getInstance().printLog("Erro ao abrir manual: " + e1.getMessage());
 		}
 	}
 
