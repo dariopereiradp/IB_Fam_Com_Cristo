@@ -186,12 +186,8 @@ public class Estatisticas extends JDialog {
 		painelGraficosPorMesChooser.add(new JLabel(""));
 		painelGraficosPorMesChooser.add(new JLabel("Escolha o ano: "));
 
-		Integer[] anosList = new Integer[250];
-		for (int i = 2000; i < 2250; i++)
-			anosList[i - 2000] = i;
-
 		JComboBox<Integer> anos = new JComboBox<Integer>();
-		anos.setModel(new DefaultComboBoxModel<Integer>(anosList));
+		anos.setModel(new DefaultComboBoxModel<Integer>(getAnosList()));
 		anos.setSelectedItem(LocalDate.now().getYear());
 
 		anos.addActionListener(new ActionListener() {
@@ -221,6 +217,16 @@ public class Estatisticas extends JDialog {
 		setUpMembrosNumerosPanel();
 
 		tabbedPane.addTab("Finanças", financasPane);
+	}
+
+	private Integer[] getAnosList() {
+		int min = TableModelFinancas.getInstance().getOldestDate().getYear();
+		int max = LocalDate.now().getYear();
+		int size = max - min + 1;
+		Integer[] anosList = new Integer[size];
+		for (int i = min; i <= max; i++)
+			anosList[i - min] = i;
+		return anosList;
 	}
 
 	/**

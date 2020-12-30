@@ -8,6 +8,7 @@ import java.nio.file.StandardCopyOption;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.FileUtils;
 
@@ -42,17 +43,23 @@ public class Main {
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String DEFAULT_USER = "admin";
 	public static final String DEFAULT_PASS = "dad";
-	private static final String DOCUMENTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
-			+ "Documents/IB_Fam_Com_Cristo/";
-	public static final String LISTAS_DIR = DOCUMENTS_DIR + "Listas/";
-	public static final String BACKUP_DIR = DOCUMENTS_DIR + "Backups/";
-	public static final String LOGO_DIR = DOCUMENTS_DIR + "Imagem de Logotipo/";
-	public static final String SAVED_IMAGES = DOCUMENTS_DIR + "Imagem Salvas/";
-	public static final String MODELOS_DIR = DOCUMENTS_DIR + "Modelos/";
-	public static final String BUG_REPORTS_DIR = DOCUMENTS_DIR + "BugReports/";
-	public static final String DATA_DIR = System.getenv("APPDATA") + "/IB_Fam_Com_Cristo/";
-	public static final String DATABASE_DIR = DATA_DIR + "Databases/";
-	public static final String MEMBROS_PDF_PATH = DOCUMENTS_DIR + "Fichas de Membros/";
+//	private static final String DOCUMENTS_DIR = System.getProperty("user.home") + System.getProperty("file.separator")
+//			+ "Documents/IB_Fam_Com_Cristo/";
+	private static final String DOCUMENTS_DIR = FileSystemView.getFileSystemView().getDefaultDirectory().getPath()
+			+ System.getProperty("file.separator") + "IB_Fam_Com_Cristo" + System.getProperty("file.separator");
+	public static final String LISTAS_DIR = DOCUMENTS_DIR + "Listas de Membros" + System.getProperty("file.separator");
+	public static final String RELATORIOS_DIR = DOCUMENTS_DIR + "Relatórios Financeiros"
+			+ System.getProperty("file.separator");
+	public static final String BACKUP_DIR = DOCUMENTS_DIR + "Backups" + System.getProperty("file.separator");
+	public static final String LOGO_DIR = DOCUMENTS_DIR + "Imagem de Logotipo" + System.getProperty("file.separator");
+	public static final String SAVED_IMAGES = DOCUMENTS_DIR + "Imagem Salvas" + System.getProperty("file.separator");
+	public static final String MODELOS_DIR = DOCUMENTS_DIR + "Modelos" + System.getProperty("file.separator");
+	public static final String BUG_REPORTS_DIR = DOCUMENTS_DIR + "BugReports" + System.getProperty("file.separator");
+	public static final String DATA_DIR = System.getenv("APPDATA") + System.getProperty("file.separator")
+			+ "IB_Fam_Com_Cristo" + System.getProperty("file.separator");
+	public static final String DATABASE_DIR = DATA_DIR + "Databases" + System.getProperty("file.separator");
+	public static final String MEMBROS_PDF_PATH = DOCUMENTS_DIR + "Fichas de Membros"
+			+ System.getProperty("file.separator");
 	public static final String[] OPTIONS = { "Sim", "Não" };
 	public static final String AVISO_INI = "SE ALTERAR ESSE FICHEIRO O PROGRAMA PODE NÃO FUNCIONAR CORRETAMENTE";
 	public static long inicialTime;
@@ -195,6 +202,10 @@ public class Main {
 		File listDir = new File(Main.LISTAS_DIR);
 		if (!listDir.exists())
 			listDir.mkdirs();
+
+		File relatoriosDir = new File(Main.RELATORIOS_DIR);
+		if (!relatoriosDir.exists())
+			relatoriosDir.mkdirs();
 
 		File backdir = new File(Main.BACKUP_DIR);
 		if (!backdir.exists())

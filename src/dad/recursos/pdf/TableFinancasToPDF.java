@@ -79,7 +79,7 @@ public class TableFinancasToPDF {
 		try {
 			Document doc = new Document(PageSize.A4, 40, 40, 50, 50);
 
-			PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(Main.LISTAS_DIR + title));
+			PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(Main.RELATORIOS_DIR + title));
 			writer.setPageEvent(new HeaderFooterPageEvent());
 			doc.open();
 
@@ -215,8 +215,8 @@ public class TableFinancasToPDF {
 			doc.close();
 			String message = "O Relatório Financeiro - " + descricao
 					+ " foi criado com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"
-					+ Main.LISTAS_DIR + "\nVocê quer abrir o documento agora?";
-			Utils.askMessage(message, Main.LISTAS_DIR, Main.LISTAS_DIR + title);
+					+ Main.RELATORIOS_DIR+ "\nVocê quer abrir o documento agora?";
+			Utils.askMessage(message, Main.RELATORIOS_DIR, Main.RELATORIOS_DIR + title);
 
 		} catch (DocumentException ex) {
 			ex.printStackTrace();

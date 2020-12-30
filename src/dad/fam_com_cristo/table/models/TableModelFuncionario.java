@@ -182,7 +182,7 @@ public class TableModelFuncionario extends AbstractTableModel {
 
 	public Funcionario getFuncionario(String nome) {
 		for (Funcionario funcionario : funcionarios) {
-			if (funcionario.getNome().equals(nome))
+			if (funcionario.getNome().equalsIgnoreCase(nome))
 				return funcionario;
 		}
 		return null;

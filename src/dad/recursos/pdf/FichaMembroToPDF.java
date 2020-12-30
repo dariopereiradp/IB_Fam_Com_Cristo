@@ -260,7 +260,7 @@ public class FichaMembroToPDF {
 			doc.close();
 			String message = membro == null ? "A ficha de membro vazia" : "A ficha do membro " + membro.getNome();
 			message += " foi criada com sucesso!\nFoi salvo um documento PDF (que pode ser impresso) na pasta:\n"
-					+ Main.LISTAS_DIR + "\nVocê quer abrir o documento agora?";
+					+ Main.MEMBROS_PDF_PATH + "\nVocê quer abrir o documento agora?";
 			Utils.askMessage(message, Main.MEMBROS_PDF_PATH, Main.MEMBROS_PDF_PATH + title);
 
 		} catch (Exception e) {
