@@ -6,11 +6,18 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Small image view (in both MembroDetails and Ficha_Membro_ToPDF) know preserves the original aspect ratio.
+- The programa now uses a different folder to store the finnancial reports. Before it was using the same folder of members lists.
+- Folder 'Listas' changed to 'Listas de Membros'
+- Statistics -> Finances -> Por meses. Chosing the year is simpler now. Before it was showing all the years from 2000 to 2250 on the JComboBox. Now it only shows the years from the oldest year to the current year.
+- Changed '/' to System.getProperty("file.separator")
 
 ### Fixed
 - Manual opening didn't work (wrong pdf name - 2.0 instead of 2.0.1)
 - Data do batismo was wrong on the pdf generation Ficha_de_Membro. It was a mistake: I was calling the wrong function (getMembro_desde())
 - Image upload with wrong orientation. I fixed it using the [TwelveMonkeys ImageIO 3.6.1] library to compress the image and preserve the metadata and [JavaXT Core] library to rotate the image, according to the orientation metadata.
+- Unable to Login with different String case (for example: the user is registred as 'tesoureiro'. If I try to login using 'Tesoureiro', the UCanAccess library finds the user, but TableModelFuncionario wasn't finding it, causing a NullPointerException). The method getFuncionario(String nome) now uses the method equalsIgnoreCase() of the String class. So, Usernames aren't case sensitive.
+- Finding the Documents folder is language sensitive now. The program was using "Documents" string, causing non-english systems to create a new folder instead of using the Documents folder. Now, the program uses this trick to find the correct documents folder: FileSystemView.getFileSystemView().getDefaultDirectory().getPath().
+- Wrong indication of the path of generated Fichas de Membros. It was indicating the path of Listas de Membros in the JOptionPane.
 
 ## [v2.0.1beta] - 2020-12-18
 
