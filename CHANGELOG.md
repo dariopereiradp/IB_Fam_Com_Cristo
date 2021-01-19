@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [v2.0.1] - 
 
 ### Changed
-- Small image view (in both MembroDetails and Ficha_Membro_ToPDF) know preserves the original aspect ratio.
+- Small image view (in both MembroDetails and Ficha_Membro_ToPDF) now preserves the original aspect ratio.
 - The programa now uses a different folder to store the finnancial reports. Before it was using the same folder of members lists.
 - Folder 'Listas' changed to 'Listas de Membros'
 - Statistics -> Finances -> Por meses. Chosing the year is simpler now. Before it was showing all the years from 2000 to 2250 on the JComboBox. Now it only shows the years from the oldest year to the current year.
