@@ -26,7 +26,7 @@ All notable changes to this project will be documented in this file.
 - On Windows 10 Control Panel there is a proper uninstall icon on the program (modification on the Inno script)
 
 ### Changed
-- As part of the new feature, the program now saves the user (object) that logged in, instead of saving only the name, in the Login class. This solution is more robust and adds a new layer of security since know the program needs to call a method (getFuncionario()) instead of accessing a public variable directly (Login.NOME).
+- As part of the new feature, the program now saves the user (object) that logged in, instead of saving only the name, in the Login class. This solution is more robust and adds a new layer of security since now the program needs to call a method (getFuncionario()) instead of accessing a public variable directly (Login.NOME).
 - The admin user now can only change settings and manage the users. He doesn't have access to the whole program anymore, and cannot see anything about the members or finances. This is because the IT guy doesn't need to have access to personal or secret data to manage the program.
 - The version number changed, even if the previous version was a beta version because I added a new important feature, described above. So I changed the version to 2.0.1 and it will remain in beta testing while I wait for users feedback.
 
