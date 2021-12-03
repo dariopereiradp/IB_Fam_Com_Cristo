@@ -163,6 +163,7 @@ public class BugReport extends JDialog {
 			Log.getInstance().printLog(message);
 			file_text.delete();
 			dispose();
+			zip.close();
 		} catch (Exception e) {
 			String message = "Erro ao criar o relatório de erros! - " + e.getMessage();
 			JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE,

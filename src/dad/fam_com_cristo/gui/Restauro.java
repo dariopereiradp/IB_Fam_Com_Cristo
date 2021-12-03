@@ -141,7 +141,8 @@ public class Restauro extends JDialog {
 		File temp = new File(tempDir);
 		temp.mkdirs();
 		try {
-			new ZipFile(backupFile).extractAll(temp.getPath());
+			ZipFile zip = new ZipFile(backupFile);
+			zip.extractAll(temp.getPath());
 			if (!conf.isSelected()) {
 				File confFile = new File(tempDir + "conf.dad");
 				confFile.delete();
@@ -160,6 +161,7 @@ public class Restauro extends JDialog {
 				File funcFile = new File(tempDir + "logins.accdb");
 				funcFile.delete();
 			}
+			zip.close();
 			Utils.close("O programa terminou, para restaurar a cópia de segurança!");
 		} catch (Exception e) {
 			Log.getInstance()

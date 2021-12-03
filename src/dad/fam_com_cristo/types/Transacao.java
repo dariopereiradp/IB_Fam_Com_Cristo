@@ -148,7 +148,7 @@ public class Transacao implements Comparable<Transacao> {
 	public int compareTo(Transacao o) {
 		int r = this.getData().compareTo(o.getData());
 		if (r == 0)
-			return new Integer(this.getId()).compareTo(new Integer(o.getId()));
+			return Integer.valueOf(this.getId()).compareTo(Integer.valueOf(o.getId()));
 		else
 			return r;
 	}

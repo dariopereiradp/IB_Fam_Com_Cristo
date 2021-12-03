@@ -43,7 +43,7 @@ public class CSVExport {
 				pst = connection.getConnection().prepareStatement(statement);
 				resultSet = pst.executeQuery();
 				CSVPrinter csvPrinter = new CSVPrinter(writer,
-						CSVFormat.DEFAULT.withHeader(resultSet).withDelimiter(';'));
+						CSVFormat.DEFAULT.builder().setHeader(resultSet).setDelimiter(';').build());
 				csvPrinter.printRecords(resultSet);
 				csvPrinter.close();
 

@@ -1,6 +1,5 @@
 package dad.recursos;
 
-import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -53,7 +52,7 @@ public class DateChooser extends DatePicker {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getComponentDateTextField().dispatchEvent(new FocusEvent(DateChooser.this, Event.LOST_FOCUS));				
+				getComponentDateTextField().dispatchEvent(new FocusEvent(DateChooser.this, FocusEvent.FOCUS_LOST));				
 			}
 		});
 		

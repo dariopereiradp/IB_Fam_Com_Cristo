@@ -38,7 +38,7 @@ public class Main {
 	public static final String TITLE_SMALL = "Igreja Batista Famílias com Cristo";
 	public static final String SIGLA = "IBFC";
 	public static final String PASTOR = "PASTOR";
-	public static final String VERSION = "2.0.1 - Reforma";
+	public static final String VERSION = "2.0.2 - Reforma";
 	public static final String DATA_PUBLICACAO = "31 de Outubro de 2020";
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String DEFAULT_USER = "admin";

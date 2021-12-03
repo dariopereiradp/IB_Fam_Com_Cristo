@@ -728,7 +728,7 @@ public class DataGui extends JFrame {
 		@Override
 		public boolean dispatchKeyEvent(KeyEvent e) {
 			if (e.getID() == KeyEvent.KEY_PRESSED) {
-				if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
+				if ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
 					switch (e.getKeyCode()) {
 					case KeyEvent.VK_Z:
 						anular();
