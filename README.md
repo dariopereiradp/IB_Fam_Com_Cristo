@@ -93,7 +93,7 @@ I extracted this metrics using <a href="https://github.com/mariazevedo88/o3smeas
 * Number of interfaces: 3
 
 ### Built With
-* [Java 8](https://java.com/)
+* [Java 17](https://openjdk.java.net/projects/jdk/17/)
 
 
 ## Getting started
@@ -145,7 +145,7 @@ To see a full explanation, read the manual (in portuguese). Bellow you can see s
 * <a href="https://github.com/vincenzopalazzo/material-ui-swing">Material UI Swing v1.1.2</a> - Implements a beauty and modern Look-and-feel, based on Material Design.
 * <a href="http://ucanaccess.sourceforge.net/site.html">UCanAccess 5.0.1</a> - Read and write Microsoft Access Databases
 * <a href="https://jackcessencrypt.sourceforge.io">Jackcess Encrypt 3.0.0</a> - Read and write encrypted Access databases
-* <a href="https://github.com/haraldk/TwelveMonkeys">TwelveMonkeys ImageIO 3.8.21</a> - Compress the images
+* <a href="https://github.com/haraldk/TwelveMonkeys">TwelveMonkeys ImageIO 3.8.2</a> - Compress the images
 * <a href="https://www.javaxt.com/javaxt-core">JavaXT Core 1.11.0</a> - To see the images with the correct orientation
 * <a href="https://github.com/srikanth-lingala/zip4j">Zip4j 2.10.0</a> - Generate Zip files (used in Backups and BugReports)
 * <a href="https://github.com/LGoodDatePicker/LGoodDatePicker">LGoodDatePicker 11.2.1</a> - Choose a date in the LocalDate type.
