@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v2.0.1] - 
+## [v2.1.0] -
+
+### Added
+- 
+
+### Changed
+- Migrated project to Java 17
+- Updated many dependencies to the latest version
+- 
+
+## [v2.0.1]
 
 ### Changed
 - Small image view (in both MembroDetails and Ficha_Membro_ToPDF) now preserves the original aspect ratio.
