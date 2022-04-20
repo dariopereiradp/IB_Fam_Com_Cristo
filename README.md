@@ -71,7 +71,7 @@ This project was created by Dário Pereira, to help Igreja Batista Famílias com
 * Bug reports: the user can write a description of the problem and the program will auto generate a zip file with the logs and the description.
 
 ### Technical details
-* This project was compiled with Java 8. 
+* This project was compiled with Java 17. 
 * Since v2.0 I started using Maven to organize the dependencies of the project.
 * I developed this program using Eclipse.
 * This project is a Java Swing application.
@@ -99,7 +99,7 @@ I extracted this metrics using <a href="https://github.com/mariazevedo88/o3smeas
 ## Getting started
 
 ### Prerequisites
-This program was made in Java. You will need a JVM with the minimum version 1.8.
+This program was made in Java. It requires a JVM with the minimum version 17.
 I adapted this program to work with Windows. But, since Java is multiplataform, it should work in other operating systems. Still, I didn't tested it.
 
 ### Installation
@@ -142,22 +142,22 @@ To see a full explanation, read the manual (in portuguese). Bellow you can see s
 
 
 ## Acknowledgements
-* <a href="https://github.com/vincenzopalazzo/material-ui-swing">Material UI Swing v1.1.2-rc1</a> - Implements a beauty and modern Look-and-feel, based on Material Design.
-* <a href="http://ucanaccess.sourceforge.net/site.html">UCanAccess 5.0.0</a> - Read and write Microsoft Access Databases
+* <a href="https://github.com/vincenzopalazzo/material-ui-swing">Material UI Swing v1.1.2</a> - Implements a beauty and modern Look-and-feel, based on Material Design.
+* <a href="http://ucanaccess.sourceforge.net/site.html">UCanAccess 5.0.1</a> - Read and write Microsoft Access Databases
 * <a href="https://jackcessencrypt.sourceforge.io">Jackcess Encrypt 3.0.0</a> - Read and write encrypted Access databases
-* <a href="https://github.com/haraldk/TwelveMonkeys">TwelveMonkeys ImageIO 3.6.1</a> - Compress the images
-* <a href="https://www.javaxt.com/javaxt-core">JavaXT Core 1.10.3</a> - To see the images with the correct orientation
-* <a href="https://github.com/srikanth-lingala/zip4j">Zip4j 2.6.4</a> - Generate Zip files (used in Backups and BugReports)
-* <a href="https://github.com/LGoodDatePicker/LGoodDatePicker">LGoodDatePicker 11.1.0</a> - Choose a date in the LocalDate type.
+* <a href="https://github.com/haraldk/TwelveMonkeys">TwelveMonkeys ImageIO 3.8.21</a> - Compress the images
+* <a href="https://www.javaxt.com/javaxt-core">JavaXT Core 1.11.0</a> - To see the images with the correct orientation
+* <a href="https://github.com/srikanth-lingala/zip4j">Zip4j 2.10.0</a> - Generate Zip files (used in Backups and BugReports)
+* <a href="https://github.com/LGoodDatePicker/LGoodDatePicker">LGoodDatePicker 11.2.1</a> - Choose a date in the LocalDate type.
 * <a href="https://itextpdf.com/en/products/itext-5-legacy">iTextPDF 5.5.13.2</a> - Generate a PDF file (used to the lists of members, financial reports and member profiles)
-* <a href="https://knowm.org/open-source/xchart">xChart 3.6.5</a> - Generate charts (used in statistics and financial reports)
-* <a href="http://miglayout.com/">MigLayout-Swing 5.2</a> - Used in some layouts (for example, in the profile page)
-* <a href="https://commons.apache.org/proper/commons-csv">Apache Commons CSV 1.8</a> - Export the databases to CSV
-* <a href="https://commons.apache.org/proper/commons-codec">Apache Commons Codec 1.15</a> - Used to implement AES Encryption
-* <a href="https://commons.apache.org/proper/commons-io">Apache Commons IO 2.8.0</a> - FileUtils: copy files or delete directories
-* <a href="https://commons.apache.org/proper/commons-lang">Commons Lang 3.11</a> - DurationFormatUtils: format the time of using the program
-* <a href="https://commons.apache.org/proper/commons-text">Commons Text 1.9</a> - WordUtils.capitalize: capitalize the names
+* <a href="https://knowm.org/open-source/xchart">xChart 3.6.6</a> - Generate charts (used in statistics and financial reports)
+* <a href="http://miglayout.com/">MigLayout-Swing 11.0</a> - Used in some layouts (for example, in the profile page)
+* <a href="https://commons.apache.org/proper/commons-csv">Apache Commons CSV 1.9.0</a> - Export the databases to CSV
 * <a href="https://commons.apache.org/proper/commons-logging">Apache Commons Logging 1.2</a> - Generate the log files
+* <a href="https://commons.apache.org/proper/commons-io">Apache Commons IO 2.11.0</a> - FileUtils: copy files or delete directories
+* <a href="https://commons.apache.org/proper/commons-lang">Commons Lang 3.12.0</a> - DurationFormatUtils: format the time of using the program
+* <a href="https://commons.apache.org/proper/commons-text">Commons Text 1.9</a> - WordUtils.capitalize: capitalize the names
+* <a href="https://commons.apache.org/proper/commons-codec">Apache Commons Codec 1.15</a> - Used to implement AES Encryption
 
 
 [product-screenshot]: Samples/sample.png
