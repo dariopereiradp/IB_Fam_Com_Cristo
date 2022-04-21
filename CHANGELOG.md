@@ -2,15 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v2.1.0] -
+## [v2.1.0] - 2020-04-22
 
 ### Added
-- 
+- Possibility to export transactions of a period without showing total amount
 
 ### Changed
 - Migrated project to Java 17
 - Updated many dependencies to the latest version
-- 
 
 ## [v2.0.1]
 
