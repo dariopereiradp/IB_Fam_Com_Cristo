@@ -8,8 +8,10 @@ All notable changes to this project will be documented in this file.
 - Possibility to export transactions of a period without showing total amount
 
 ### Changed
-- Migrated project to Java 17
+- Migrated project to Java 17. It requires Windows 64bits version.
 - Updated many dependencies to the latest version
+- When exporting Transações, "Tesoureiro" will sign instead of pastor and when exporting Membros, "Secratário" will sign instead of pastor and both will be generic, without any specific name.
+- JOptionPane will have a minimum size of 800x100 to prevent text being truncated.
 
 ## [v2.0.1]
 
