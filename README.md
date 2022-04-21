@@ -86,9 +86,9 @@ This project was created by Dário Pereira, to help Igreja Batista Famílias com
 I extracted this metrics using <a href="https://github.com/mariazevedo88/o3smeasures-tool">o3smeasures-tool</a> to Eclipse.
 
 * Number of classes: 85
-* Lines of code (LOC): 9663 (Max: 825 - DataGui.java)
-* Numbers of Methods: 515 (Max: 63 - TableModelMembro.java)
-* Number of Attributes: 355 (Max: 46 - MembroPanel.java)
+* Lines of code (LOC): 4678 (Max: 611 - MembroDetail.java)
+* Numbers of Methods: 523 (Max: 63 - TableModelMembro.java)
+* Number of Attributes: 357 (Max: 46 - MembroPanel.java)
 * Number of packages: 12
 * Number of interfaces: 3
 
