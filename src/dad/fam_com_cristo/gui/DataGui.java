@@ -431,8 +431,7 @@ public class DataGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				LocalDate init = EstatisticaPeriodos.ANO_ANTERIOR.getInit();
 				LocalDate fim = EstatisticaPeriodos.ANO_ANTERIOR.getEnd();
-				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
-						String.valueOf(init.getYear()), EstatisticaPeriodos.ANO_ANTERIOR, init, fim, true);
+				Utils.gerarRelatorio(FinancasPanel.getInstance().newTable("Todos", init, fim), init, fim, String.valueOf(init.getYear()), EstatisticaPeriodos.ANO_ANTERIOR, true);
 			}
 		});
 
@@ -440,16 +439,14 @@ public class DataGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				LocalDate init = EstatisticaPeriodos.MES_ANTERIOR.getInit();
 				LocalDate fim = EstatisticaPeriodos.MES_ANTERIOR.getEnd();
-				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", init, fim),
-						init.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt")) + " " + init.getYear(),
-						EstatisticaPeriodos.MES_ANTERIOR, init, fim, false);
+				Utils.gerarRelatorio(FinancasPanel.getInstance().newTable("Todos", init, fim), init, fim, init.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt")) + " " + init.getYear(), EstatisticaPeriodos.MES_ANTERIOR, false);
 			}
 		});
 
 		mnRelatorioTotal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				TableFinancasToPDF.transacoesToPDF(FinancasPanel.getInstance().newTable("Todos", null, null),
-						"Completo", EstatisticaPeriodos.DESDE_SEMPRE, null, null, false);
+						"Completo", EstatisticaPeriodos.DESDE_SEMPRE, null, null, false, true);
 			}
 		});
 

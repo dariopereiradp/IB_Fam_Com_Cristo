@@ -1,5 +1,6 @@
 package dad.fam_com_cristo;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.io.File;
 import java.nio.file.Files;
@@ -38,8 +39,8 @@ public class Main {
 	public static final String TITLE_SMALL = "Igreja Batista Famílias com Cristo";
 	public static final String SIGLA = "IBFC";
 	public static final String PASTOR = "PASTOR";
-	public static final String VERSION = "2.0.2 - Reforma";
-	public static final String DATA_PUBLICACAO = "31 de Outubro de 2020";
+	public static final String VERSION = "2.1.0 - Reforma";
+	public static final String DATA_PUBLICACAO = "21 de Abril de 2022";
 	public static final String EMAIL_SUPORTE = "pereira13.dario@gmail.com";
 	public static final String DEFAULT_USER = "admin";
 	public static final String DEFAULT_PASS = "dad";
@@ -61,6 +62,7 @@ public class Main {
 	public static final String MEMBROS_PDF_PATH = DOCUMENTS_DIR + "Fichas de Membros"
 			+ System.getProperty("file.separator");
 	public static final String[] OPTIONS = { "Sim", "Não" };
+	public static final String[] OPTIONS_CANCEL = { "Sim", "Não", "Cancelar" };
 	public static final String AVISO_INI = "SE ALTERAR ESSE FICHEIRO O PROGRAMA PODE NÃO FUNCIONAR CORRETAMENTE";
 	public static long inicialTime;
 
@@ -76,6 +78,7 @@ public class Main {
 
 			UIManager.setLookAndFeel(materialTheme);
 			UIManager.getLookAndFeelDefaults().put("TabbedPane[tab].height", 5);
+			UIManager.getLookAndFeelDefaults().put("OptionPane.minimumSize",new Dimension(800,100));
 			Splash screen = new Splash();
 			EventQueue.invokeLater(new Runnable() {
 

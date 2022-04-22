@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
@@ -45,6 +46,7 @@ import dad.fam_com_cristo.table.MembroPanel;
 import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
 import dad.fam_com_cristo.types.enumerados.ImageFormats;
+import dad.recursos.pdf.TableFinancasToPDF;
 import javaxt.io.Image;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.animation.MaterialUIMovement;
@@ -448,12 +450,34 @@ public class Utils {
 			Log.getInstance().printLog(e1.getMessage());
 		}
 	}
+	
+	/**
+	 * Mostra JOptionPane perguntando se quer incluir o saldo total ao exportar um relatório financeiro
+	 * 
+	 */
+	public static void gerarRelatorio(JTable table, LocalDate init, LocalDate fim, String descricao, EstatisticaPeriodos periodo, boolean anual) {
+
+		String message = "Deseja incluir o saldo total no relatório?";
+
+		int ok = JOptionPane.showOptionDialog(DataGui.getInstance(), message, "Gerar Relatório Financeiro",
+				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+				new ImageIcon(DataGui.getInstance().getClass().getResource("/FC_SS.jpg")), Main.OPTIONS_CANCEL,
+				Main.OPTIONS_CANCEL[1]);
+		Log.getInstance().printLog(message);
+		if (ok == JOptionPane.YES_OPTION) {
+			TableFinancasToPDF.transacoesToPDF(table, descricao, periodo, init, fim, anual, true);
+		} else if(ok == JOptionPane.NO_OPTION) {
+			TableFinancasToPDF.transacoesToPDF(table, descricao, periodo, init, fim, anual, false);
+		}
+	}
 
 	/**
 	 * Mostra JOptionPane informando que foi salvo com sucesso e perguntando se quer
 	 * abrir o ficheiro
 	 * 
 	 * @param message
+	 * @param dir
+	 * @param filepath
 	 * @throws IOException
 	 */
 	public static void askMessage(String message, String dir, String filepath) throws IOException {

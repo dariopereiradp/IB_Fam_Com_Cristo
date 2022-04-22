@@ -49,7 +49,6 @@ import dad.recursos.DataPesquisavel;
 import dad.recursos.DateChooser;
 import dad.recursos.SairAction;
 import dad.recursos.Utils;
-import dad.recursos.pdf.TableFinancasToPDF;
 import mdlaf.utils.MaterialImageFactory;
 import mdlaf.utils.icons.MaterialIconFont;
 
@@ -353,8 +352,7 @@ public class FinancasPanel extends JPanel {
 							entradaSaida = "Saídas - ";
 					}
 				}
-				TableFinancasToPDF.transacoesToPDF(financas, "Personalizado - " + filtro + entradaSaida + dataString,
-						EstatisticaPeriodos.PERSONALIZADO, init, fim, false);
+				Utils.gerarRelatorio(financas, init, fim, "Personalizado - " + filtro + entradaSaida + dataString, EstatisticaPeriodos.PERSONALIZADO, false);
 			}
 		});
 
@@ -528,7 +526,7 @@ public class FinancasPanel extends JPanel {
 		} catch (java.util.regex.PatternSyntaxException e) {
 		}
 		sorter.setRowFilter(rowFilter);
-
+		
 		return table;
 	}
 

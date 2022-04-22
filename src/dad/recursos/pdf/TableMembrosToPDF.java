@@ -125,18 +125,11 @@ public class TableMembrosToPDF {
 			cellOne.setBorder(Rectangle.NO_BORDER);
 			assin.addCell(cellOne);
 
-			Paragraph pastor = new Paragraph(Utils.getInstance().getPastorName(),
-					FontFactory.getFont(FontFactory.TIMES, 10));
-			PdfPCell pastorCell = new PdfPCell(pastor);
-			pastorCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			pastorCell.setBorder(Rectangle.NO_BORDER);
-			assin.addCell(pastorCell);
-
-			Paragraph pastorF = new Paragraph(("(Pastor)"), FontFactory.getFont(FontFactory.TIMES, 10));
-			PdfPCell pastorFCell = new PdfPCell(pastorF);
-			pastorFCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			pastorFCell.setBorder(Rectangle.NO_BORDER);
-			assin.addCell(pastorFCell);
+			Paragraph secretario = new Paragraph(("(Secretário)"), FontFactory.getFont(FontFactory.TIMES, 10));
+			PdfPCell secretarioCell = new PdfPCell(secretario);
+			secretarioCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			secretarioCell.setBorder(Rectangle.NO_BORDER);
+			assin.addCell(secretarioCell);
 			
 			doc.add(new Paragraph(" "));
 			doc.add(assin);

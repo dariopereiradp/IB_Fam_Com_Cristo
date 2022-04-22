@@ -41,8 +41,10 @@ import com.itextpdf.text.pdf.PdfWriter;
 import dad.fam_com_cristo.Main;
 import dad.fam_com_cristo.table.models.TableModelFinancas;
 import dad.fam_com_cristo.types.enumerados.EstatisticaPeriodos;
+import dad.fam_com_cristo.types.enumerados.Tipo_Transacao;
 import dad.recursos.GraficosFinancas;
 import dad.recursos.Log;
+import dad.recursos.Money;
 import dad.recursos.Utils;
 
 /**
@@ -60,17 +62,18 @@ public class TableFinancasToPDF {
 
 	/**
 	 * 
-	 * @param table     - tabela base que vai ser convertida para PDF
-	 * @param descricao - descrição que vai para o título e nome do ficheiro
-	 * @param periodo   - período do relatório
-	 * @param init      - data de início
-	 * @param end       - data de fim
-	 * @param anual     - true inclui um CategoryChart - false inclui um PieChart
+	 * @param table   				   - tabela base que vai ser convertida para PDF
+	 * @param descricao				   - descrição que vai para o título e nome do ficheiro
+	 * @param periodo 				   - período do relatório
+	 * @param init     				   - data de início
+	 * @param end       			   - data de fim
+	 * @param anual     			   - true inclui um CategoryChart - false inclui um PieChart
+	 * @param incluirSaldoTotal     - true inclui o saldo total - false só inclui o saldo do período
 	 * 
 	 * @return
 	 */
 	public static String transacoesToPDF(JTable table, String descricao, EstatisticaPeriodos periodo, LocalDate init,
-			LocalDate end, boolean anual) {
+			LocalDate end, boolean anual, boolean incluirSaldoTotal) {
 
 		descricaoS = descricao;
 
@@ -130,12 +133,16 @@ public class TableFinancasToPDF {
 			Paragraph descricaoSaldo = new Paragraph("", FontFactory.getFont(FontFactory.COURIER, 12));
 			descricaoSaldo.add("Relatório gerado em: " + DateTimeFormatter
 					.ofPattern("EEEE, d 'de' MMMM 'de' yyyy", new Locale("pt")).format(LocalDate.now()) + ".\n");
-			descricaoSaldo.add(bullet);
-			descricaoSaldo
-					.add(" O saldo atual é: " + utils.getNumberFormatCurrency().format(financas.getTotal()) + ".\n");
-			descricaoSaldo.add(bullet);
-			descricaoSaldo.add(" O saldo no último dia do período (filtrado) era: "
-					.concat(table.getRowCount() == 0 ? "R$0,00.\n" : table.getValueAt(table.getRowCount() - 1, 4) + ".\n"));
+
+			if(incluirSaldoTotal) {
+				descricaoSaldo.add(bullet);
+				descricaoSaldo
+						.add(" O saldo atual é: " + utils.getNumberFormatCurrency().format(financas.getTotal()) + ".\n");
+				descricaoSaldo.add(bullet);
+				descricaoSaldo.add(" O saldo no último dia do período (filtrado) era: "
+						.concat(table.getRowCount() == 0 ? "R$0,00.\n" : table.getValueAt(table.getRowCount() - 1, 4) + ".\n"));
+			}
+
 			descricaoSaldo.add(bullet);
 			descricaoSaldo.add(" O total de entradas no período foi: "
 					+ utils.getNumberFormatCurrency().format(financas.getTotalEntradas(init, end)) + ".\n");
@@ -168,12 +175,33 @@ public class TableFinancasToPDF {
 				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 				pdfTable.addCell(cell);
 			}
+			
+			Money saldoAnterior = new Money();
+			
+			if(!incluirSaldoTotal && table.getRowCount() > 0) {
+				Money subTotal = (Money) table.getModel().getValueAt(table.convertRowIndexToModel(0), 4);
+				Money firstOper = (Money) table.getModel().getValueAt(table.convertRowIndexToModel(0), 1);
+				
+				if(subTotal.compareTo(firstOper) != 0) {
+					Tipo_Transacao tipo = (Tipo_Transacao) table.getModel().getValueAt(table.convertRowIndexToModel(0), 2);
+					
+					saldoAnterior = subTotal.transacaoInversa(tipo, firstOper);
+				}
+			}
+			
 			// extracting data from the JTable and inserting it to PdfPTable
 			for (int rows = 0; rows < table.getRowCount(); rows++) {
 				for (int cols = 0; cols < table.getColumnCount(); cols++) {
 					Paragraph p = null;
-					p = new Paragraph(table.getModel().getValueAt(table.convertRowIndexToModel(rows), cols).toString(),
-							FontFactory.getFont(FontFactory.COURIER, 9));
+					String text = "";
+					
+					if(cols == 4 && !saldoAnterior.eZero()) {
+						text = ((Money)table.getModel().getValueAt(table.convertRowIndexToModel(rows), cols)).subtract(saldoAnterior).toString();
+					} else {
+						text = table.getModel().getValueAt(table.convertRowIndexToModel(rows), cols).toString();
+					}
+					
+					p = new Paragraph(text, FontFactory.getFont(FontFactory.COURIER, 9));
 					PdfPCell cell = new PdfPCell(p);
 					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 					pdfTable.addCell(cell);
@@ -193,17 +221,12 @@ public class TableFinancasToPDF {
 			PdfPCell cellOne = new PdfPCell(assinatura_line);
 			cellOne.setBorder(Rectangle.NO_BORDER);
 			assinatura.addCell(cellOne);
-			Paragraph pastor = new Paragraph(utils.getPastorName(), FontFactory.getFont(FontFactory.TIMES, 10));
-			PdfPCell pastorCell = new PdfPCell(pastor);
-			pastorCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			pastorCell.setBorder(Rectangle.NO_BORDER);
-			assinatura.addCell(pastorCell);
 
-			Paragraph pastorF = new Paragraph(("(Pastor)"), FontFactory.getFont(FontFactory.TIMES, 10));
-			PdfPCell pastorFCell = new PdfPCell(pastorF);
-			pastorFCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			pastorFCell.setBorder(Rectangle.NO_BORDER);
-			assinatura.addCell(pastorFCell);
+			Paragraph tesoureiro = new Paragraph(("(Tesoureiro)"), FontFactory.getFont(FontFactory.TIMES, 10));
+			PdfPCell tesoureiroCell = new PdfPCell(tesoureiro);
+			tesoureiroCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			tesoureiroCell.setBorder(Rectangle.NO_BORDER);
+			assinatura.addCell(tesoureiroCell);
 			
 			doc.add(new Paragraph(" "));
 			doc.add(assinatura);
