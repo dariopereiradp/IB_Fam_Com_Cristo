@@ -2,7 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v2.0.1] - 
+## [v2.1.0] - 2020-04-22
+
+### Added
+- Possibility to export transactions of a period without showing total amount
+
+### Changed
+- Migrated project to Java 17. It requires Windows 64bits version.
+- Updated many dependencies to the latest version
+- When exporting Transações, "Tesoureiro" will sign instead of pastor and when exporting Membros, "Secratário" will sign instead of pastor and both will be generic, without any specific name.
+- JOptionPane will have a minimum size of 800x100 to prevent text being truncated.
+
+## [v2.0.1]
 
 ### Changed
 - Small image view (in both MembroDetails and Ficha_Membro_ToPDF) now preserves the original aspect ratio.
