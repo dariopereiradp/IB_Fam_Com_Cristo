@@ -92,6 +92,7 @@ on October 31, I decided to call it "Reforma" in honor of the [Protestant Reform
 [JCalendar]: https://github.com/toedter/jcalendar
 [LGoodDatePicker]: https://github.com/LGoodDatePicker/LGoodDatePicker
 [Protestant Reformation]: https://www.history.com/topics/reformation/reformation
+[v2.1.0]: https://github.com/dariopereiradp/IB_Fam_Com_Cristo/compare/v2.0.1beta-Reforma...v2.1.0
 [v2.0.1beta]: https://github.com/dariopereiradp/IB_Fam_Com_Cristo/compare/v2.0beta-Reforma...v2.0.1beta-Reforma
 [v2.0beta]: https://github.com/dariopereiradp/IB_Fam_Com_Cristo/compare/v1.0...v2.0beta-Reforma
 [v1.0]: https://github.com/dariopereiradp/IB_Fam_Com_Cristo/releases/tag/v1.0
